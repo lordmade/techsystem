@@ -23,6 +23,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Technician Dashboard</h1>
             <div class="space-x-2">
                 <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">Print Report</button>
+                <button onclick="saveLocalFile()" class="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded shadow transition">Save Local Copy (.txt)</button>
                 <button onclick="submitForm()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition">Save to Database</button>
             </div>
         </div>
@@ -34,46 +35,46 @@
                     <h2 class="text-3xl font-black text-blue-900 tracking-tighter">RARE GRADE TECH</h2>
                     <p class="text-blue-700 font-bold uppercase tracking-widest text-sm">Device Service Report</p>
                 </div>
-                <div class="text-right mt-4 md:mt-0 text-gray-500 text-xs italic">
-                    Thank you for trusting us with your device. <br>
-                    Detailed report on services performed by Rare Grade Tech.
+                <div class="text-right mt-4 md:mt-0">
+                    <div class="text-xs text-gray-500 italic mb-1">Generated Service ID:</div>
+                    <input type="text" id="reportID" class="text-blue-800 font-bold border-none bg-transparent text-right outline-none" readonly>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div class="col-span-2 bg-blue-50 p-2 font-bold text-blue-800 border-l-4 border-blue-800 mb-2">CLIENT INFORMATION</div>
+                <div class="col-span-2 bg-blue-50 p-2 font-bold text-blue-800 border-l-4 border-blue-800 mb-2 uppercase tracking-wide">Client Information</div>
                 
                 <div class="flex flex-col">
                     <label class="text-sm font-semibold text-gray-600">Client Name:</label>
-                    <input type="text" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1" value="Ms Salphy Songo">
+                    <input type="text" id="clientName" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1" value="Ms Salphy Songo">
                 </div>
                 <div class="flex flex-col">
                     <label class="text-sm font-semibold text-gray-600">Contact Number:</label>
-                    <input type="text" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1" value="076 543 1888">
+                    <input type="text" id="contactNumber" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1" value="076 543 1888">
                 </div>
                 <div class="flex flex-col">
                     <label class="text-sm font-semibold text-gray-600">Email Address:</label>
-                    <input type="email" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1" value="mmakhora@yahoo.com">
+                    <input type="email" id="email" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1" value="mmakhora@yahoo.com">
                 </div>
                 <div class="flex flex-col">
                     <label class="text-sm font-semibold text-gray-600">Device Model/Type:</label>
-                    <input type="text" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1">
+                    <input type="text" id="model" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1">
                 </div>
                 <div class="flex flex-col col-span-2">
                     <label class="text-sm font-semibold text-gray-600">Serial Number/IMEI:</label>
-                    <input type="text" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1">
+                    <input type="text" id="imei" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1">
                 </div>
                 <div class="flex flex-col col-span-2">
                     <label class="text-sm font-semibold text-gray-600">Issue reported by client:</label>
-                    <textarea class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
+                    <textarea id="issue" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
                 </div>
                 <div class="flex flex-col col-span-2">
                     <label class="text-sm font-semibold text-gray-600">Diagnosis:</label>
-                    <textarea class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
+                    <textarea id="diagnosis" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
                 </div>
                 <div class="flex flex-col col-span-2">
                     <label class="text-sm font-semibold text-gray-600">Action Taken:</label>
-                    <textarea class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
+                    <textarea id="action" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
                 </div>
             </div>
 
@@ -135,11 +136,11 @@
                 <div class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="text-sm font-semibold">Technician Name:</span>
-                        <input type="text" class="border-b border-gray-300 flex-grow bg-transparent outline-none">
+                        <input type="text" id="techName" class="border-b border-gray-300 flex-grow bg-transparent outline-none">
                     </div>
                     <div class="flex flex-col">
                         <span class="text-sm font-semibold">Notes/Observations:</span>
-                        <textarea class="border-b border-gray-300 bg-transparent outline-none resize-none" rows="2"></textarea>
+                        <textarea id="notes" class="border-b border-gray-300 bg-transparent outline-none resize-none" rows="2"></textarea>
                     </div>
                 </div>
             </div>
@@ -156,7 +157,7 @@
                         </div>
                         <div class="flex items-center space-x-2">
                             <label class="text-sm font-bold">Date:</label>
-                            <input type="text" class="border-b border-gray-300 outline-none" value="03.03.2026">
+                            <input type="text" id="reportDate" class="border-b border-gray-300 outline-none" value="03.03.2026">
                         </div>
                     </div>
                     <div class="bg-blue-900 text-white p-4 rounded text-xs space-y-1">
@@ -171,10 +172,41 @@
     </div>
 
     <script>
+        // Automatic ID Generation on page load
+        window.onload = function() {
+            const date = new Date();
+            const datePart = date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
+            const randomPart = Math.floor(1000 + Math.random() * 9000); // 4 digit random number
+            const uniqueID = `RGT-${datePart}-${randomPart}`;
+            document.getElementById('reportID').value = uniqueID;
+        };
+
         function submitForm() {
-            // Logic to collect all data and send to a backend
-            alert("Report saved successfully for Ms Salphy Songo!");
-            console.log("Form Data Collected: ", new FormData(document.getElementById('serviceForm')));
+            alert("Report " + document.getElementById('reportID').value + " saved to database successfully!");
+        }
+
+        function saveLocalFile() {
+            const id = document.getElementById('reportID').value;
+            const name = document.getElementById('clientName').value;
+            const date = document.getElementById('reportDate').value;
+            const model = document.getElementById('model').value || "N/A";
+            const diag = document.getElementById('diagnosis').value || "N/A";
+            
+            const content = `DEVICE SERVICE REPORT\n` +
+                          `Report ID: ${id}\n` +
+                          `----------------------\n` +
+                          `Date: ${date}\n` +
+                          `Client: ${name}\n` +
+                          `Device: ${model}\n` +
+                          `Diagnosis: ${diag}\n` +
+                          `----------------------\n` +
+                          `Report Generated via Rare Grade Tech Dashboard.`;
+
+            const blob = new Blob([content], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Report_${id}_${name.replace(/\s+/g, '_')}.txt`;
+            link.click();
         }
     </script>
 </body>
