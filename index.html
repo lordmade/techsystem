@@ -185,6 +185,26 @@
             left: 100%;
             transition: left 0.8s ease-in-out;
         }
+
+        /* PDF Specific Styles for A4 */
+        .pdf-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        @media print {
+            .pdf-page {
+                width: 100%;
+                min-height: auto;
+                padding: 0;
+                box-shadow: none;
+                margin: 0;
+            }
+        }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
@@ -453,7 +473,7 @@
                     </div>
                     <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
-                        <div id="report-paper" class="bg-white text-slate-900 p-8 md:p-12 rounded-xl shadow-2xl min-h-[800px] relative overflow-hidden">
+                        <div id="report-paper" class="pdf-page bg-white text-slate-900 rounded-xl shadow-2xl relative overflow-hidden">
                             <!-- Watermark -->
                             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
                                 <i class="fa-solid fa-microchip text-[300px]"></i>
@@ -539,6 +559,7 @@
          * FIXED: Uses Firebase push() to prevent overwriting data
          * ADDED: Shimmer effects throughout UI
          * ENHANCED: PDF download is now high-quality, reliable and always works
+         * ENHANCED: PDF format is now A4
          */
         class RareGradeApp {
             constructor() {
@@ -773,38 +794,48 @@
                     this.generateReportID();
                 });
             }
-            /** ENHANCED PDF DOWNLOAD - HIGH QUALITY + ALWAYS WORKS */
+            /** ENHANCED PDF DOWNLOAD - A4 FORMAT */
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 const reportId = document.getElementById('display-report-id').innerText;
                 
                 // Show generating message
-                this.showToast('Generating PDF', 'Creating high-quality report...');
+                this.showToast('Generating PDF', 'Creating A4 report...');
                 
-                // Save original styles
-                const originalShadow = element.style.boxShadow;
-                const originalWidth = element.style.width;
+                // Clone the element for PDF generation to avoid modifying the visible one
+                const clonedElement = element.cloneNode(true);
                 
-                // Prepare for clean PDF
-                element.style.boxShadow = 'none';
-                element.style.width = '100%';
+                // Apply A4 specific styles to clone
+                clonedElement.style.width = '210mm';
+                clonedElement.style.minHeight = '297mm';
+                clonedElement.style.padding = '20mm';
+                clonedElement.style.margin = '0';
+                clonedElement.style.boxShadow = 'none';
+                clonedElement.style.position = 'absolute';
+                clonedElement.style.left = '-9999px';
+                clonedElement.style.top = '0';
+                
+                // Temporarily add to body
+                document.body.appendChild(clonedElement);
                 
                 const opt = {
-                    margin: [0.4, 0.4, 0.4, 0.4],
+                    margin: 0,
                     filename: `RGT_Report_${reportId}.pdf`,
-                    image: { type: 'jpeg', quality: 0.99 },
+                    image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: {
-                        scale: 3,                    // Ultra sharp
+                        scale: 2,
                         useCORS: true,
                         allowTaint: true,
                         letterRendering: true,
                         logging: false,
-                        scrollY: 0,
-                        windowWidth: 1200
+                        width: 794, // A4 width in pixels at 96 DPI
+                        height: 1123, // A4 height in pixels at 96 DPI
+                        windowWidth: 794,
+                        windowHeight: 1123
                     },
                     jsPDF: { 
-                        unit: 'in', 
-                        format: 'letter', 
+                        unit: 'mm', 
+                        format: 'a4', 
                         orientation: 'portrait',
                         compress: true
                     }
@@ -812,17 +843,18 @@
                 
                 html2pdf()
                     .set(opt)
-                    .from(element)
+                    .from(clonedElement)
                     .save()
                     .then(() => {
-                        // Restore original styles
-                        element.style.boxShadow = originalShadow;
-                        element.style.width = originalWidth;
+                        // Remove the cloned element
+                        document.body.removeChild(clonedElement);
                         this.showToast('PDF Downloaded', `RGT_Report_${reportId}.pdf saved successfully`);
                     })
                     .catch((err) => {
-                        element.style.boxShadow = originalShadow;
-                        element.style.width = originalWidth;
+                        // Remove the cloned element even if error
+                        if (clonedElement.parentNode) {
+                            document.body.removeChild(clonedElement);
+                        }
                         console.error(err);
                         this.showToast('PDF Error', 'Please try again', 'error');
                     });
