@@ -6,22 +6,22 @@
     <title>Rare Grade Tech | Enterprise Portal</title>
  
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com "></script>
+    <script src="https://cdn.tailwindcss.com"></script>
  
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
  
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300 ;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
  
     <!-- PDF Generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Firebase SDK (Realtime Database) -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js "></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js "></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -226,7 +226,7 @@
         <!-- User Profile -->
         <div class="p-4 border-t border-slate-200">
             <div class="glass-panel p-3 rounded-xl flex items-center gap-3">
-                <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff " class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+                <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-slate-900 truncate">Vynix Lingua</p>
                     <p class="text-xs text-slate-500 truncate">System Administrator</p>
@@ -513,7 +513,7 @@
                                     <p class="text-xs font-bold mt-1">Vynix Lingua</p>
                                 </div>
                                 <div class="text-right">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=RareGradeTechReport " alt="QR" class="ml-auto opacity-80">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=RareGradeTechReport" alt="QR" class="ml-auto opacity-80">
                                     <p class="text-[9px] text-slate-400 mt-1">Scan to verify authenticity</p>
                                 </div>
                             </div>
@@ -534,12 +534,6 @@
         </div>
     </div>
     <script>
-        /**
-         * Rare Grade Tech - Application Logic
-         * FIXED: Uses Firebase push() to prevent overwriting data
-         * ADDED: Shimmer effects throughout UI
-         * ENHANCED: PDF download is now high-quality, reliable and always works
-         */
         class RareGradeApp {
             constructor() {
                 this.clients = [];
@@ -773,44 +767,47 @@
                     this.generateReportID();
                 });
             }
-            /** FIXED PDF DOWNLOAD - CRYSTAL CLEAR ON A4 */
+            /** FIXED: SINGLE PAGE A4 PDF - NO BLANK PAGE */
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 const reportId = document.getElementById('display-report-id').innerText;
                
-                this.showToast('Generating PDF', 'Creating crystal-clear A4 report...');
+                this.showToast('Generating PDF', 'Creating perfect single-page A4 report...');
                
-                const originalShadow = element.style.boxShadow;
-                const originalWidth = element.style.width;
-                const originalHeight = element.style.height;
-                const originalPadding = element.style.padding;
+                const originalShadow = element.style.boxShadow || '';
+                const originalWidth = element.style.width || '';
+                const originalHeight = element.style.height || '';
+                const originalPadding = element.style.padding || '';
+                const originalMinHeight = element.style.minHeight || '';
                
-                // Force exact A4 size with proper padding for perfect clarity
+                // Force exact A4 size to prevent extra blank page
+                element.style.boxShadow = 'none';
                 element.style.width = '210mm';
                 element.style.height = '297mm';
+                element.style.minHeight = '297mm';
                 element.style.padding = '15mm 20mm';
-                element.style.boxShadow = 'none';
-                element.style.backgroundColor = '#ffffff';
+                element.style.overflow = 'hidden';
                
                 const opt = {
                     margin: 0,
                     filename: `RGT_Report_${reportId}.pdf`,
                     image: { type: 'jpeg', quality: 1.0 },
                     html2canvas: {
-                        scale: 4,                    // Ultra sharp text
+                        scale: 3,
                         useCORS: true,
                         allowTaint: true,
                         letterRendering: true,
                         logging: false,
-                        backgroundColor: '#ffffff',
-                        scrollY: 0
+                        width: 794,
+                        height: 1123
                     },
                     jsPDF: {
                         unit: 'mm',
                         format: 'a4',
                         orientation: 'portrait',
                         compress: true
-                    }
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
                
                 html2pdf()
@@ -822,13 +819,17 @@
                         element.style.width = originalWidth;
                         element.style.height = originalHeight;
                         element.style.padding = originalPadding;
-                        this.showToast('PDF Downloaded', `RGT_Report_${reportId}.pdf saved clearly as A4`);
+                        element.style.minHeight = originalMinHeight;
+                        element.style.overflow = '';
+                        this.showToast('PDF Downloaded', `RGT_Report_${reportId}.pdf saved as single A4 page`);
                     })
                     .catch((err) => {
                         element.style.boxShadow = originalShadow;
                         element.style.width = originalWidth;
                         element.style.height = originalHeight;
                         element.style.padding = originalPadding;
+                        element.style.minHeight = originalMinHeight;
+                        element.style.overflow = '';
                         console.error(err);
                         this.showToast('PDF Error', 'Please try again', 'error');
                     });
