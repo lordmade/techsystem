@@ -41,6 +41,15 @@
                             900: '#0c4a6e',
                             950: '#082f49',
                         }
+                    },
+                    animation: {
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        }
                     }
                 }
             }
@@ -90,6 +99,40 @@
             animation: fadeIn 0.4s ease-out forwards;
         }
        
+        /* Shimmer Effect */
+        .shimmer-bg {
+            background: linear-gradient(to right, #f6f7f8 4%, #edeef1 25%, #f6f7f8 36%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+        }
+        
+        .shimmer-overlay {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shimmer-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transform: translateX(-100%);
+            animation: shimmer-slide 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        @keyframes shimmer-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+       
         /* Print Styles */
         @media print {
             body { background: white; color: black; }
@@ -122,6 +165,28 @@
         .nav-item { color: #475569 !important; }
         .nav-item:hover { background-color: #f1f5f9 !important; color: #0f172a !important; }
         .nav-item.active { background-color: #f0f9ff !important; color: #0ea5e9 !important; border-right: 3px solid #0ea5e9; }
+        
+        /* Table row shimmer on hover */
+        .table-row-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .table-row-shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.05), transparent);
+            transition: left 0.5s;
+        }
+        
+        .table-row-shimmer:hover::before {
+            left: 100%;
+            transition: left 0.8s ease-in-out;
+        }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
@@ -197,29 +262,29 @@
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Stat 1 -->
-                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group shimmer-overlay">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-users text-6xl text-brand-500"></i>
                         </div>
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Clients</p>
                         <h3 class="text-4xl font-display font-bold text-slate-900" id="stat-clients">0</h3>
                         <div class="mt-4 h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <div class="h-full bg-brand-500 w-[75%]"></div>
+                            <div class="h-full bg-brand-500 w-[75%] shimmer-bg"></div>
                         </div>
                     </div>
                     <!-- Stat 2 -->
-                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group shimmer-overlay">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-clipboard-check text-6xl text-emerald-500"></i>
                         </div>
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Reports Generated</p>
                         <h3 class="text-4xl font-display font-bold text-slate-900" id="stat-reports">0</h3>
                         <div class="mt-4 h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <div class="h-full bg-emerald-500 w-[45%]"></div>
+                            <div class="h-full bg-emerald-500 w-[45%] shimmer-bg"></div>
                         </div>
                     </div>
                     <!-- Stat 3 -->
-                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group shimmer-overlay">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-server text-6xl text-purple-500"></i>
                         </div>
@@ -266,7 +331,7 @@
             </section>
             <!-- VIEW: ADD CLIENT -->
             <section id="view-add-client" class="view-section hidden max-w-3xl mx-auto animate-fade-in">
-                <div class="glass-card rounded-2xl p-8 border-t-4 border-brand-500">
+                <div class="glass-card rounded-2xl p-8 border-t-4 border-brand-500 shimmer-overlay">
                     <div class="flex items-center gap-4 mb-8">
                         <div class="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
                             <i class="fa-solid fa-user-plus text-xl"></i>
@@ -298,7 +363,7 @@
                             </div>
                             <div class="flex gap-3">
                                 <button type="button" onclick="app.navigate('dashboard')" class="px-6 py-3 rounded-xl text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Cancel</button>
-                                <button type="submit" class="px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-lg shadow-brand-500/25 transition-all transform hover:scale-105 flex items-center gap-2">
+                                <button type="submit" class="px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-lg shadow-brand-500/25 transition-all transform hover:scale-105 flex items-center gap-2 shimmer-overlay">
                                     <i class="fa-solid fa-cloud-arrow-up"></i> Register Client
                                 </button>
                             </div>
@@ -319,7 +384,7 @@
                             <button onclick="app.loadSampleData()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition-colors">
                                 <i class="fa-solid fa-database mr-2"></i>Load Sample Data
                             </button>
-                            <button onclick="app.navigate('add-client')" class="px-4 py-2 rounded-lg text-xs font-medium bg-brand-600 text-white hover:bg-brand-500 transition-colors shadow-lg shadow-brand-500/20">
+                            <button onclick="app.navigate('add-client')" class="px-4 py-2 rounded-lg text-xs font-medium bg-brand-600 text-white hover:bg-brand-500 transition-colors shadow-lg shadow-brand-500/20 shimmer-overlay">
                                 <i class="fa-solid fa-plus mr-2"></i>New Client
                             </button>
                         </div>
@@ -357,7 +422,7 @@
                    
                     <!-- Left: Controls -->
                     <div class="lg:col-span-1 space-y-6 no-print">
-                        <div class="glass-card p-6 rounded-2xl">
+                        <div class="glass-card p-6 rounded-2xl shimmer-overlay">
                             <h3 class="text-lg font-bold text-slate-900 mb-4">Report Configuration</h3>
                            
                             <div class="space-y-4">
@@ -376,10 +441,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="glass-card p-6 rounded-2xl">
+                        <div class="glass-card p-6 rounded-2xl shimmer-overlay">
                             <h3 class="text-lg font-bold text-slate-900 mb-4">Actions</h3>
                             <div class="space-y-3">
-                                <button onclick="app.saveReport()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+                                <button onclick="app.saveReport()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 shimmer-overlay">
                                     <i class="fa-solid fa-save"></i> Save to Database
                                 </button>
                                 <button onclick="app.downloadPDF()" class="w-full py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold transition-all flex items-center justify-center gap-2">
@@ -473,8 +538,8 @@
     <script>
         /**
          * Rare Grade Tech - Application Logic
-         * FULLY FUNCTIONAL + Firebase Realtime Database
-         * Every button works and data is stored in realtime
+         * FIXED: Uses Firebase push() to prevent overwriting data
+         * ADDED: Shimmer effects throughout UI
          */
         class RareGradeApp {
             constructor() {
@@ -522,7 +587,11 @@
                 this.db.ref('clients').on('value', (snapshot) => {
                     this.clients = [];
                     if (snapshot.exists()) {
-                        snapshot.forEach(child => this.clients.push(child.val()));
+                        snapshot.forEach(child => {
+                            const client = child.val();
+                            client._key = child.key; // Store Firebase key
+                            this.clients.push(client);
+                        });
                     }
                     this.updateStats();
                     if (this.currentView === 'manage-clients' || this.currentView === 'dashboard') {
@@ -568,29 +637,37 @@
                 if(viewId === 'manage-clients') this.renderTables();
                 if(viewId === 'service-form') this.renderClientDropdown();
             }
+            
+            // FIXED: Use push() instead of set() to prevent overwriting
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
                 const phone = document.getElementById('newClientPhone').value.trim();
                 const email = document.getElementById('newClientEmail').value.trim();
-                const id = document.getElementById('preview-client-id').innerText;
-                if(!name || !phone || id === '---') return;
-               
+                
+                if(!name || !phone) return;
+                
+                // Generate display ID for UI
+                const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
+                
                 const newClient = {
-                    id: id,
+                    displayId: displayId,
                     name: name,
                     phone: phone,
                     email: email || '',
-                    date: new Date().toLocaleDateString()
+                    date: new Date().toLocaleDateString(),
+                    timestamp: Date.now()
                 };
-               
-                this.db.ref('clients/' + id).set(newClient).then(() => {
+                
+                // Use push() to create unique entry - THIS FIXES THE OVERWRITE BUG
+                this.db.ref('clients').push(newClient).then(() => {
                     e.target.reset();
                     document.getElementById('preview-client-id').innerText = '---';
                     this.showToast('Client Registered', `${name} saved to Realtime Database`);
                     setTimeout(() => this.navigate('manage-clients'), 800);
                 });
             }
+            
             renderTables() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
@@ -604,11 +681,14 @@
                     document.getElementById('empty-state').classList.add('hidden');
                 }
                
-                this.clients.forEach(client => {
+                // Sort by timestamp (newest first)
+                const sortedClients = [...this.clients].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+               
+                sortedClients.forEach(client => {
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0';
+                    tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
                     tr.innerHTML = `
-                        <td class="p-4 font-mono text-brand-600 font-medium">${client.id}</td>
+                        <td class="p-4 font-mono text-brand-600 font-medium">${client.displayId || client.id || 'N/A'}</td>
                         <td class="p-4 font-medium text-slate-900">${client.name}</td>
                         <td class="p-4">
                             <div class="text-xs text-slate-600">${client.phone}</div>
@@ -616,7 +696,7 @@
                         </td>
                         <td class="p-4 text-slate-500 text-xs">${client.date}</td>
                         <td class="p-4 text-right">
-                            <button onclick="app.prepReport('${client.id}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                            <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium shimmer-overlay">
                                 Create Report
                             </button>
                         </td>
@@ -624,10 +704,11 @@
                     tbody.appendChild(tr);
                 });
                
-                this.clients.slice(0, 5).forEach(client => {
+                sortedClients.slice(0, 5).forEach(client => {
                     const tr = document.createElement('tr');
+                    tr.className = 'table-row-shimmer';
                     tr.innerHTML = `
-                        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.id}</td>
+                        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
                         <td class="px-6 py-4 font-medium text-slate-700">${client.name}</td>
                         <td class="px-6 py-4 text-xs">${client.date}</td>
                         <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span></td>
@@ -648,24 +729,24 @@
                 select.innerHTML = '<option value="">-- Select Client --</option>';
                 this.clients.forEach(c => {
                     const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.text = `${c.name} (${c.id})`;
+                    opt.value = c._key; // Use Firebase key
+                    opt.text = `${c.name} (${c.displayId || c.id || 'N/A'})`;
                     select.appendChild(opt);
                 });
             }
-            loadClientToForm(clientId) {
-                const client = this.clients.find(c => c.id === clientId);
+            loadClientToForm(clientKey) {
+                const client = this.clients.find(c => c._key === clientKey);
                 if(client) {
-                    document.getElementById('display-client-id').innerText = client.id;
+                    document.getElementById('display-client-id').innerText = client.displayId || client.id || 'N/A';
                     document.getElementById('display-client-name').innerText = client.name;
                     document.getElementById('display-client-email').innerText = client.email;
                     document.getElementById('display-client-phone').innerText = client.phone;
                 }
             }
-            prepReport(clientId) {
+            prepReport(clientKey) {
                 this.navigate('service-form');
-                document.getElementById('report-client-select').value = clientId;
-                this.loadClientToForm(clientId);
+                document.getElementById('report-client-select').value = clientKey;
+                this.loadClientToForm(clientKey);
             }
             generateReportID() {
                 const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
@@ -676,20 +757,26 @@
             }
             saveReport() {
                 const reportId = document.getElementById('display-report-id').innerText;
-                const clientId = document.getElementById('display-client-id').innerText;
+                const clientDisplayId = document.getElementById('display-client-id').innerText;
                
-                if(clientId === '---') {
+                if(clientDisplayId === '---') {
                     this.showToast('Error', 'Please select a client first.', 'error');
                     return;
                 }
+                
+                const client = this.clients.find(c => (c.displayId || c.id) === clientDisplayId);
+               
                 const report = {
                     id: reportId,
-                    clientId: clientId,
+                    clientId: clientDisplayId,
+                    clientKey: client ? client._key : null,
                     date: new Date().toISOString(),
                     diagnosis: document.getElementById('input-diagnosis').value,
                     resolution: document.getElementById('input-resolution').value
                 };
-                this.db.ref('reports/' + reportId).set(report).then(() => {
+                
+                // Use push for reports too
+                this.db.ref('reports').push(report).then(() => {
                     this.showToast('Report Saved', `Report ${reportId} saved to Realtime Database`);
                     this.generateReportID();
                 });
@@ -780,14 +867,17 @@
                 this.chartInstance.data.datasets[0].data = newData;
                 this.chartInstance.update();
             }
+            
+            // FIXED: Use push() for sample data too
             loadSampleData() {
                 const samples = [
-                    { id: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString() },
-                    { id: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString() },
-                    { id: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString() }
+                    { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString(), timestamp: Date.now() },
+                    { displayId: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString(), timestamp: Date.now() - 86400000 },
+                    { displayId: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString(), timestamp: Date.now() - 172800000 }
                 ];
+                
                 samples.forEach(s => {
-                    this.db.ref('clients/' + s.id).set(s);
+                    this.db.ref('clients').push(s);
                 });
                 this.showToast('Sample Data Loaded', 'Test clients saved to Realtime Database');
             }
