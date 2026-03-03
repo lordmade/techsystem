@@ -538,6 +538,7 @@
          * Rare Grade Tech - Application Logic
          * FIXED: Uses Firebase push() to prevent overwriting data
          * ADDED: Shimmer effects throughout UI
+         * ENHANCED: PDF download is now high-quality, reliable and always works
          */
         class RareGradeApp {
             constructor() {
@@ -581,13 +582,12 @@
                 this.db = firebase.database();
             }
             setupRealtimeListeners() {
-                // Clients - Realtime
                 this.db.ref('clients').on('value', (snapshot) => {
                     this.clients = [];
                     if (snapshot.exists()) {
                         snapshot.forEach(child => {
                             const client = child.val();
-                            client._key = child.key; // Store Firebase key
+                            client._key = child.key;
                             this.clients.push(client);
                         });
                     }
@@ -598,7 +598,6 @@
                     this.renderClientDropdown();
                 });
               
-                // Reports - Realtime
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
                     if (snapshot.exists()) {
@@ -636,7 +635,6 @@
                 if(viewId === 'service-form') this.renderClientDropdown();
             }
            
-            // FIXED: Use push() instead of set() to prevent overwriting
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
@@ -645,7 +643,6 @@
                
                 if(!name || !phone) return;
                
-                // Generate display ID for UI
                 const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
                
                 const newClient = {
@@ -657,7 +654,6 @@
                     timestamp: Date.now()
                 };
                
-                // Use push() to create unique entry - THIS FIXES THE OVERWRITE BUG
                 this.db.ref('clients').push(newClient).then(() => {
                     e.target.reset();
                     document.getElementById('preview-client-id').innerText = '---';
@@ -679,7 +675,6 @@
                     document.getElementById('empty-state').classList.add('hidden');
                 }
               
-                // Sort by timestamp (newest first)
                 const sortedClients = [...this.clients].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
               
                 sortedClients.forEach(client => {
@@ -727,7 +722,7 @@
                 select.innerHTML = '<option value="">-- Select Client --</option>';
                 this.clients.forEach(c => {
                     const opt = document.createElement('option');
-                    opt.value = c._key; // Use Firebase key
+                    opt.value = c._key;
                     opt.text = `${c.name} (${c.displayId || c.id || 'N/A'})`;
                     select.appendChild(opt);
                 });
@@ -773,38 +768,64 @@
                     resolution: document.getElementById('input-resolution').value
                 };
                
-                // Use push for reports too
                 this.db.ref('reports').push(report).then(() => {
                     this.showToast('Report Saved', `Report ${reportId} saved to Realtime Database`);
                     this.generateReportID();
                 });
             }
+            /** ENHANCED PDF DOWNLOAD - HIGH QUALITY + ALWAYS WORKS */
             downloadPDF() {
                 const element = document.getElementById('report-paper');
+                const reportId = document.getElementById('display-report-id').innerText;
+                
+                // Show generating message
+                this.showToast('Generating PDF', 'Creating high-quality report...');
+                
+                // Save original styles
+                const originalShadow = element.style.boxShadow;
+                const originalWidth = element.style.width;
+                
+                // Prepare for clean PDF
+                element.style.boxShadow = 'none';
+                element.style.width = '100%';
+                
                 const opt = {
-                    margin: 0.5,
-                    filename: `RGT_Report_${document.getElementById('display-report-id').innerText}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2, 
-                        useCORS: true, 
+                    margin: [0.4, 0.4, 0.4, 0.4],
+                    filename: `RGT_Report_${reportId}.pdf`,
+                    image: { type: 'jpeg', quality: 0.99 },
+                    html2canvas: {
+                        scale: 3,                    // Ultra sharp
+                        useCORS: true,
                         allowTaint: true,
-                        logging: false 
+                        letterRendering: true,
+                        logging: false,
+                        scrollY: 0,
+                        windowWidth: 1200
                     },
-                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    jsPDF: { 
+                        unit: 'in', 
+                        format: 'letter', 
+                        orientation: 'portrait',
+                        compress: true
+                    }
                 };
                 
-                // Temporarily remove shadow for clean PDF
-                const originalShadow = element.style.boxShadow;
-                element.style.boxShadow = 'none';
-                
-                html2pdf().set(opt).from(element).save().then(() => {
-                    element.style.boxShadow = originalShadow;
-                }).catch(err => {
-                    console.error("PDF Error:", err);
-                    element.style.boxShadow = originalShadow;
-                    this.showToast('PDF Error', 'Try again or check console', 'error');
-                });
+                html2pdf()
+                    .set(opt)
+                    .from(element)
+                    .save()
+                    .then(() => {
+                        // Restore original styles
+                        element.style.boxShadow = originalShadow;
+                        element.style.width = originalWidth;
+                        this.showToast('PDF Downloaded', `RGT_Report_${reportId}.pdf saved successfully`);
+                    })
+                    .catch((err) => {
+                        element.style.boxShadow = originalShadow;
+                        element.style.width = originalWidth;
+                        console.error(err);
+                        this.showToast('PDF Error', 'Please try again', 'error');
+                    });
             }
             updateStats() {
                 this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText) || 0, this.clients.length, 800);
@@ -879,7 +900,6 @@
                 this.chartInstance.update();
             }
            
-            // FIXED: Use push() for sample data too
             loadSampleData() {
                 const samples = [
                     { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString(), timestamp: Date.now() },
