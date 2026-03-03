@@ -4,21 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rare Grade Tech | Enterprise Portal</title>
-    
+   
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+   
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+   
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+   
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+   
     <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Firebase SDK (added for backend) -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -36,54 +40,47 @@
                             600: '#0284c7',
                             900: '#0c4a6e',
                             950: '#082f49',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                            950: '#020617',
                         }
                     }
                 }
             }
         }
     </script>
-
     <style>
         body {
-            background-color: #020617;
-            color: #e2e8f0;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
-        
+       
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a; 
+            background: #f1f5f9;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155; 
+            background: #cbd5e1;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #475569; 
+            background: #94a3b8;
         }
-
-        /* Glassmorphism Utilities */
+       
+        /* Glassmorphism Utilities - LIGHT VERSION */
         .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.15);
         }
-
         .glass-card {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 30px rgba(15, 23, 42, 0.06);
         }
-
+       
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -92,26 +89,26 @@
         .animate-fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-
+       
         /* Print Styles */
         @media print {
             body { background: white; color: black; }
             .no-print { display: none !important; }
-            .print-area { 
-                box-shadow: none !important; 
-                border: none !important; 
+            .print-area {
+                box-shadow: none !important;
+                border: none !important;
                 background: white !important;
                 color: black !important;
                 padding: 0 !important;
             }
             input, textarea { border: none !important; background: transparent !important; color: black !important; }
         }
-
+       
         /* Input Styling */
         .input-field {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            color: white;
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
             transition: all 0.3s ease;
         }
         .input-field:focus {
@@ -119,85 +116,82 @@
             box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
             outline: none;
         }
+       
+        /* Light theme overrides for sidebar & cards */
+        aside { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
+        .nav-item { color: #475569 !important; }
+        .nav-item:hover { background-color: #f1f5f9 !important; color: #0f172a !important; }
+        .nav-item.active { background-color: #f0f9ff !important; color: #0ea5e9 !important; border-right: 3px solid #0ea5e9; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
-
     <!-- Sidebar -->
-    <aside class="w-72 bg-dark-950 border-r border-white/5 flex flex-col z-20 no-print relative">
+    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 no-print relative">
         <!-- Logo Area -->
-        <div class="p-8 border-b border-white/5">
+        <div class="p-8 border-b border-slate-200">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
                     <i class="fa-solid fa-layer-group text-white text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="font-display font-bold text-xl tracking-tight text-white">RARE GRADE</h1>
-                    <p class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">Enterprise Cloud</p>
+                    <h1 class="font-display font-bold text-xl tracking-tight text-slate-900">RARE GRADE</h1>
+                    <p class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Enterprise Cloud</p>
                 </div>
             </div>
         </div>
-
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Main</p>
-            
-            <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-400 transition-colors"></i>
+           
+            <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+                <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 Dashboard
             </button>
-
-            <button onclick="app.navigate('add-client')" id="nav-add-client" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                <i class="fa-solid fa-user-plus w-5 text-center group-hover:text-brand-400 transition-colors"></i>
+            <button onclick="app.navigate('add-client')" id="nav-add-client" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+                <i class="fa-solid fa-user-plus w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 New Client
             </button>
-
-            <button onclick="app.navigate('manage-clients')" id="nav-manage-clients" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                <i class="fa-solid fa-users-gear w-5 text-center group-hover:text-brand-400 transition-colors"></i>
+            <button onclick="app.navigate('manage-clients')" id="nav-manage-clients" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+                <i class="fa-solid fa-users-gear w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 Client Registry
             </button>
-
-            <button onclick="app.navigate('service-form')" id="nav-service-form" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                <i class="fa-solid fa-file-contract w-5 text-center group-hover:text-brand-400 transition-colors"></i>
+            <button onclick="app.navigate('service-form')" id="nav-service-form" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+                <i class="fa-solid fa-file-contract w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 Service Reports
             </button>
         </nav>
-
         <!-- User Profile -->
-        <div class="p-4 border-t border-white/5">
+        <div class="p-4 border-t border-slate-200">
             <div class="glass-panel p-3 rounded-xl flex items-center gap-3">
-                <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff" class="w-10 h-10 rounded-full border-2 border-dark-900" alt="User">
+                <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-white truncate">Vynix Lingua</p>
-                    <p class="text-xs text-slate-400 truncate">System Administrator</p>
+                    <p class="text-sm font-medium text-slate-900 truncate">Vynix Lingua</p>
+                    <p class="text-xs text-slate-500 truncate">System Administrator</p>
                 </div>
-                <button class="text-slate-400 hover:text-white"><i class="fa-solid fa-gear"></i></button>
+                <button class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-gear"></i></button>
             </div>
         </div>
     </aside>
-
     <!-- Main Content -->
-    <main class="flex-1 relative overflow-hidden bg-dark-950">
+    <main class="flex-1 relative overflow-hidden bg-slate-50">
         <!-- Background Gradients -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-brand-600/10 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px]"></div>
+            <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-brand-500/5 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]"></div>
         </div>
-
         <div class="relative z-10 h-full overflow-y-auto p-8 scroll-smooth">
-            
+           
             <!-- Header -->
             <header class="flex justify-between items-end mb-8 animate-fade-in">
                 <div>
-                    <h2 id="page-title" class="text-3xl font-display font-bold text-white mb-1">Dashboard</h2>
-                    <p class="text-slate-400 text-sm">Overview of system performance and metrics.</p>
+                    <h2 id="page-title" class="text-3xl font-display font-bold text-slate-900 mb-1">Dashboard</h2>
+                    <p class="text-slate-500 text-sm">Overview of system performance and metrics.</p>
                 </div>
                 <div class="text-right hidden md:block">
                     <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Current Date</p>
-                    <p id="current-date" class="text-slate-300 font-mono"></p>
+                    <p id="current-date" class="text-slate-600 font-mono"></p>
                 </div>
             </header>
-
             <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section space-y-6 animate-fade-in">
                 <!-- Stats Grid -->
@@ -207,41 +201,38 @@
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-users text-6xl text-brand-500"></i>
                         </div>
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total Clients</p>
-                        <h3 class="text-4xl font-display font-bold text-white" id="stat-clients">0</h3>
-                        <div class="mt-4 h-1 w-full bg-slate-700 rounded-full overflow-hidden">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Clients</p>
+                        <h3 class="text-4xl font-display font-bold text-slate-900" id="stat-clients">0</h3>
+                        <div class="mt-4 h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <div class="h-full bg-brand-500 w-[75%]"></div>
                         </div>
                     </div>
-
                     <!-- Stat 2 -->
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-clipboard-check text-6xl text-emerald-500"></i>
                         </div>
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Reports Generated</p>
-                        <h3 class="text-4xl font-display font-bold text-white" id="stat-reports">0</h3>
-                        <div class="mt-4 h-1 w-full bg-slate-700 rounded-full overflow-hidden">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Reports Generated</p>
+                        <h3 class="text-4xl font-display font-bold text-slate-900" id="stat-reports">0</h3>
+                        <div class="mt-4 h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <div class="h-full bg-emerald-500 w-[45%]"></div>
                         </div>
                     </div>
-
                     <!-- Stat 3 -->
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-server text-6xl text-purple-500"></i>
                         </div>
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">System Health</p>
-                        <h3 class="text-4xl font-display font-bold text-emerald-400">98.2%</h3>
-                        <p class="text-xs text-emerald-500/80 mt-1"><i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> Operational</p>
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">System Health</p>
+                        <h3 class="text-4xl font-display font-bold text-emerald-600">98.2%</h3>
+                        <p class="text-xs text-emerald-600 mt-1"><i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> Operational</p>
                     </div>
                 </div>
-
                 <!-- Chart Section -->
                 <div class="glass-card p-6 rounded-2xl">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold text-white">Activity Overview</h3>
-                        <select class="bg-dark-900 border border-slate-700 text-xs text-slate-300 rounded-lg px-2 py-1 outline-none">
+                        <h3 class="text-lg font-bold text-slate-900">Activity Overview</h3>
+                        <select class="bg-white border border-slate-200 text-xs text-slate-600 rounded-lg px-2 py-1 outline-none">
                             <option>Last 7 Days</option>
                             <option>Last 30 Days</option>
                         </select>
@@ -250,16 +241,15 @@
                         <canvas id="activityChart"></canvas>
                     </div>
                 </div>
-
                 <!-- Recent Activity List -->
                 <div class="glass-card rounded-2xl overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-white">Recent Registrations</h3>
-                        <button onclick="app.navigate('manage-clients')" class="text-xs text-brand-400 hover:text-brand-300 font-medium">View All</button>
+                    <div class="p-6 border-b border-slate-200 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-slate-900">Recent Registrations</h3>
+                        <button onclick="app.navigate('manage-clients')" class="text-xs text-brand-600 hover:text-brand-500 font-medium">View All</button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-400">
-                            <thead class="bg-black/20 text-xs uppercase font-semibold text-slate-300">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-100 text-xs uppercase font-semibold text-slate-500">
                                 <tr>
                                     <th class="px-6 py-4">Client ID</th>
                                     <th class="px-6 py-4">Name</th>
@@ -267,49 +257,47 @@
                                     <th class="px-6 py-4">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="recent-clients-list" class="divide-y divide-white/5">
+                            <tbody id="recent-clients-list" class="divide-y divide-slate-200">
                                 <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
-
             <!-- VIEW: ADD CLIENT -->
             <section id="view-add-client" class="view-section hidden max-w-3xl mx-auto animate-fade-in">
                 <div class="glass-card rounded-2xl p-8 border-t-4 border-brand-500">
                     <div class="flex items-center gap-4 mb-8">
-                        <div class="w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400">
+                        <div class="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
                             <i class="fa-solid fa-user-plus text-xl"></i>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-white">Onboard New Client</h3>
-                            <p class="text-slate-400 text-sm">Create a new profile in the enterprise registry.</p>
+                            <h3 class="text-2xl font-bold text-slate-900">Onboard New Client</h3>
+                            <p class="text-slate-500 text-sm">Create a new profile in the enterprise registry.</p>
                         </div>
                     </div>
-
                     <form id="add-client-form" onsubmit="app.handleAddClient(event)" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase">Full Name</label>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Full Name</label>
                                 <input type="text" id="newClientName" required class="w-full p-4 rounded-xl input-field" placeholder="e.g. John Doe">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase">Phone Number</label>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Phone Number</label>
                                 <input type="tel" id="newClientPhone" required class="w-full p-4 rounded-xl input-field" placeholder="+1 (555) 000-0000">
                             </div>
                             <div class="space-y-2 md:col-span-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase">Email Address</label>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Email Address</label>
                                 <input type="email" id="newClientEmail" required class="w-full p-4 rounded-xl input-field" placeholder="john@example.com">
                             </div>
                         </div>
-                        
-                        <div class="pt-4 flex items-center justify-between border-t border-white/5">
+                       
+                        <div class="pt-4 flex items-center justify-between border-t border-slate-200">
                             <div class="text-xs text-slate-500 font-mono">
-                                ID PREVIEW: <span id="preview-client-id" class="text-brand-400">---</span>
+                                ID PREVIEW: <span id="preview-client-id" class="text-brand-600">---</span>
                             </div>
                             <div class="flex gap-3">
-                                <button type="button" onclick="app.navigate('dashboard')" class="px-6 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white transition-colors">Cancel</button>
+                                <button type="button" onclick="app.navigate('dashboard')" class="px-6 py-3 rounded-xl text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Cancel</button>
                                 <button type="submit" class="px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-lg shadow-brand-500/25 transition-all transform hover:scale-105 flex items-center gap-2">
                                     <i class="fa-solid fa-cloud-arrow-up"></i> Register Client
                                 </button>
@@ -318,18 +306,17 @@
                     </form>
                 </div>
             </section>
-
             <!-- VIEW: MANAGE CLIENTS -->
             <section id="view-manage-clients" class="view-section hidden animate-fade-in">
                 <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-[calc(100vh-200px)]">
                     <!-- Toolbar -->
-                    <div class="p-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 bg-black/20">
+                    <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
                         <div class="relative w-full md:w-96">
-                            <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-500"></i>
+                            <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
                             <input type="text" id="client-search" onkeyup="app.filterClients()" placeholder="Search by ID, Name, or Email..." class="w-full pl-10 pr-4 py-3 rounded-xl input-field text-sm">
                         </div>
                         <div class="flex gap-3">
-                            <button onclick="app.loadSampleData()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-colors">
+                            <button onclick="app.loadSampleData()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition-colors">
                                 <i class="fa-solid fa-database mr-2"></i>Load Sample Data
                             </button>
                             <button onclick="app.navigate('add-client')" class="px-4 py-2 rounded-lg text-xs font-medium bg-brand-600 text-white hover:bg-brand-500 transition-colors shadow-lg shadow-brand-500/20">
@@ -337,24 +324,23 @@
                             </button>
                         </div>
                     </div>
-
                     <!-- Table -->
                     <div class="flex-1 overflow-auto">
                         <table class="w-full text-left border-collapse">
-                            <thead class="bg-slate-900/50 text-slate-400 text-xs uppercase font-bold sticky top-0 backdrop-blur-md z-10">
+                            <thead class="bg-slate-100 text-slate-500 text-xs uppercase font-bold sticky top-0 backdrop-blur-md z-10">
                                 <tr>
-                                    <th class="p-4 border-b border-white/5">Client ID</th>
-                                    <th class="p-4 border-b border-white/5">Full Name</th>
-                                    <th class="p-4 border-b border-white/5">Contact</th>
-                                    <th class="p-4 border-b border-white/5">Date Added</th>
-                                    <th class="p-4 border-b border-white/5 text-right">Actions</th>
+                                    <th class="p-4 border-b border-slate-200">Client ID</th>
+                                    <th class="p-4 border-b border-slate-200">Full Name</th>
+                                    <th class="p-4 border-b border-slate-200">Contact</th>
+                                    <th class="p-4 border-b border-slate-200">Date Added</th>
+                                    <th class="p-4 border-b border-slate-200 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="client-table-body" class="text-sm text-slate-300 divide-y divide-white/5">
+                            <tbody id="client-table-body" class="text-sm text-slate-700 divide-y divide-slate-200">
                                 <!-- Rows generated by JS -->
                             </tbody>
                         </table>
-                        
+                       
                         <!-- Empty State -->
                         <div id="empty-state" class="hidden h-full flex flex-col items-center justify-center text-slate-500">
                             <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -363,49 +349,45 @@
                     </div>
                 </div>
             </section>
-
             <!-- VIEW: SERVICE FORM -->
             <section id="view-service-form" class="view-section hidden animate-fade-in">
-                
+               
                 <!-- Report Generator UI -->
                 <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
+                   
                     <!-- Left: Controls -->
                     <div class="lg:col-span-1 space-y-6 no-print">
                         <div class="glass-card p-6 rounded-2xl">
-                            <h3 class="text-lg font-bold text-white mb-4">Report Configuration</h3>
-                            
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">Report Configuration</h3>
+                           
                             <div class="space-y-4">
                                 <div>
-                                    <label class="text-xs font-bold text-slate-400 uppercase mb-2 block">Select Client</label>
+                                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Select Client</label>
                                     <select id="report-client-select" onchange="app.loadClientToForm(this.value)" class="w-full p-3 rounded-xl input-field text-sm">
                                         <option value="">-- Select Client --</option>
                                     </select>
                                 </div>
-
                                 <div>
-                                    <label class="text-xs font-bold text-slate-400 uppercase mb-2 block">Report Type</label>
+                                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Report Type</label>
                                     <div class="grid grid-cols-2 gap-2">
                                         <button class="p-2 rounded-lg bg-brand-600 text-white text-xs font-medium border border-brand-500">Hardware</button>
-                                        <button class="p-2 rounded-lg bg-slate-800 text-slate-400 text-xs font-medium border border-slate-700 hover:bg-slate-700">Software</button>
+                                        <button class="p-2 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200 hover:bg-slate-200">Software</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="glass-card p-6 rounded-2xl">
-                            <h3 class="text-lg font-bold text-white mb-4">Actions</h3>
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">Actions</h3>
                             <div class="space-y-3">
                                 <button onclick="app.saveReport()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-save"></i> Save to Database
                                 </button>
-                                <button onclick="app.downloadPDF()" class="w-full py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold transition-all flex items-center justify-center gap-2">
+                                <button onclick="app.downloadPDF()" class="w-full py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-file-pdf"></i> Export PDF
                                 </button>
                             </div>
                         </div>
                     </div>
-
                     <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
                         <div id="report-paper" class="bg-white text-slate-900 p-8 md:p-12 rounded-xl shadow-2xl min-h-[800px] relative overflow-hidden">
@@ -413,7 +395,6 @@
                             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
                                 <i class="fa-solid fa-microchip text-[300px]"></i>
                             </div>
-
                             <!-- Report Header -->
                             <div class="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
                                 <div>
@@ -433,7 +414,6 @@
                                     <p id="display-date" class="text-xs text-slate-500 mt-1">---</p>
                                 </div>
                             </div>
-
                             <!-- Client Info Grid -->
                             <div class="grid grid-cols-2 gap-8 mb-8">
                                 <div>
@@ -453,18 +433,15 @@
                                     <p id="display-client-phone" class="text-slate-600">---</p>
                                 </div>
                             </div>
-
                             <!-- Technical Details -->
                             <div class="mb-8">
                                 <h4 class="text-sm font-bold text-slate-900 uppercase border-b border-slate-200 pb-2 mb-4">Technical Diagnosis</h4>
                                 <textarea id="input-diagnosis" class="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none resize-none" placeholder="Enter detailed technical findings here..."></textarea>
                             </div>
-
                             <div class="mb-8">
                                 <h4 class="text-sm font-bold text-slate-900 uppercase border-b border-slate-200 pb-2 mb-4">Resolution & Recommendations</h4>
                                 <textarea id="input-resolution" class="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none resize-none" placeholder="Enter steps taken and recommendations..."></textarea>
                             </div>
-
                             <!-- Footer -->
                             <div class="mt-auto pt-8 border-t border-slate-200 flex justify-between items-end">
                                 <div>
@@ -481,25 +458,23 @@
                     </div>
                 </div>
             </section>
-
         </div>
     </main>
-
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
-        <div class="bg-slate-800 border border-slate-700 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
-            <i id="toast-icon" class="fa-solid fa-check-circle text-emerald-400 text-xl"></i>
+        <div class="bg-white border border-slate-200 text-slate-900 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
+            <i id="toast-icon" class="fa-solid fa-check-circle text-emerald-500 text-xl"></i>
             <div>
                 <h4 id="toast-title" class="font-bold text-sm">Success</h4>
-                <p id="toast-msg" class="text-xs text-slate-400">Operation completed.</p>
+                <p id="toast-msg" class="text-xs text-slate-500">Operation completed.</p>
             </div>
         </div>
     </div>
-
     <script>
         /**
          * Rare Grade Tech - Application Logic
          * Handles State, Navigation, and Data Rendering
+         * FULLY FUNCTIONAL WITH FIREBASE BACKEND
          */
         class RareGradeApp {
             constructor() {
@@ -507,25 +482,24 @@
                 this.reports = [];
                 this.currentView = 'dashboard';
                 this.chartInstance = null;
-                
+                this.db = null;
+               
                 // Initialize
                 this.init();
             }
-
             init() {
-                // Load data from memory (simulating DB)
+                this.initFirebase();
                 this.loadData();
-                
+               
                 // Setup UI
                 this.updateDate();
                 this.renderClientDropdown();
                 this.renderTables();
                 this.initChart();
                 this.generateReportID();
-                
+               
                 // Initial Navigation
                 this.navigate('dashboard');
-
                 // Event Listeners for ID generation
                 document.getElementById('newClientName')?.addEventListener('input', (e) => {
                     const name = e.target.value;
@@ -533,32 +507,36 @@
                     document.getElementById('preview-client-id').innerText = id;
                 });
             }
-
+            initFirebase() {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCMznVwTmqCPpXQIWq87dylW8j9wbJEPek",
+                    authDomain: "it-report-system.firebaseapp.com",
+                    projectId: "it-report-system",
+                    storageBucket: "it-report-system.firebasestorage.app",
+                    messagingSenderId: "1069743986775",
+                    appId: "1:1069743986775:web:197c2b27cc552ea1b5eb12",
+                    measurementId: "G-82S3CF06YF"
+                };
+                firebase.initializeApp(firebaseConfig);
+                this.db = firebase.firestore();
+            }
             // --- Navigation ---
             navigate(viewId) {
-                // Hide all views
                 document.querySelectorAll('.view-section').forEach(el => {
                     el.classList.add('hidden');
                     el.classList.remove('animate-fade-in');
                 });
-                
-                // Show target view
+               
                 const target = document.getElementById(`view-${viewId}`);
                 if(target) {
                     target.classList.remove('hidden');
-                    // Trigger reflow for animation
-                    void target.offsetWidth; 
+                    void target.offsetWidth;
                     target.classList.add('animate-fade-in');
                 }
-
-                // Update Sidebar Active State
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('bg-white/10', 'text-white', 'border-r-2', 'border-brand-500'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
-                if(activeBtn) {
-                    activeBtn.classList.add('bg-white/10', 'text-white', 'border-r-2', 'border-brand-500');
-                }
-
-                // Update Header Title
+                if(activeBtn) activeBtn.classList.add('active');
+               
                 const titles = {
                     'dashboard': 'System Dashboard',
                     'add-client': 'Client Onboarding',
@@ -566,136 +544,109 @@
                     'service-form': 'Service Report Generator'
                 };
                 document.getElementById('page-title').innerText = titles[viewId] || 'Dashboard';
-                
+               
                 this.currentView = viewId;
-
-                // Refresh data specific to view
                 if(viewId === 'manage-clients') this.renderTables();
                 if(viewId === 'service-form') this.renderClientDropdown();
             }
-
             // --- Data Management ---
             loadData() {
-                // In a real app, this would fetch from Firebase.
-                // Here we check local storage or use defaults.
-                const storedClients = localStorage.getItem('rgt_clients');
-                const storedReports = localStorage.getItem('rgt_reports');
-                
-                if (storedClients) this.clients = JSON.parse(storedClients);
-                if (storedReports) this.reports = JSON.parse(storedReports);
-                
-                this.updateStats();
+                if (!this.db) return;
+                // Load Clients
+                this.db.collection("clients").get().then((snapshot) => {
+                    this.clients = [];
+                    snapshot.forEach((doc) => this.clients.push(doc.data()));
+                    this.updateStats();
+                    this.renderTables();
+                    this.renderClientDropdown();
+                }).catch(err => console.error("Clients load error:", err));
+               
+                // Load Reports
+                this.db.collection("reports").get().then((snapshot) => {
+                    this.reports = [];
+                    snapshot.forEach((doc) => this.reports.push(doc.data()));
+                    this.updateStats();
+                }).catch(err => console.error("Reports load error:", err));
             }
-
-            saveData() {
-                localStorage.setItem('rgt_clients', JSON.stringify(this.clients));
-                localStorage.setItem('rgt_reports', JSON.stringify(this.reports));
-                this.updateStats();
-            }
-
-            loadSampleData() {
-                const samples = [
-                    { id: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString() },
-                    { id: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString() },
-                    { id: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString() }
-                ];
-                
-                // Avoid duplicates
-                samples.forEach(s => {
-                    if(!this.clients.find(c => c.id === s.id)) this.clients.push(s);
-                });
-                
-                this.saveData();
-                this.renderTables();
-                this.showToast('Sample Data Loaded', 'Database populated with test entries.');
-            }
-
             // --- Core Features ---
             handleAddClient(e) {
                 e.preventDefault();
-                const name = document.getElementById('newClientName').value;
-                const phone = document.getElementById('newClientPhone').value;
-                const email = document.getElementById('newClientEmail').value;
+                const name = document.getElementById('newClientName').value.trim();
+                const phone = document.getElementById('newClientPhone').value.trim();
+                const email = document.getElementById('newClientEmail').value.trim();
                 const id = document.getElementById('preview-client-id').innerText;
-
-                if(!name || !phone) return;
-
+                if(!name || !phone || id === '---') return;
+               
                 const newClient = {
                     id: id,
                     name: name,
                     phone: phone,
-                    email: email,
+                    email: email || '',
                     date: new Date().toLocaleDateString()
                 };
-
-                this.clients.unshift(newClient); // Add to top
-                this.saveData();
-                
-                // Reset Form
-                e.target.reset();
-                document.getElementById('preview-client-id').innerText = '---';
-                
-                this.showToast('Client Registered', `${name} has been added to the database.`);
-                setTimeout(() => this.navigate('manage-clients'), 1000);
+               
+                this.clients.unshift(newClient);
+                this.db.collection("clients").doc(id).set(newClient)
+                    .then(() => {
+                        this.saveData();
+                        e.target.reset();
+                        document.getElementById('preview-client-id').innerText = '---';
+                        this.showToast('Client Registered', `${name} saved to Firebase.`);
+                        setTimeout(() => this.navigate('manage-clients'), 800);
+                    })
+                    .catch(err => console.error(err));
             }
-
             renderTables() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-                
+               
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
-
                 if(this.clients.length === 0) {
                     document.getElementById('empty-state').classList.remove('hidden');
                 } else {
                     document.getElementById('empty-state').classList.add('hidden');
                 }
-
-                // Main Table
+               
                 this.clients.forEach(client => {
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-white/5 transition-colors border-b border-white/5 last:border-0';
+                    tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0';
                     tr.innerHTML = `
-                        <td class="p-4 font-mono text-brand-400 font-medium">${client.id}</td>
-                        <td class="p-4 font-medium text-white">${client.name}</td>
+                        <td class="p-4 font-mono text-brand-600 font-medium">${client.id}</td>
+                        <td class="p-4 font-medium text-slate-900">${client.name}</td>
                         <td class="p-4">
-                            <div class="text-xs text-slate-300">${client.phone}</div>
+                            <div class="text-xs text-slate-600">${client.phone}</div>
                             <div class="text-[10px] text-slate-500">${client.email}</div>
                         </td>
-                        <td class="p-4 text-slate-400 text-xs">${client.date}</td>
+                        <td class="p-4 text-slate-500 text-xs">${client.date}</td>
                         <td class="p-4 text-right">
-                            <button onclick="app.prepReport('${client.id}')" class="text-xs bg-brand-500/10 text-brand-400 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                            <button onclick="app.prepReport('${client.id}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
                                 Create Report
                             </button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
-
-                // Recent List (Dashboard)
+               
                 this.clients.slice(0, 5).forEach(client => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="px-6 py-4 font-mono text-xs text-brand-400">${client.id}</td>
-                        <td class="px-6 py-4 font-medium text-slate-200">${client.name}</td>
+                        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.id}</td>
+                        <td class="px-6 py-4 font-medium text-slate-700">${client.name}</td>
                         <td class="px-6 py-4 text-xs">${client.date}</td>
-                        <td class="px-6 py-4"><span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-500/20">Active</span></td>
+                        <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span></td>
                     `;
                     recentList.appendChild(tr);
                 });
             }
-
             filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase();
                 const rows = document.querySelectorAll('#client-table-body tr');
-                
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
                     row.style.display = text.includes(term) ? '' : 'none';
                 });
             }
-
             // --- Reporting System ---
             renderClientDropdown() {
                 const select = document.getElementById('report-client-select');
@@ -707,7 +658,6 @@
                     select.appendChild(opt);
                 });
             }
-
             loadClientToForm(clientId) {
                 const client = this.clients.find(c => c.id === clientId);
                 if(client) {
@@ -717,13 +667,11 @@
                     document.getElementById('display-client-phone').innerText = client.phone;
                 }
             }
-
             prepReport(clientId) {
                 this.navigate('service-form');
                 document.getElementById('report-client-select').value = clientId;
                 this.loadClientToForm(clientId);
             }
-
             generateReportID() {
                 const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
                 const rand = Math.floor(1000 + Math.random() * 9000);
@@ -731,16 +679,14 @@
                 document.getElementById('display-report-id').innerText = id;
                 document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             }
-
             saveReport() {
                 const reportId = document.getElementById('display-report-id').innerText;
                 const clientId = document.getElementById('display-client-id').innerText;
-                
+               
                 if(clientId === '---') {
                     this.showToast('Error', 'Please select a client first.', 'error');
                     return;
                 }
-
                 const report = {
                     id: reportId,
                     clientId: clientId,
@@ -748,13 +694,14 @@
                     diagnosis: document.getElementById('input-diagnosis').value,
                     resolution: document.getElementById('input-resolution').value
                 };
-
                 this.reports.push(report);
-                this.saveData();
-                this.showToast('Report Saved', `Report ${reportId} synced to database.`);
-                this.generateReportID(); // Reset for next
+                this.db.collection("reports").doc(reportId).set(report)
+                    .then(() => {
+                        this.showToast('Report Saved', `Report ${reportId} saved to Firebase.`);
+                        this.generateReportID();
+                    })
+                    .catch(err => console.error(err));
             }
-
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 const opt = {
@@ -764,72 +711,53 @@
                     html2canvas: { scale: 2, useCORS: true },
                     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
                 };
-                
-                // Temporarily remove shadow for cleaner PDF
                 element.classList.remove('shadow-2xl');
                 html2pdf().set(opt).from(element).save().then(() => {
                     element.classList.add('shadow-2xl');
                 });
             }
-
             // --- Utilities ---
             updateStats() {
-                // Animate numbers
-                this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText), this.clients.length, 1000);
-                this.animateValue("stat-reports", parseInt(document.getElementById("stat-reports").innerText), this.reports.length, 1000);
-                
-                if(this.chartInstance) {
-                    this.updateChart();
-                }
+                this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText) || 0, this.clients.length, 800);
+                this.animateValue("stat-reports", parseInt(document.getElementById("stat-reports").innerText) || 0, this.reports.length, 800);
+                if(this.chartInstance) this.updateChart();
             }
-
             animateValue(id, start, end, duration) {
                 if (start === end) return;
                 const range = end - start;
                 let current = start;
                 const increment = end > start ? 1 : -1;
-                const stepTime = Math.abs(Math.floor(duration / range));
+                const stepTime = Math.max(Math.floor(duration / range), 30);
                 const obj = document.getElementById(id);
-                const timer = setInterval(function() {
+                const timer = setInterval(() => {
                     current += increment;
                     obj.innerHTML = current;
-                    if (current == end) {
+                    if (current >= end) {
+                        obj.innerHTML = end;
                         clearInterval(timer);
                     }
-                }, Math.max(stepTime, 50)); // Min 50ms
+                }, stepTime);
             }
-
             updateDate() {
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', options);
             }
-
             showToast(title, message, type = 'success') {
                 const toast = document.getElementById('toast');
                 document.getElementById('toast-title').innerText = title;
                 document.getElementById('toast-msg').innerText = message;
-                
                 const icon = document.getElementById('toast-icon');
-                if(type === 'error') {
-                    icon.className = 'fa-solid fa-circle-exclamation text-red-400 text-xl';
-                } else {
-                    icon.className = 'fa-solid fa-check-circle text-emerald-400 text-xl';
-                }
-
+                icon.className = type === 'error' 
+                    ? 'fa-solid fa-circle-exclamation text-red-500 text-xl' 
+                    : 'fa-solid fa-check-circle text-emerald-500 text-xl';
                 toast.classList.remove('translate-y-20', 'opacity-0');
-                setTimeout(() => {
-                    toast.classList.add('translate-y-20', 'opacity-0');
-                }, 3000);
+                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
             }
-
             initChart() {
                 const ctx = document.getElementById('activityChart').getContext('2d');
-                
-                // Gradient
                 const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(14, 165, 233, 0.5)');
+                gradient.addColorStop(0, 'rgba(14, 165, 233, 0.4)');
                 gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
-
                 this.chartInstance = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -839,7 +767,7 @@
                             data: [12, 19, 15, 25, 22, 30, 28],
                             borderColor: '#0ea5e9',
                             backgroundColor: gradient,
-                            borderWidth: 2,
+                            borderWidth: 3,
                             pointBackgroundColor: '#fff',
                             fill: true,
                             tension: 0.4
@@ -848,31 +776,36 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
+                        plugins: { legend: { display: false } },
                         scales: {
-                            y: {
-                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                                ticks: { color: '#64748b' }
-                            },
-                            x: {
-                                grid: { display: false },
-                                ticks: { color: '#64748b' }
-                            }
+                            y: { grid: { color: '#e2e8f0' }, ticks: { color: '#64748b' } },
+                            x: { grid: { display: false }, ticks: { color: '#64748b' } }
                         }
                     }
                 });
             }
-
             updateChart() {
-                // Simulate data update based on client count
                 const newData = Array.from({length: 7}, () => Math.floor(Math.random() * 50));
                 this.chartInstance.data.datasets[0].data = newData;
                 this.chartInstance.update();
             }
+            loadSampleData() {
+                const samples = [
+                    { id: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString() },
+                    { id: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString() },
+                    { id: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString() }
+                ];
+                samples.forEach(s => {
+                    if(!this.clients.find(c => c.id === s.id)) {
+                        this.clients.push(s);
+                        this.db.collection("clients").doc(s.id).set(s);
+                    }
+                });
+                this.showToast('Sample Data Loaded', 'Test clients saved to Firebase.');
+                this.renderTables();
+                this.renderClientDropdown();
+            }
         }
-
         // Initialize App
         const app = new RareGradeApp();
     </script>
