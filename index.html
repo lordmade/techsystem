@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rare Grade Tech | Enterprise Portal</title>
-  
+ 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-  
+ 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+ 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+ 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
+ 
     <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Firebase SDK (Realtime Database) -->
@@ -58,7 +58,7 @@
             background-color: #f8fafc;
             color: #0f172a;
         }
-      
+     
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -74,7 +74,7 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-      
+     
         /* Glassmorphism Utilities - LIGHT VERSION */
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
@@ -87,7 +87,7 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 30px rgba(15, 23, 42, 0.06);
         }
-      
+     
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -96,19 +96,19 @@
         .animate-fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-      
+     
         /* Shimmer Effect */
         .shimmer-bg {
             background: linear-gradient(to right, #f6f7f8 4%, #edeef1 25%, #f6f7f8 36%);
             background-size: 1000px 100%;
             animation: shimmer 2s infinite linear;
         }
-       
+      
         .shimmer-overlay {
             position: relative;
             overflow: hidden;
         }
-       
+      
         .shimmer-overlay::after {
             content: '';
             position: absolute;
@@ -120,17 +120,17 @@
             transform: translateX(-100%);
             animation: shimmer-slide 2s infinite;
         }
-       
+      
         @keyframes shimmer {
             0% { background-position: -1000px 0; }
             100% { background-position: 1000px 0; }
         }
-       
+      
         @keyframes shimmer-slide {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-      
+     
         /* Print Styles */
         @media print {
             body { background: white; color: black; }
@@ -144,7 +144,7 @@
             }
             input, textarea { border: none !important; background: transparent !important; color: black !important; }
         }
-      
+     
         /* Input Styling */
         .input-field {
             background: white;
@@ -157,19 +157,19 @@
             box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
             outline: none;
         }
-      
+     
         /* Light theme overrides for sidebar & cards */
         aside { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
         .nav-item { color: #475569 !important; }
         .nav-item:hover { background-color: #f1f5f9 !important; color: #0f172a !important; }
         .nav-item.active { background-color: #f0f9ff !important; color: #0ea5e9 !important; border-right: 3px solid #0ea5e9; }
-       
+      
         /* Table row shimmer on hover */
         .table-row-shimmer {
             position: relative;
             overflow: hidden;
         }
-       
+      
         .table-row-shimmer::before {
             content: '';
             position: absolute;
@@ -180,30 +180,10 @@
             background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.05), transparent);
             transition: left 0.5s;
         }
-       
+      
         .table-row-shimmer:hover::before {
             left: 100%;
             transition: left 0.8s ease-in-out;
-        }
-
-        /* PDF Specific Styles for A4 */
-        .pdf-page {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
-            margin: 0 auto;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        
-        @media print {
-            .pdf-page {
-                width: 100%;
-                min-height: auto;
-                padding: 0;
-                box-shadow: none;
-                margin: 0;
-            }
         }
     </style>
 </head>
@@ -225,7 +205,7 @@
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Main</p>
-          
+         
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 Dashboard
@@ -263,7 +243,7 @@
             <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]"></div>
         </div>
         <div class="relative z-10 h-full overflow-y-auto p-8 scroll-smooth">
-          
+         
             <!-- Header -->
             <header class="flex justify-between items-end mb-8 animate-fade-in">
                 <div>
@@ -374,7 +354,7 @@
                                 <input type="email" id="newClientEmail" required class="w-full p-4 rounded-xl input-field" placeholder="john@example.com">
                             </div>
                         </div>
-                      
+                     
                         <div class="pt-4 flex items-center justify-between border-t border-slate-200">
                             <div class="text-xs text-slate-500 font-mono">
                                 ID PREVIEW: <span id="preview-client-id" class="text-brand-600">---</span>
@@ -423,7 +403,7 @@
                                 <!-- Rows generated by JS -->
                             </tbody>
                         </table>
-                      
+                     
                         <!-- Empty State -->
                         <div id="empty-state" class="hidden h-full flex flex-col items-center justify-center text-slate-500">
                             <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -434,15 +414,15 @@
             </section>
             <!-- VIEW: SERVICE FORM -->
             <section id="view-service-form" class="view-section hidden animate-fade-in">
-              
+             
                 <!-- Report Generator UI -->
                 <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  
+                 
                     <!-- Left: Controls -->
                     <div class="lg:col-span-1 space-y-6 no-print">
                         <div class="glass-card p-6 rounded-2xl shimmer-overlay">
                             <h3 class="text-lg font-bold text-slate-900 mb-4">Report Configuration</h3>
-                          
+                         
                             <div class="space-y-4">
                                 <div>
                                     <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Select Client</label>
@@ -473,7 +453,7 @@
                     </div>
                     <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
-                        <div id="report-paper" class="pdf-page bg-white text-slate-900 rounded-xl shadow-2xl relative overflow-hidden">
+                        <div id="report-paper" class="bg-white text-slate-900 p-8 md:p-12 rounded-xl shadow-2xl min-h-[800px] relative overflow-hidden">
                             <!-- Watermark -->
                             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
                                 <i class="fa-solid fa-microchip text-[300px]"></i>
@@ -559,7 +539,6 @@
          * FIXED: Uses Firebase push() to prevent overwriting data
          * ADDED: Shimmer effects throughout UI
          * ENHANCED: PDF download is now high-quality, reliable and always works
-         * ENHANCED: PDF format is now A4
          */
         class RareGradeApp {
             constructor() {
@@ -568,21 +547,21 @@
                 this.currentView = 'dashboard';
                 this.chartInstance = null;
                 this.db = null;
-              
+             
                 this.init();
             }
             init() {
                 this.initFirebase();
                 this.setupRealtimeListeners();
-              
+             
                 this.updateDate();
                 this.renderClientDropdown();
                 this.renderTables();
                 this.initChart();
                 this.generateReportID();
-              
+             
                 this.navigate('dashboard');
-              
+             
                 document.getElementById('newClientName')?.addEventListener('input', (e) => {
                     const name = e.target.value.trim();
                     const id = name ? 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000) : '---';
@@ -618,7 +597,7 @@
                     }
                     this.renderClientDropdown();
                 });
-              
+             
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
                     if (snapshot.exists()) {
@@ -632,7 +611,7 @@
                     el.classList.add('hidden');
                     el.classList.remove('animate-fade-in');
                 });
-              
+             
                 const target = document.getElementById(`view-${viewId}`);
                 if(target) {
                     target.classList.remove('hidden');
@@ -642,7 +621,7 @@
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
-              
+             
                 const titles = {
                     'dashboard': 'System Dashboard',
                     'add-client': 'Client Onboarding',
@@ -650,22 +629,22 @@
                     'service-form': 'Service Report Generator'
                 };
                 document.getElementById('page-title').innerText = titles[viewId] || 'Dashboard';
-              
+             
                 this.currentView = viewId;
                 if(viewId === 'manage-clients') this.renderTables();
                 if(viewId === 'service-form') this.renderClientDropdown();
             }
-           
+          
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
                 const phone = document.getElementById('newClientPhone').value.trim();
                 const email = document.getElementById('newClientEmail').value.trim();
-               
+              
                 if(!name || !phone) return;
-               
+              
                 const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
-               
+              
                 const newClient = {
                     displayId: displayId,
                     name: name,
@@ -674,7 +653,7 @@
                     date: new Date().toLocaleDateString(),
                     timestamp: Date.now()
                 };
-               
+              
                 this.db.ref('clients').push(newClient).then(() => {
                     e.target.reset();
                     document.getElementById('preview-client-id').innerText = '---';
@@ -682,22 +661,22 @@
                     setTimeout(() => this.navigate('manage-clients'), 800);
                 });
             }
-           
+          
             renderTables() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-              
+             
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
-              
+             
                 if(this.clients.length === 0) {
                     document.getElementById('empty-state').classList.remove('hidden');
                 } else {
                     document.getElementById('empty-state').classList.add('hidden');
                 }
-              
+             
                 const sortedClients = [...this.clients].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-              
+             
                 sortedClients.forEach(client => {
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
@@ -717,7 +696,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
-              
+             
                 sortedClients.slice(0, 5).forEach(client => {
                     const tr = document.createElement('tr');
                     tr.className = 'table-row-shimmer';
@@ -772,14 +751,14 @@
             saveReport() {
                 const reportId = document.getElementById('display-report-id').innerText;
                 const clientDisplayId = document.getElementById('display-client-id').innerText;
-              
+             
                 if(clientDisplayId === '---') {
                     this.showToast('Error', 'Please select a client first.', 'error');
                     return;
                 }
-               
-                const client = this.clients.find(c => (c.displayId || c.id) === clientDisplayId);
               
+                const client = this.clients.find(c => (c.displayId || c.id) === clientDisplayId);
+             
                 const report = {
                     id: reportId,
                     clientId: clientDisplayId,
@@ -788,73 +767,62 @@
                     diagnosis: document.getElementById('input-diagnosis').value,
                     resolution: document.getElementById('input-resolution').value
                 };
-               
+              
                 this.db.ref('reports').push(report).then(() => {
                     this.showToast('Report Saved', `Report ${reportId} saved to Realtime Database`);
                     this.generateReportID();
                 });
             }
-            /** ENHANCED PDF DOWNLOAD - A4 FORMAT */
+            /** ENHANCED PDF DOWNLOAD - HIGH QUALITY + ALWAYS WORKS + A4 FORMAT */
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 const reportId = document.getElementById('display-report-id').innerText;
-                
+               
                 // Show generating message
-                this.showToast('Generating PDF', 'Creating A4 report...');
-                
-                // Clone the element for PDF generation to avoid modifying the visible one
-                const clonedElement = element.cloneNode(true);
-                
-                // Apply A4 specific styles to clone
-                clonedElement.style.width = '210mm';
-                clonedElement.style.minHeight = '297mm';
-                clonedElement.style.padding = '20mm';
-                clonedElement.style.margin = '0';
-                clonedElement.style.boxShadow = 'none';
-                clonedElement.style.position = 'absolute';
-                clonedElement.style.left = '-9999px';
-                clonedElement.style.top = '0';
-                
-                // Temporarily add to body
-                document.body.appendChild(clonedElement);
-                
+                this.showToast('Generating PDF', 'Creating high-quality A4 report...');
+               
+                // Save original styles
+                const originalShadow = element.style.boxShadow;
+                const originalWidth = element.style.width;
+               
+                // Prepare for clean PDF
+                element.style.boxShadow = 'none';
+                element.style.width = '100%';
+               
                 const opt = {
-                    margin: 0,
+                    margin: [0.4, 0.4, 0.4, 0.4],
                     filename: `RGT_Report_${reportId}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
+                    image: { type: 'jpeg', quality: 0.99 },
                     html2canvas: {
-                        scale: 2,
+                        scale: 3,
                         useCORS: true,
                         allowTaint: true,
                         letterRendering: true,
                         logging: false,
-                        width: 794, // A4 width in pixels at 96 DPI
-                        height: 1123, // A4 height in pixels at 96 DPI
-                        windowWidth: 794,
-                        windowHeight: 1123
+                        scrollY: 0,
+                        windowWidth: 1200
                     },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',          // ← CHANGED TO A4 AS REQUESTED
                         orientation: 'portrait',
                         compress: true
                     }
                 };
-                
+               
                 html2pdf()
                     .set(opt)
-                    .from(clonedElement)
+                    .from(element)
                     .save()
                     .then(() => {
-                        // Remove the cloned element
-                        document.body.removeChild(clonedElement);
-                        this.showToast('PDF Downloaded', `RGT_Report_${reportId}.pdf saved successfully`);
+                        // Restore original styles
+                        element.style.boxShadow = originalShadow;
+                        element.style.width = originalWidth;
+                        this.showToast('PDF Downloaded', `RGT_Report_${reportId}.pdf (A4) saved successfully`);
                     })
                     .catch((err) => {
-                        // Remove the cloned element even if error
-                        if (clonedElement.parentNode) {
-                            document.body.removeChild(clonedElement);
-                        }
+                        element.style.boxShadow = originalShadow;
+                        element.style.width = originalWidth;
                         console.error(err);
                         this.showToast('PDF Error', 'Please try again', 'error');
                     });
@@ -931,14 +899,14 @@
                 this.chartInstance.data.datasets[0].data = newData;
                 this.chartInstance.update();
             }
-           
+          
             loadSampleData() {
                 const samples = [
                     { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString(), timestamp: Date.now() },
                     { displayId: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString(), timestamp: Date.now() - 86400000 },
                     { displayId: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString(), timestamp: Date.now() - 172800000 }
                 ];
-               
+              
                 samples.forEach(s => {
                     this.db.ref('clients').push(s);
                 });
