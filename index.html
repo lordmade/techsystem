@@ -3,223 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rare Grade Tech - Service Dashboard</title>
+    <title>Rare Grade Tech | Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; -webkit-tap-highlight-color: transparent; }
-        .report-card { background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-top: 8px solid #1e40af; }
-        input, textarea { font-size: 16px !important; } 
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; padding: 0; }
-            .report-card { box-shadow: none; border: 1px solid #ccc; width: 100%; }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .sidebar-link.active { background: #1e40af; color: white; border-right: 4px solid #60a5fa; }
+        @media print { .no-print { display: none !important; } }
     </style>
 </head>
-<body class="p-2 md:p-8">
+<body class="flex min-h-screen">
 
-    <div class="max-w-4xl mx-auto">
-        
-        <div class="mb-6 no-print">
-            <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </span>
-                <input type="text" id="searchInput" onkeyup="searchClients()" placeholder="Search previous clients by Name or Phone Number..." 
-                       class="w-full pl-10 pr-4 py-4 rounded-xl border-none shadow-md focus:ring-2 focus:ring-blue-500 outline-none text-lg">
-                <div id="searchResults" class="hidden absolute z-10 w-full bg-white mt-1 rounded-xl shadow-2xl border border-gray-100 overflow-hidden"></div>
-            </div>
+    <aside class="w-64 bg-slate-900 text-slate-300 flex-shrink-0 no-print">
+        <div class="p-6">
+            <h1 class="text-xl font-black text-white tracking-tighter italic">RARE GRADE TECH</h1>
+            <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Admin Systems v2.0</p>
         </div>
+        
+        <nav class="mt-4 px-4 space-y-2">
+            <button onclick="switchTab('dashboard')" class="sidebar-link w-full flex items-center p-3 rounded-lg transition active" id="btn-dashboard">
+                <i class="fas fa-chart-line w-6"></i> <span>Dashboard</span>
+            </button>
+            <button onclick="switchTab('add-client')" class="sidebar-link w-full flex items-center p-3 rounded-lg transition" id="btn-add-client">
+                <i class="fas fa-user-plus w-6"></i> <span>Add New Client</span>
+            </button>
+            <button onclick="switchTab('manage-clients')" class="sidebar-link w-full flex items-center p-3 rounded-lg transition" id="btn-manage-clients">
+                <i class="fas fa-users-cog w-6"></i> <span>Manage Clients</span>
+            </button>
+            <button onclick="switchTab('service-form')" class="sidebar-link w-full flex items-center p-3 rounded-lg transition" id="btn-service-form">
+                <i class="fas fa-file-invoice w-6"></i> <span>Service Reports</span>
+            </button>
+        </nav>
 
-        <div id="capture-area">
-            <form id="serviceForm" class="report-card rounded-lg p-4 md:p-10">
-                
-                <div class="flex flex-col md:flex-row justify-between items-start border-b pb-6 mb-6">
+        <div class="absolute bottom-0 w-64 p-6 border-t border-slate-800 text-xs italic">
+            Developed by Vynix Lingua
+        </div>
+    </aside>
+
+    <main class="flex-1 h-screen overflow-y-auto p-8">
+        
+        <section id="dashboard" class="tab-content active">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800">Operational Overview</h2>
+                <p class="text-slate-500">Real-time metrics for technical support and dev records.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-400 uppercase">Total Clients</p>
+                            <h3 class="text-4xl font-black text-slate-800" id="stat-total-clients">0</h3>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-xl text-blue-600"><i class="fas fa-users fa-2x"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-400 uppercase">Reports Issued</p>
+                            <h3 class="text-4xl font-black text-slate-800" id="stat-total-reports">0</h3>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-xl text-green-600"><i class="fas fa-file-alt fa-2x"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-400 uppercase">Pending Service</p>
+                            <h3 class="text-4xl font-black text-slate-800">12</h3>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-xl text-orange-600"><i class="fas fa-clock fa-2x"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Recent System Activity</h3>
+                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">LIVE</span>
+                </div>
+                <div class="p-6 italic text-slate-400 text-sm">
+                    Client "Ms Salphy Songo" service report updated 2 mins ago.
+                </div>
+            </div>
+        </section>
+
+        <section id="add-client" class="tab-content">
+            <div class="max-w-2xl bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-slate-800 mb-6">Client Registration</h2>
+                <div class="grid gap-4">
+                    <input type="text" id="newClientName" placeholder="Full Name" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="newClientPhone" placeholder="Contact Number" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="email" id="newClientEmail" placeholder="Email Address" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="saveNewClient()" class="bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition">Add Client to Database</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="manage-clients" class="tab-content">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-800">Client Directory</h2>
+                    <input type="text" onkeyup="searchTable(this)" placeholder="Filter by name..." class="border rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold">
+                        <tr>
+                            <th class="p-4">Name</th>
+                            <th class="p-4">Contact</th>
+                            <th class="p-4">Email</th>
+                            <th class="p-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="service-form" class="tab-content">
+            <div id="capture-area" class="bg-white p-10 rounded-xl shadow-lg border-t-8 border-blue-800 max-w-4xl mx-auto">
+                <div class="flex justify-between border-b pb-6 mb-6">
                     <div>
                         <h2 class="text-3xl font-black text-blue-900 tracking-tighter">RARE GRADE TECH</h2>
-                        <p class="text-blue-700 font-bold uppercase tracking-widest text-sm">Device Service Report</p>
+                        <p class="text-blue-700 font-bold uppercase tracking-widest text-xs">Device Service Report</p>
                     </div>
-                    <div class="text-left md:text-right mt-4 md:mt-0">
-                        <div class="text-[10px] text-gray-500 italic mb-1 uppercase font-bold">Unique Service ID:</div>
-                        <input type="text" id="reportID" class="text-blue-800 font-mono font-bold border-none bg-transparent outline-none text-lg" readonly>
-                    </div>
+                    <input type="text" id="reportID" class="text-right text-blue-800 font-mono font-bold border-none bg-transparent outline-none" readonly>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    <div class="col-span-1 md:col-span-2 bg-blue-50 p-2 font-bold text-blue-800 border-l-4 border-blue-800 mb-2 uppercase tracking-wide">Client Information</div>
-                    
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex flex-col">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Client Name:</label>
-                        <input type="text" id="clientName" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 font-semibold" value="Ms Salphy Songo">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Client Name</label>
+                        <input type="text" id="formClientName" class="border-b font-bold p-1 outline-none">
                     </div>
                     <div class="flex flex-col">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Contact Number:</label>
-                        <input type="text" id="contactNumber" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 font-semibold" value="076 543 1888">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Contact</label>
+                        <input type="text" id="formContact" class="border-b font-bold p-1 outline-none">
                     </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Email Address:</label>
-                        <input type="email" id="email" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 font-semibold" value="mmakhora@yahoo.com">
+                    <div class="flex flex-col md:col-span-2">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Diagnosis</label>
+                        <textarea id="diagnosis" rows="2" class="border-b p-1 outline-none resize-none"></textarea>
                     </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Device Model/Type:</label>
-                        <input type="text" id="model" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1">
-                    </div>
-                    <div class="flex flex-col col-span-1 md:col-span-2">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Serial Number/IMEI:</label>
-                        <input type="text" id="imei" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1">
-                    </div>
-                    <div class="flex flex-col col-span-1 md:col-span-2">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Issue reported by client:</label>
-                        <textarea id="issue" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
-                    </div>
-                    <div class="flex flex-col col-span-1 md:col-span-2">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Diagnosis:</label>
-                        <textarea id="diagnosis" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
-                    </div>
-                    <div class="flex flex-col col-span-1 md:col-span-2">
-                        <label class="text-xs font-bold text-gray-500 uppercase">Action Taken:</label>
-                        <textarea id="action" class="border-b border-gray-300 focus:border-blue-500 outline-none p-1 resize-none" rows="1"></textarea>
+                    <div class="flex flex-col md:col-span-2">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Action Taken</label>
+                        <textarea id="action" rows="2" class="border-b p-1 outline-none resize-none"></textarea>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div>
-                        <h3 class="font-bold text-gray-800 mb-2 border-b">Status After Service:</h3>
-                        <div class="flex flex-wrap gap-4 items-center mt-2">
-                            <label class="flex items-center space-x-2 py-1"><input type="checkbox" class="w-5 h-5"> <span>Functional</span></label>
-                            <label class="flex items-center space-x-2 py-1"><input type="checkbox" class="w-5 h-5"> <span>Non-Functional</span></label>
-                            <label class="flex items-center space-x-2 py-1"><span>Other:</span> <input type="text" class="border-b border-gray-300 w-24 outline-none"></label>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 mb-2 border-b">Condition Before Service:</h3>
-                        <div class="flex gap-4 mb-4">
-                            <label class="flex items-center space-x-2 font-bold"><input type="radio" name="cond" class="w-5 h-5"> <span>NEW</span></label>
-                            <label class="flex items-center space-x-2 font-bold"><input type="radio" name="cond" class="w-5 h-5"> <span>USED</span></label>
-                            <label class="flex items-center space-x-2 font-bold"><input type="radio" name="cond" class="w-5 h-5"> <span>DAMAGED</span></label>
-                        </div>
-                    </div>
+                <div class="mt-8 flex gap-4 no-print">
+                    <button onclick="downloadPDF()" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold text-sm">Download PDF</button>
+                    <button onclick="saveReport()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-bold text-sm">Finalize & Save</button>
                 </div>
+            </div>
+        </section>
 
-                <div class="bg-gray-50 p-4 rounded mb-8 border border-gray-200">
-                    <h3 class="font-bold text-gray-800 border-b mb-4">Technician Notes:</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm font-semibold">Name:</span>
-                            <input type="text" id="techName" class="border-b border-gray-300 flex-grow bg-transparent outline-none">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-3 mb-8 no-print">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <button type="button" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition flex items-center justify-center text-lg">
-                            📥 Download PDF
-                        </button>
-                        <button type="button" onclick="window.print()" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition flex items-center justify-center text-lg">
-                            🖨️ Print Report
-                        </button>
-                        <button type="button" onclick="submitForm()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition flex items-center justify-center text-lg">
-                            ✅ Save to DB
-                        </button>
-                    </div>
-                </div>
-
-                <div class="border-t-2 border-blue-800 pt-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div>
-                            <p class="text-[9px] text-gray-500 leading-tight mb-4 italic">By signing, the client confirms receipt of the device and services described.</p>
-                            <div class="flex flex-col mb-4">
-                                <label class="text-sm font-bold">Client Signature:</label>
-                                <div id="displaySignature" class="border-b border-black h-12 w-full italic text-blue-800 px-2 pt-4">Ms Salphy Songo</div>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <label class="text-sm font-bold">Date:</label>
-                                <input type="text" id="reportDate" class="border-b border-gray-300 outline-none" value="03.03.2026">
-                            </div>
-                        </div>
-                        <div class="bg-blue-900 text-white p-4 rounded text-xs space-y-1">
-                            <p class="font-bold border-b border-blue-700 mb-2 pb-1 uppercase tracking-tighter">Rare Grade Tech Contact</p>
-                            <p>📞 015 065 0979 | 061 527 0749</p>
-                            <p>✉️ info@raregradetech.co.za</p>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </main>
 
     <script>
-        // Mock Database
-        let reportDatabase = [
-            { id: 'RGT-20260303-1001', name: 'Ms Salphy Songo', phone: '076 543 1888', email: 'mmakhora@yahoo.com', model: 'SAMSUNG A54' }
-        ];
+        // Database State
+        let db = {
+            clients: [
+                { id: 1, name: 'Ms Salphy Songo', phone: '076 543 1888', email: 'mmakhora@yahoo.com' }
+            ],
+            reports: []
+        };
 
-        window.onload = function() { generateID(); };
+        window.onload = () => {
+            updateDashboard();
+            renderClientTable();
+            generateReportID();
+        };
 
-        function generateID() {
-            const date = new Date();
-            const datePart = date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
-            const randomPart = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('reportID').value = `RGT-${datePart}-${randomPart}`;
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById(`btn-${tabId}`).classList.add('active');
         }
 
-        function submitForm() {
-            const newEntry = {
+        function updateDashboard() {
+            document.getElementById('stat-total-clients').innerText = db.clients.length;
+            document.getElementById('stat-total-reports').innerText = db.reports.length;
+        }
+
+        function renderClientTable() {
+            const tbody = document.getElementById('clientTableBody');
+            tbody.innerHTML = db.clients.map(c => `
+                <tr class="border-b hover:bg-slate-50 transition">
+                    <td class="p-4 font-semibold text-slate-700">${c.name}</td>
+                    <td class="p-4 text-slate-500">${c.phone}</td>
+                    <td class="p-4 text-slate-500">${c.email}</td>
+                    <td class="p-4">
+                        <button onclick="prepForm('${c.name}', '${c.phone}')" class="text-blue-600 font-bold text-xs uppercase hover:underline">Create Report</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveNewClient() {
+            const name = document.getElementById('newClientName').value;
+            const phone = document.getElementById('newClientPhone').value;
+            const email = document.getElementById('newClientEmail').value;
+
+            if(!name || !phone) return alert("Name and Phone are required!");
+
+            db.clients.push({ id: Date.now(), name, phone, email });
+            alert("Client added successfully!");
+            
+            // Clear inputs
+            document.getElementById('newClientName').value = '';
+            document.getElementById('newClientPhone').value = '';
+            document.getElementById('newClientEmail').value = '';
+            
+            updateDashboard();
+            renderClientTable();
+            switchTab('manage-clients');
+        }
+
+        function prepForm(name, phone) {
+            document.getElementById('formClientName').value = name;
+            document.getElementById('formContact').value = phone;
+            switchTab('service-form');
+        }
+
+        function generateReportID() {
+            const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
+            document.getElementById('reportID').value = `RGT-${date}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+
+        function saveReport() {
+            const report = {
                 id: document.getElementById('reportID').value,
-                name: document.getElementById('clientName').value,
-                phone: document.getElementById('contactNumber').value,
-                email: document.getElementById('email').value,
-                model: document.getElementById('model').value
+                client: document.getElementById('formClientName').value,
+                date: new Date().toLocaleDateString()
             };
-            reportDatabase.push(newEntry);
-            alert("Report " + newEntry.id + " saved to session database!");
-            generateID(); // Prepare for next entry
-        }
-
-        function searchClients() {
-            const val = document.getElementById('searchInput').value.toLowerCase();
-            const resultsDiv = document.getElementById('searchResults');
-            
-            if (val.length < 2) { resultsDiv.classList.add('hidden'); return; }
-
-            const filtered = reportDatabase.filter(r => r.name.toLowerCase().includes(val) || r.phone.includes(val));
-            
-            if (filtered.length > 0) {
-                resultsDiv.innerHTML = filtered.map(r => `
-                    <div onclick="loadClient('${r.id}')" class="p-4 border-b hover:bg-blue-50 cursor-pointer transition">
-                        <div class="font-bold text-blue-900">${r.name}</div>
-                        <div class="text-xs text-gray-500">${r.phone} | ${r.id}</div>
-                    </div>
-                `).join('');
-                resultsDiv.classList.remove('hidden');
-            } else {
-                resultsDiv.classList.add('hidden');
-            }
-        }
-
-        function loadClient(id) {
-            const client = reportDatabase.find(r => r.id === id);
-            document.getElementById('clientName').value = client.name;
-            document.getElementById('contactNumber').value = client.phone;
-            document.getElementById('email').value = client.email;
-            document.getElementById('model').value = client.model;
-            document.getElementById('reportID').value = client.id;
-            document.getElementById('displaySignature').innerText = client.name;
-            document.getElementById('searchResults').classList.add('hidden');
-            document.getElementById('searchInput').value = "";
+            db.reports.push(report);
+            updateDashboard();
+            alert("Report saved to database!");
+            generateReportID();
+            switchTab('dashboard');
         }
 
         function downloadPDF() {
             const element = document.getElementById('capture-area');
             const opt = {
-                margin: 0.2, filename: `RGT_Report_${document.getElementById('reportID').value}.pdf`,
+                margin: 0.5,
+                filename: `RGT_Report_${document.getElementById('reportID').value}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
             html2pdf().set(opt).from(element).save();
+        }
+
+        function searchTable(input) {
+            const filter = input.value.toLowerCase();
+            const rows = document.querySelectorAll("#clientTableBody tr");
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
+            });
         }
     </script>
 </body>
