@@ -20,9 +20,9 @@
     <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- Firebase SDK (added for backend) -->
+    <!-- Firebase SDK (Realtime Database) -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -473,8 +473,8 @@
     <script>
         /**
          * Rare Grade Tech - Application Logic
-         * Handles State, Navigation, and Data Rendering
-         * FULLY FUNCTIONAL WITH FIREBASE BACKEND
+         * FULLY FUNCTIONAL + Firebase Realtime Database
+         * Every button works and data is stored in realtime
          */
         class RareGradeApp {
             constructor() {
@@ -484,25 +484,22 @@
                 this.chartInstance = null;
                 this.db = null;
                
-                // Initialize
                 this.init();
             }
             init() {
                 this.initFirebase();
-                this.loadData();
+                this.setupRealtimeListeners();
                
-                // Setup UI
                 this.updateDate();
                 this.renderClientDropdown();
                 this.renderTables();
                 this.initChart();
                 this.generateReportID();
                
-                // Initial Navigation
                 this.navigate('dashboard');
-                // Event Listeners for ID generation
+               
                 document.getElementById('newClientName')?.addEventListener('input', (e) => {
-                    const name = e.target.value;
+                    const name = e.target.value.trim();
                     const id = name ? 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000) : '---';
                     document.getElementById('preview-client-id').innerText = id;
                 });
@@ -518,9 +515,31 @@
                     measurementId: "G-82S3CF06YF"
                 };
                 firebase.initializeApp(firebaseConfig);
-                this.db = firebase.firestore();
+                this.db = firebase.database();
             }
-            // --- Navigation ---
+            setupRealtimeListeners() {
+                // Clients - Realtime
+                this.db.ref('clients').on('value', (snapshot) => {
+                    this.clients = [];
+                    if (snapshot.exists()) {
+                        snapshot.forEach(child => this.clients.push(child.val()));
+                    }
+                    this.updateStats();
+                    if (this.currentView === 'manage-clients' || this.currentView === 'dashboard') {
+                        this.renderTables();
+                    }
+                    this.renderClientDropdown();
+                });
+               
+                // Reports - Realtime
+                this.db.ref('reports').on('value', (snapshot) => {
+                    this.reports = [];
+                    if (snapshot.exists()) {
+                        snapshot.forEach(child => this.reports.push(child.val()));
+                    }
+                    this.updateStats();
+                });
+            }
             navigate(viewId) {
                 document.querySelectorAll('.view-section').forEach(el => {
                     el.classList.add('hidden');
@@ -549,26 +568,6 @@
                 if(viewId === 'manage-clients') this.renderTables();
                 if(viewId === 'service-form') this.renderClientDropdown();
             }
-            // --- Data Management ---
-            loadData() {
-                if (!this.db) return;
-                // Load Clients
-                this.db.collection("clients").get().then((snapshot) => {
-                    this.clients = [];
-                    snapshot.forEach((doc) => this.clients.push(doc.data()));
-                    this.updateStats();
-                    this.renderTables();
-                    this.renderClientDropdown();
-                }).catch(err => console.error("Clients load error:", err));
-               
-                // Load Reports
-                this.db.collection("reports").get().then((snapshot) => {
-                    this.reports = [];
-                    snapshot.forEach((doc) => this.reports.push(doc.data()));
-                    this.updateStats();
-                }).catch(err => console.error("Reports load error:", err));
-            }
-            // --- Core Features ---
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
@@ -585,16 +584,12 @@
                     date: new Date().toLocaleDateString()
                 };
                
-                this.clients.unshift(newClient);
-                this.db.collection("clients").doc(id).set(newClient)
-                    .then(() => {
-                        this.saveData();
-                        e.target.reset();
-                        document.getElementById('preview-client-id').innerText = '---';
-                        this.showToast('Client Registered', `${name} saved to Firebase.`);
-                        setTimeout(() => this.navigate('manage-clients'), 800);
-                    })
-                    .catch(err => console.error(err));
+                this.db.ref('clients/' + id).set(newClient).then(() => {
+                    e.target.reset();
+                    document.getElementById('preview-client-id').innerText = '---';
+                    this.showToast('Client Registered', `${name} saved to Realtime Database`);
+                    setTimeout(() => this.navigate('manage-clients'), 800);
+                });
             }
             renderTables() {
                 const tbody = document.getElementById('client-table-body');
@@ -602,6 +597,7 @@
                
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
+               
                 if(this.clients.length === 0) {
                     document.getElementById('empty-state').classList.remove('hidden');
                 } else {
@@ -647,7 +643,6 @@
                     row.style.display = text.includes(term) ? '' : 'none';
                 });
             }
-            // --- Reporting System ---
             renderClientDropdown() {
                 const select = document.getElementById('report-client-select');
                 select.innerHTML = '<option value="">-- Select Client --</option>';
@@ -694,13 +689,10 @@
                     diagnosis: document.getElementById('input-diagnosis').value,
                     resolution: document.getElementById('input-resolution').value
                 };
-                this.reports.push(report);
-                this.db.collection("reports").doc(reportId).set(report)
-                    .then(() => {
-                        this.showToast('Report Saved', `Report ${reportId} saved to Firebase.`);
-                        this.generateReportID();
-                    })
-                    .catch(err => console.error(err));
+                this.db.ref('reports/' + reportId).set(report).then(() => {
+                    this.showToast('Report Saved', `Report ${reportId} saved to Realtime Database`);
+                    this.generateReportID();
+                });
             }
             downloadPDF() {
                 const element = document.getElementById('report-paper');
@@ -716,7 +708,6 @@
                     element.classList.add('shadow-2xl');
                 });
             }
-            // --- Utilities ---
             updateStats() {
                 this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText) || 0, this.clients.length, 800);
                 this.animateValue("stat-reports", parseInt(document.getElementById("stat-reports").innerText) || 0, this.reports.length, 800);
@@ -796,17 +787,11 @@
                     { id: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString() }
                 ];
                 samples.forEach(s => {
-                    if(!this.clients.find(c => c.id === s.id)) {
-                        this.clients.push(s);
-                        this.db.collection("clients").doc(s.id).set(s);
-                    }
+                    this.db.ref('clients/' + s.id).set(s);
                 });
-                this.showToast('Sample Data Loaded', 'Test clients saved to Firebase.');
-                this.renderTables();
-                this.renderClientDropdown();
+                this.showToast('Sample Data Loaded', 'Test clients saved to Realtime Database');
             }
         }
-        // Initialize App
         const app = new RareGradeApp();
     </script>
 </body>
