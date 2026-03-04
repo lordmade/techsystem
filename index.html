@@ -626,6 +626,30 @@
             </div>
         </div>
     </div>
+    <!-- Modern Confirmation Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform scale-95 opacity-0 transition-all duration-300" id="confirm-modal-content">
+            <div class="p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                        <i class="fa-solid fa-trash-can text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900" id="confirm-modal-title">Delete Client?</h3>
+                        <p class="text-sm text-slate-500" id="confirm-modal-message">This action cannot be undone.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3 justify-end">
+                    <button onclick="app.closeConfirmModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                        Cancel
+                    </button>
+                    <button id="confirm-modal-action" class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold shadow-lg shadow-red-500/25 transition-all">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         class RareGradeApp {
             constructor() {
@@ -637,6 +661,7 @@
                 this.currentReportType = 'Hardware';
                 this.sidebarOpen = true;
                 this.timeInterval = null;
+                this.pendingDeleteKey = null;
            
                 this.init();
             }
@@ -785,7 +810,9 @@
                             <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium shimmer-overlay">
                                 Create Report
                             </button>
-                            <button onclick="app.deleteClient('${client._key}')" class="ml-2 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">Delete</button>
+                            <button onclick="app.confirmDelete('${client._key}')" class="ml-2 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                                Delete
+                            </button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -891,12 +918,54 @@
                 return null;
             }
 
-            deleteClient(key) {
-                if (confirm('Delete this client permanently from the registry?')) {
-                    this.db.ref('clients/' + key).remove().then(() => {
-                        this.showToast('Client Deleted', 'Client removed from Realtime Database');
-                    });
-                }
+            // MODERN CONFIRMATION MODAL METHODS
+            confirmDelete(key) {
+                this.pendingDeleteKey = key;
+                const modal = document.getElementById('confirm-modal');
+                const content = document.getElementById('confirm-modal-content');
+                
+                // Show modal
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                // Animate in
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+                
+                // Set up action button
+                const actionBtn = document.getElementById('confirm-modal-action');
+                actionBtn.onclick = () => {
+                    this.executeDelete();
+                };
+            }
+
+            closeConfirmModal() {
+                const modal = document.getElementById('confirm-modal');
+                const content = document.getElementById('confirm-modal-content');
+                
+                // Animate out
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    this.pendingDeleteKey = null;
+                }, 300);
+            }
+
+            executeDelete() {
+                if (!this.pendingDeleteKey) return;
+                
+                this.db.ref('clients/' + this.pendingDeleteKey).remove().then(() => {
+                    this.closeConfirmModal();
+                    this.showToast('Client Deleted', 'Client removed from Realtime Database');
+                }).catch(err => {
+                    this.closeConfirmModal();
+                    this.showToast('Error', 'Failed to delete client: ' + err.message, 'error');
+                });
             }
 
             renderClientDropdown() {
