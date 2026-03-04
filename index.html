@@ -194,6 +194,7 @@
             min-height: 297mm;
             margin: 0 auto;
             border: 1px solid #ddd;
+            max-width: 100%;
         }
         #report-paper .header-blue {
             background: #003087;
@@ -219,7 +220,7 @@
         }
         #report-paper textarea.form-line {
             resize: none;
-            height: 68px;
+            height: 42px; /* compact - no extra space lines */
             width: 100%;
         }
         #report-paper input[type="checkbox"] {
@@ -231,22 +232,32 @@
             margin-right: 6px;
             vertical-align: middle;
         }
+
+        /* Mobile + Sidebar Collapse */
+        @media (max-width: 768px) {
+            aside { transform: translateX(-100%); transition: transform 0.3s; }
+            aside.open { transform: translateX(0); }
+        }
+        aside.collapsed { width: 68px !important; }
+        aside.collapsed .nav-text { display: none; }
+        aside.collapsed .logo-text { display: none; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
     <!-- Sidebar -->
-    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 no-print relative">
+    <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 no-print relative transition-all duration-300 md:block">
         <!-- Logo Area -->
-        <div class="p-8 border-b border-slate-200">
+        <div class="p-8 border-b border-slate-200 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
                     <i class="fa-solid fa-layer-group text-white text-lg"></i>
                 </div>
-                <div>
+                <div class="logo-text">
                     <h1 class="font-display font-bold text-xl tracking-tight text-slate-900">RARE GRADE</h1>
                     <p class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Enterprise Cloud</p>
                 </div>
             </div>
+            <button onclick="app.toggleSidebar()" class="md:hidden text-2xl text-slate-500"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -254,26 +265,26 @@
         
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-500 transition-colors"></i>
-                Dashboard
+                <span class="nav-text">Dashboard</span>
             </button>
             <button onclick="app.navigate('add-client')" id="nav-add-client" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-user-plus w-5 text-center group-hover:text-brand-500 transition-colors"></i>
-                New Client
+                <span class="nav-text">New Client</span>
             </button>
             <button onclick="app.navigate('manage-clients')" id="nav-manage-clients" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-users-gear w-5 text-center group-hover:text-brand-500 transition-colors"></i>
-                Client Registry
+                <span class="nav-text">Client Registry</span>
             </button>
             <button onclick="app.navigate('service-form')" id="nav-service-form" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-file-contract w-5 text-center group-hover:text-brand-500 transition-colors"></i>
-                Service Reports
+                <span class="nav-text">Service Reports</span>
             </button>
         </nav>
         <!-- User Profile -->
         <div class="p-4 border-t border-slate-200">
             <div class="glass-panel p-3 rounded-xl flex items-center gap-3">
                 <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
-                <div class="flex-1 min-w-0">
+                <div class="flex-1 min-w-0 nav-text">
                     <p class="text-sm font-medium text-slate-900 truncate">Vynix Lingua</p>
                     <p class="text-xs text-slate-500 truncate">System Administrator</p>
                 </div>
@@ -282,26 +293,27 @@
         </div>
     </aside>
     <!-- Main Content -->
-    <main class="flex-1 relative overflow-hidden bg-slate-50">
-        <!-- Background Gradients -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-brand-500/5 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]"></div>
-        </div>
-        <div class="relative z-10 h-full overflow-y-auto p-8 scroll-smooth">
-        
-            <!-- Header -->
-            <header class="flex justify-between items-end mb-8 animate-fade-in">
-                <div>
-                    <h2 id="page-title" class="text-3xl font-display font-bold text-slate-900 mb-1">Dashboard</h2>
-                    <p class="text-slate-500 text-sm">Overview of system performance and metrics.</p>
-                </div>
-                <div class="text-right hidden md:block">
-                    <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Current Date</p>
-                    <p id="current-date" class="text-slate-600 font-mono"></p>
-                </div>
-            </header>
+    <main class="flex-1 relative overflow-hidden bg-slate-50 flex flex-col">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10 no-print">
+            <div class="flex items-center gap-4">
+                <button onclick="app.toggleSidebar()" class="text-2xl text-slate-600 md:block hidden"><i class="fa-solid fa-bars"></i></button>
+                <button onclick="app.toggleSidebar()" class="text-2xl text-slate-600 md:hidden"><i class="fa-solid fa-bars"></i></button>
+                <h2 id="page-title" class="text-2xl font-display font-bold text-slate-900">Dashboard</h2>
+            </div>
+            <div class="text-right hidden md:block">
+                <p id="current-date" class="text-slate-600 font-mono text-sm"></p>
+            </div>
+        </header>
 
+        <div class="flex-1 relative overflow-y-auto p-4 md:p-8 scroll-smooth">
+            <!-- Background Gradients -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-brand-500/5 rounded-full blur-[100px]"></div>
+                <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]"></div>
+            </div>
+
+            <!-- All views remain unchanged except mobile responsiveness -->
             <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section space-y-6 animate-fade-in">
                 <!-- Stats Grid -->
@@ -420,7 +432,7 @@
 
             <!-- VIEW: MANAGE CLIENTS -->
             <section id="view-manage-clients" class="view-section hidden animate-fade-in">
-                <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-[calc(100vh-200px)]">
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-[calc(100vh-180px)]">
                     <!-- Toolbar -->
                     <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
                         <div class="relative w-full md:w-96">
@@ -503,7 +515,7 @@
                     
                     <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
-                        <div id="report-paper" class="print-area">
+                        <div id="report-paper" class="print-area mx-auto">
                             <!-- HEADER -->
                             <div class="header-blue mb-6">
                                 <div class="flex items-center gap-3">
@@ -647,6 +659,7 @@
                 this.chartInstance = null;
                 this.db = null;
                 this.currentReportType = 'Hardware';
+                this.sidebarOpen = true;
             
                 this.init();
             }
@@ -1040,6 +1053,12 @@
                     this.db.ref('clients').push(s);
                 });
                 this.showToast('Sample Data Loaded', 'Test clients saved to Realtime Database');
+            }
+
+            toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('collapsed');
+                sidebar.classList.toggle('open');
             }
         }
         const app = new RareGradeApp();
