@@ -557,7 +557,10 @@
                                     <div class="col-span-2"><input type="checkbox"> Other (specify): <input class="form-line inline-block w-64" value=""></div>
                                 </div>
                                 <div class="mt-4 text-sm">
-                                    <span class="font-medium">Date of Service Completion:</span> <input id="display-date" class="form-line inline-block w-64" value="">
+                                    <span class="font-medium">Time of Service Completion:</span> <input id="display-time" class="form-line inline-block w-32" value="">
+                                </div>
+                                <div class="mt-2 text-sm">
+                                    <span class="font-medium">Date of Service Completion:</span> <input id="display-date" class="form-line inline-block w-48" value="">
                                 </div>
                             </div>
 
@@ -792,6 +795,7 @@
                             <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium shimmer-overlay">
                                 Create Report
                             </button>
+                            <button onclick="app.deleteClient('${client._key}')" class="ml-2 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">Delete</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -808,6 +812,13 @@
                     `;
                     recentList.appendChild(tr);
                 });
+            }
+            deleteClient(key) {
+                if (confirm('Delete this client permanently from the registry?')) {
+                    this.db.ref('clients/' + key).remove().then(() => {
+                        this.showToast('Client Deleted', 'Client removed from Realtime Database');
+                    });
+                }
             }
             filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase();
@@ -858,7 +869,11 @@
                 const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
                 const rand = Math.floor(1000 + Math.random() * 9000);
                 const id = `REP-${date}-${rand}`;
-                const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
+                const now = new Date();
+                const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
+                const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                
+                document.getElementById('display-time').value = timeStr;
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
             }
