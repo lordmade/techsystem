@@ -181,7 +181,7 @@
             transition: left 0.8s ease-in-out;
         }
 
-        /* EXACT PAPER FORM STYLING FOR PDF */
+        /* EXACT PAPER FORM STYLING FOR PDF - EDITABLE */
         #report-paper {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
@@ -204,9 +204,22 @@
             justify-content: space-between;
         }
         #report-paper .form-line {
+            border: none;
             border-bottom: 1px solid #000;
-            min-height: 18px;
-            display: block;
+            background: transparent;
+            width: 100%;
+            font-size: 11pt;
+            font-family: 'Times New Roman', serif;
+            color: #000;
+            padding: 2px 0;
+        }
+        #report-paper .form-line:focus {
+            outline: none;
+            border-bottom: 1px solid #003087;
+        }
+        #report-paper textarea.form-line {
+            resize: none;
+            height: 68px;
             width: 100%;
         }
         #report-paper .checkbox {
@@ -288,7 +301,6 @@
                 </div>
             </header>
 
-            <!-- All other views remain 100% unchanged -->
             <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section space-y-6 animate-fade-in">
                 <!-- Stats Grid -->
@@ -469,8 +481,8 @@
                                 <div>
                                     <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Report Type</label>
                                     <div class="grid grid-cols-2 gap-2">
-                                        <button class="p-2 rounded-lg bg-brand-600 text-white text-xs font-medium border border-brand-500">Hardware</button>
-                                        <button class="p-2 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200 hover:bg-slate-200">Software</button>
+                                        <button onclick="app.setReportType('Hardware')" id="report-type-hardware" class="p-2 rounded-lg bg-brand-600 text-white text-xs font-medium border border-brand-500">Hardware</button>
+                                        <button onclick="app.setReportType('Software')" id="report-type-software" class="p-2 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200 hover:bg-slate-200">Software</button>
                                     </div>
                                 </div>
                             </div>
@@ -490,7 +502,6 @@
                     
                     <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
-                        <!-- EXACT MATCH TO YOUR PHYSICAL FORM -->
                         <div id="report-paper" class="print-area">
                             <!-- HEADER -->
                             <div class="header-blue mb-6">
@@ -500,7 +511,7 @@
                                     </div>
                                     <div>
                                         <div class="text-white text-lg font-bold tracking-wider">RARE GRADE TECH</div>
-                                        <div class="text-[10px] text-white/90">Device Service Report</div>
+                                        <div id="report-type-title" class="text-[10px] text-white/90">Hardware Device Service Report</div>
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -514,13 +525,13 @@
                             <div class="mb-6">
                                 <h3 class="font-bold text-sm border-b border-black pb-1 mb-3">Client Information</h3>
                                 <div class="space-y-3 text-sm">
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Client Name:</span><span id="display-client-name" class="form-line flex-1"></span></div>
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Contact Number:</span><span id="display-client-phone" class="form-line flex-1"></span></div>
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Email Address:</span><span id="display-client-email" class="form-line flex-1"></span></div>
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Device Model/Type:</span><span id="display-device-model" class="form-line flex-1">—</span></div>
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Issue reported by client:</span><span id="display-issue" class="form-line flex-1">—</span></div>
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Diagnosis:</span><span id="display-diagnosis" class="form-line flex-1"></span></div>
-                                    <div class="flex gap-3"><span class="w-36 font-medium">Action Taken:</span><span id="display-resolution" class="form-line flex-1"></span></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Client Name:</span><input id="display-client-name" class="form-line flex-1" value=""></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Contact Number:</span><input id="display-client-phone" class="form-line flex-1" value=""></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Email Address:</span><input id="display-client-email" class="form-line flex-1" value=""></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Device Model/Type:</span><input id="display-device-model" class="form-line flex-1" value=""></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Issue reported by client:</span><input id="display-issue" class="form-line flex-1" value=""></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Diagnosis:</span><textarea id="display-diagnosis" class="form-line"></textarea></div>
+                                    <div class="flex gap-3"><span class="w-36 font-medium">Action Taken:</span><textarea id="display-resolution" class="form-line"></textarea></div>
                                 </div>
                             </div>
 
@@ -545,7 +556,7 @@
                                     <div class="col-span-2"><span class="checkbox"></span> Other (specify): <span class="form-line inline-block w-64"></span></div>
                                 </div>
                                 <div class="mt-4 text-sm">
-                                    <span class="font-medium">Date of Service Completion:</span> <span id="display-date" class="form-line inline-block w-64"></span>
+                                    <span class="font-medium">Date of Service Completion:</span> <input id="display-date" class="form-line inline-block w-64" value="">
                                 </div>
                             </div>
 
@@ -576,7 +587,7 @@
                                 <div class="text-sm">
                                     <div class="flex gap-3 mb-2"><span class="w-36 font-medium">Technician Name:</span> Vynix Lingua</div>
                                     <div><span class="font-medium">Notes/Observations:</span></div>
-                                    <div id="display-resolution" class="form-line h-20 mt-1"></div>
+                                    <textarea id="display-notes" class="form-line h-20 mt-1"></textarea>
                                 </div>
                             </div>
 
@@ -592,7 +603,7 @@
                                     </div>
                                     <div>
                                         <div class="text-xs font-medium">Date:</div>
-                                        <div id="display-date-full" class="border-b border-black w-48 h-9 mt-1"></div>
+                                        <input id="display-date-full" class="form-line w-48 h-9 mt-1" value="">
                                     </div>
                                 </div>
                             </div>
@@ -631,6 +642,7 @@
                 this.currentView = 'dashboard';
                 this.chartInstance = null;
                 this.db = null;
+                this.currentReportType = 'Hardware';
             
                 this.init();
             }
@@ -716,7 +728,10 @@
             
                 this.currentView = viewId;
                 if(viewId === 'manage-clients') this.renderTables();
-                if(viewId === 'service-form') this.renderClientDropdown();
+                if(viewId === 'service-form') {
+                    this.renderClientDropdown();
+                    this.setReportType(this.currentReportType);
+                }
             }
          
             handleAddClient(e) {
@@ -814,9 +829,9 @@
             loadClientToForm(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 if(client) {
-                    document.getElementById('display-client-name').innerText = client.name || '—';
-                    document.getElementById('display-client-phone').innerText = client.phone || '—';
-                    document.getElementById('display-client-email').innerText = client.email || '—';
+                    document.getElementById('display-client-name').value = client.name || '';
+                    document.getElementById('display-client-phone').value = client.phone || '';
+                    document.getElementById('display-client-email').value = client.email || '';
                 }
             }
             prepReport(clientKey) {
@@ -824,20 +839,33 @@
                 document.getElementById('report-client-select').value = clientKey;
                 this.loadClientToForm(clientKey);
             }
+            setReportType(type) {
+                this.currentReportType = type;
+                document.getElementById('report-type-title').innerText = type + ' Device Service Report';
+                
+                document.getElementById('report-type-hardware').classList.toggle('bg-brand-600', type === 'Hardware');
+                document.getElementById('report-type-hardware').classList.toggle('text-white', type === 'Hardware');
+                document.getElementById('report-type-hardware').classList.toggle('bg-slate-100', type !== 'Hardware');
+                document.getElementById('report-type-hardware').classList.toggle('text-slate-600', type !== 'Hardware');
+                
+                document.getElementById('report-type-software').classList.toggle('bg-brand-600', type === 'Software');
+                document.getElementById('report-type-software').classList.toggle('text-white', type === 'Software');
+                document.getElementById('report-type-software').classList.toggle('bg-slate-100', type !== 'Software');
+                document.getElementById('report-type-software').classList.toggle('text-slate-600', type !== 'Software');
+            }
             generateReportID() {
                 const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
                 const rand = Math.floor(1000 + Math.random() * 9000);
                 const id = `REP-${date}-${rand}`;
-                document.getElementById('display-report-id') && (document.getElementById('display-report-id').innerText = id);
                 const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-                document.getElementById('display-date') && (document.getElementById('display-date').innerText = today);
-                document.getElementById('display-date-full') && (document.getElementById('display-date-full').innerText = today);
+                document.getElementById('display-date').value = today;
+                document.getElementById('display-date-full').value = today;
             }
             saveReport() {
                 const reportId = "REP-" + Date.now().toString(36).toUpperCase();
-                const clientDisplayId = document.getElementById('display-client-name').innerText;
+                const clientDisplayId = document.getElementById('display-client-name').value;
             
-                if(clientDisplayId === '—') {
+                if(!clientDisplayId) {
                     this.showToast('Error', 'Please select a client first.', 'error');
                     return;
                 }
@@ -846,11 +874,13 @@
             
                 const report = {
                     id: reportId,
+                    type: this.currentReportType,
                     clientId: clientDisplayId,
                     clientKey: client ? client._key : null,
                     date: new Date().toISOString(),
-                    diagnosis: document.getElementById('input-diagnosis') ? document.getElementById('input-diagnosis').value : '',
-                    resolution: document.getElementById('input-resolution') ? document.getElementById('input-resolution').value : ''
+                    diagnosis: document.getElementById('display-diagnosis').value,
+                    resolution: document.getElementById('display-resolution').value,
+                    notes: document.getElementById('display-notes').value
                 };
              
                 this.db.ref('reports').push(report).then(() => {
@@ -874,7 +904,7 @@
               
                 const opt = {
                     margin: 0,
-                    filename: `Rare_Grade_Tech_Service_Report_${reportId}.pdf`,
+                    filename: `Rare_Grade_Tech_${this.currentReportType}_Service_Report_${reportId}.pdf`,
                     image: { type: 'jpeg', quality: 1.0 },
                     html2canvas: {
                         scale: 3,
@@ -900,7 +930,7 @@
                         element.style.boxShadow = originalShadow;
                         element.style.width = originalWidth;
                         element.style.minHeight = originalMinHeight;
-                        this.showToast('PDF Downloaded', `Rare_Grade_Tech_Service_Report_${reportId}.pdf — exact match to physical form`);
+                        this.showToast('PDF Downloaded', `Rare_Grade_Tech_${this.currentReportType}_Service_Report_${reportId}.pdf — exact match to physical form`);
                     })
                     .catch((err) => {
                         element.style.boxShadow = originalShadow;
