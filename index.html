@@ -428,15 +428,9 @@
                 <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-[calc(100vh-180px)]">
                     <!-- Toolbar -->
                     <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
-                        <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                            <div class="relative w-full md:w-64">
-                                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
-                                <input type="text" id="client-search" onkeyup="app.filterClients()" placeholder="Search by ID, Name, or Email..." class="w-full pl-10 pr-4 py-3 rounded-xl input-field text-sm">
-                            </div>
-                            <div class="relative w-full md:w-48">
-                                <i class="fa-solid fa-calendar absolute left-4 top-3.5 text-slate-400"></i>
-                                <input type="date" id="client-date-search" onchange="app.filterClients()" class="w-full pl-10 pr-4 py-3 rounded-xl input-field text-sm">
-                            </div>
+                        <div class="relative w-full md:w-96">
+                            <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                            <input type="text" id="client-search" onkeyup="app.filterClients()" placeholder="Search by ID, Name, Email, or Date (e.g., 12/25/2023)..." class="w-full pl-10 pr-4 py-3 rounded-xl input-field text-sm">
                         </div>
                         <div class="flex gap-3">
                             <button onclick="app.loadSampleData()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition-colors">
@@ -810,33 +804,91 @@
                 });
             }
 
-            // FIXED: Search by text and date
+            // FIXED: Search by text and date in single search bar
             filterClients() {
-                const term = document.getElementById('client-search').value.toLowerCase();
-                const dateTerm = document.getElementById('client-date-search')?.value;
+                const term = document.getElementById('client-search').value.toLowerCase().trim();
                 const rows = document.querySelectorAll('#client-table-body tr');
+                
+                // If search is empty, show all rows
+                if (!term) {
+                    rows.forEach(row => row.style.display = '');
+                    return;
+                }
                 
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
                     const dateCell = row.cells[3]?.innerText; // Date column
                     
                     let matchesText = text.includes(term);
-                    let matchesDate = true;
+                    let matchesDate = false;
                     
-                    // If date filter is set, check if row date matches
-                    if (dateTerm && dateCell) {
-                        // Parse the stored date (format: "M/D/YYYY" or similar)
-                        const rowDate = new Date(dateCell);
-                        const filterDate = new Date(dateTerm);
-                        
-                        // Compare year, month, and day
-                        matchesDate = rowDate.getFullYear() === filterDate.getFullYear() &&
-                                      rowDate.getMonth() === filterDate.getMonth() &&
-                                      rowDate.getDate() === filterDate.getDate();
+                    // Check if term matches date in various formats
+                    if (dateCell) {
+                        // Try to parse the search term as a date
+                        const searchDate = this.parseDate(term);
+                        if (searchDate) {
+                            const rowDate = new Date(dateCell);
+                            matchesDate = rowDate.getFullYear() === searchDate.getFullYear() &&
+                                          rowDate.getMonth() === searchDate.getMonth() &&
+                                          rowDate.getDate() === searchDate.getDate();
+                        }
                     }
                     
-                    row.style.display = (matchesText && matchesDate) ? '' : 'none';
+                    // Show row if matches text OR date
+                    row.style.display = (matchesText || matchesDate) ? '' : 'none';
                 });
+            }
+
+            // Helper to parse various date formats
+            parseDate(dateStr) {
+                // Try common date formats: MM/DD/YYYY, DD/MM/YYYY, YYYY-MM-DD, etc.
+                const formats = [
+                    // MM/DD/YYYY or M/D/YYYY
+                    /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
+                    // DD/MM/YYYY or D/M/YYYY  
+                    /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
+                    // YYYY-MM-DD
+                    /^(\d{4})-(\d{1,2})-(\d{1,2})$/,
+                    // DD-MM-YYYY
+                    /^(\d{1,2})-(\d{1,2})-(\d{4})$/
+                ];
+                
+                for (let format of formats) {
+                    const match = dateStr.match(format);
+                    if (match) {
+                        let year, month, day;
+                        
+                        if (dateStr.includes('/')) {
+                            // Assume MM/DD/YYYY for slash format
+                            month = parseInt(match[1]) - 1;
+                            day = parseInt(match[2]);
+                            year = parseInt(match[3]);
+                        } else if (dateStr.startsWith(match[1]) && match[1].length === 4) {
+                            // YYYY-MM-DD
+                            year = parseInt(match[1]);
+                            month = parseInt(match[2]) - 1;
+                            day = parseInt(match[3]);
+                        } else {
+                            // DD-MM-YYYY or other dash format - try both
+                            day = parseInt(match[1]);
+                            month = parseInt(match[2]) - 1;
+                            year = parseInt(match[3]);
+                        }
+                        
+                        const date = new Date(year, month, day);
+                        if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+                            return date;
+                        }
+                    }
+                }
+                
+                // Try parsing with Date constructor as fallback
+                const d = new Date(dateStr);
+                if (!isNaN(d.getTime())) {
+                    return d;
+                }
+                
+                return null;
             }
 
             deleteClient(key) {
