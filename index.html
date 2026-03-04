@@ -181,7 +181,7 @@
             transition: left 0.8s ease-in-out;
         }
 
-        /* EXACT PAPER FORM STYLING FOR PDF - EDITABLE */
+        /* EXACT PAPER FORM STYLING FOR PDF - EDITABLE + TICKABLE CHECKBOXES */
         #report-paper {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
@@ -222,13 +222,14 @@
             height: 68px;
             width: 100%;
         }
-        #report-paper .checkbox {
+        #report-paper input[type="checkbox"] {
             width: 14px;
             height: 14px;
             border: 1px solid #000;
-            display: inline-block;
-            vertical-align: middle;
+            accent-color: #000;
+            cursor: pointer;
             margin-right: 6px;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -539,8 +540,8 @@
                             <div class="mb-6">
                                 <div class="flex items-center gap-4 text-sm">
                                     <span class="font-medium">Status After Service:</span>
-                                    <label class="flex items-center gap-1"><span class="checkbox"></span>Functional</label>
-                                    <label class="flex items-center gap-1"><span class="checkbox"></span>Non-Functional</label>
+                                    <label class="flex items-center gap-1"><input type="checkbox">Functional</label>
+                                    <label class="flex items-center gap-1"><input type="checkbox">Non-Functional</label>
                                     <span class="flex-1 border-b border-black"></span>
                                 </div>
                             </div>
@@ -549,11 +550,11 @@
                             <div class="mb-6">
                                 <h4 class="font-medium text-sm mb-2">Service Summary:</h4>
                                 <div class="grid grid-cols-2 gap-2 text-sm">
-                                    <div><span class="checkbox"></span> Device Repair</div>
-                                    <div><span class="checkbox"></span> Software Installation(s)</div>
-                                    <div><span class="checkbox"></span> Software Update</div>
-                                    <div><span class="checkbox"></span> Programming</div>
-                                    <div class="col-span-2"><span class="checkbox"></span> Other (specify): <span class="form-line inline-block w-64"></span></div>
+                                    <div><input type="checkbox"> Device Repair</div>
+                                    <div><input type="checkbox"> Software Installation(s)</div>
+                                    <div><input type="checkbox"> Software Update</div>
+                                    <div><input type="checkbox"> Programming</div>
+                                    <div class="col-span-2"><input type="checkbox"> Other (specify): <input class="form-line inline-block w-64" value=""></div>
                                 </div>
                                 <div class="mt-4 text-sm">
                                     <span class="font-medium">Date of Service Completion:</span> <input id="display-date" class="form-line inline-block w-64" value="">
@@ -565,18 +566,18 @@
                                 <div>
                                     <p class="font-medium mb-2">Device Condition Before Service:</p>
                                     <div class="space-y-1">
-                                        <div><span class="checkbox"></span> NEW <span class="checkbox ml-6"></span> USED <span class="checkbox ml-6"></span> DAMAGED</div>
-                                        <div><span class="checkbox"></span> Fully Functional</div>
-                                        <div><span class="checkbox"></span> Non-Functional</div>
-                                        <div><span class="checkbox"></span> Partially Functional (details): <span class="form-line inline-block w-48"></span></div>
+                                        <div><input type="checkbox"> NEW <input type="checkbox" class="ml-6"> USED <input type="checkbox" class="ml-6"> DAMAGED</div>
+                                        <div><input type="checkbox"> Fully Functional</div>
+                                        <div><input type="checkbox"> Non-Functional</div>
+                                        <div><input type="checkbox"> Partially Functional (details): <input class="form-line inline-block w-48" value=""></div>
                                     </div>
                                 </div>
                                 <div>
                                     <p class="font-medium mb-2">After Service:</p>
                                     <div class="space-y-1">
-                                        <div><span class="checkbox"></span> Fully Functional</div>
-                                        <div><span class="checkbox"></span> Partially Functional (details): <span class="form-line inline-block w-48"></span></div>
-                                        <div><span class="checkbox"></span> Issues Persisting (details): <span class="form-line inline-block w-48"></span></div>
+                                        <div><input type="checkbox"> Fully Functional</div>
+                                        <div><input type="checkbox"> Partially Functional (details): <input class="form-line inline-block w-48" value=""></div>
+                                        <div><input type="checkbox"> Issues Persisting (details): <input class="form-line inline-block w-48" value=""></div>
                                     </div>
                                 </div>
                             </div>
