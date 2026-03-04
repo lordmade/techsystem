@@ -871,6 +871,12 @@
                 document.getElementById('report-type-software').classList.toggle('text-white', type === 'Software');
                 document.getElementById('report-type-software').classList.toggle('bg-slate-100', type !== 'Software');
                 document.getElementById('report-type-software').classList.toggle('text-slate-600', type !== 'Software');
+
+                // NEW: Disable all checkboxes when Software is selected
+                const checkboxes = document.querySelectorAll('#report-paper input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    cb.disabled = (type === 'Software');
+                });
             }
             generateReportID() {
                 const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
