@@ -220,7 +220,7 @@
         }
         #report-paper textarea.form-line {
             resize: none;
-            height: 42px; /* compact - no extra space lines */
+            height: 38px;
             width: 100%;
         }
         #report-paper input[type="checkbox"] {
@@ -313,7 +313,6 @@
                 <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]"></div>
             </div>
 
-            <!-- All views remain unchanged except mobile responsiveness -->
             <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section space-y-6 animate-fade-in">
                 <!-- Stats Grid -->
@@ -569,7 +568,7 @@
                                     <div class="col-span-2"><input type="checkbox"> Other (specify): <input class="form-line inline-block w-64" value=""></div>
                                 </div>
                                 <div class="mt-4 text-sm">
-                                    <span class="font-medium">Time of Service Completion:</span> <input id="display-time" class="form-line inline-block w-32" value="">
+                                    <span class="font-medium">Time of Service Completion:</span> <input id="display-time" class="form-line inline-block w-40" value="">
                                 </div>
                                 <div class="mt-2 text-sm">
                                     <span class="font-medium">Date of Service Completion:</span> <input id="display-date" class="form-line inline-block w-48" value="">
@@ -601,7 +600,7 @@
                             <div class="mb-8">
                                 <h4 class="font-medium text-sm mb-2">Technician Notes:</h4>
                                 <div class="text-sm">
-                                    <div class="flex gap-3 mb-2"><span class="w-36 font-medium">Technician Name:</span><input id="display-technician-name" class="form-line flex-1" value="Vynix Lingua"></div>
+                                    <div class="flex gap-3 mb-2"><span class="w-36 font-medium">Technician Name:</span><input id="display-technician-name" class="form-line flex-1" value=""></div>
                                     <div><span class="font-medium">Notes/Observations:</span></div>
                                     <textarea id="display-notes" class="form-line h-20 mt-1"></textarea>
                                 </div>
@@ -660,6 +659,7 @@
                 this.db = null;
                 this.currentReportType = 'Hardware';
                 this.sidebarOpen = true;
+                this.timeInterval = null;
             
                 this.init();
             }
@@ -884,11 +884,24 @@
                 const id = `REP-${date}-${rand}`;
                 const now = new Date();
                 const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-                const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
                 
-                document.getElementById('display-time').value = timeStr;
+                this.updateLiveTime();
+                if (!this.timeInterval) {
+                    this.timeInterval = setInterval(() => this.updateLiveTime(), 1000);
+                }
+                
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
+            }
+            updateLiveTime() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-GB', { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                });
+                const timeEl = document.getElementById('display-time');
+                if (timeEl) timeEl.value = timeStr;
             }
             saveReport() {
                 const reportId = "REP-" + Date.now().toString(36).toUpperCase();
