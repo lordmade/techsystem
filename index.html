@@ -480,6 +480,9 @@ aside.collapsed .logo-text { display: none; }
               <button onclick="app.downloadPDF()" class="w-full py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-file-pdf"></i> Export PDF
               </button>
+              <button onclick="app.deleteCurrentReport()" class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold shadow-lg shadow-red-500/20 transition-all flex items-center justify-center gap-2 shimmer-overlay">
+                <i class="fa-solid fa-trash"></i> Delete Report
+              </button>
             </div>
           </div>
         </div>
@@ -918,6 +921,23 @@ class RareGradeApp {
     if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
       this.db.ref('reports/' + reportKey).remove().then(() => {
         this.showToast('Report Deleted', 'Report removed from Realtime Database');
+      }).catch(err => {
+        this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
+      });
+    }
+  }
+  deleteCurrentReport() {
+    if (!this.currentReportKey) {
+      this.showToast('Error', 'No report loaded to delete. Please load a report first.', 'error');
+      return;
+    }
+    
+    if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+      this.db.ref('reports/' + this.currentReportKey).remove().then(() => {
+        this.showToast('Report Deleted', 'Report removed from Realtime Database');
+        this.clearReportForm();
+        this.generateReportID();
+        this.currentReportKey = null;
       }).catch(err => {
         this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
       });
@@ -1363,7 +1383,8 @@ class RareGradeApp {
     const samples = [
       { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString(), timestamp: Date.now() },
       { displayId: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString(), timestamp: Date.now() - 86400000 },
-      { displayId: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString(), timestamp: Date.now() - 172800000 }
+      { displayId: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date
+             (Date.now() - 172800000).toLocaleDateString(), timestamp: Date.now() - 172800000 }
     ];
     
     samples.forEach(s => {
