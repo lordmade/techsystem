@@ -244,7 +244,7 @@
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
     <!-- Sidebar -->
     <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 no-print relative transition-all duration-300 md:block">
-        <!-- SIDEBAR HEADER - REPLACED WHITE LOGO WITH BLUE TEXTED BANNER (exactly the same as PDF header design) -->
+        <!-- SIDEBAR LOGO -->
         <div class="p-8 border-b border-slate-200">
             <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
                  alt="Rare Grade Tech" 
@@ -488,18 +488,16 @@
                     </div>
                     <div class="lg:col-span-2">
                         <div id="report-paper" class="print-area mx-auto">
-                            <!-- PDF HEADER FIXED - Small white logo removed, banner made larger + clearer, report type very prominent -->
-                            <div class="header-blue mb-6">
-                                <div class="flex items-center gap-6">
-                                    <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
-                                         alt="Rare Grade Tech" 
-                                         class="h-24 w-auto object-contain">
-                                    <div>
-                                        <div class="text-white text-3xl font-bold tracking-wider">RARE GRADE TECH</div>
-                                        <div class="text-white text-sm font-medium tracking-widest">IMAGINATION TO REALITY</div>
-                                    </div>
-                                </div>
-                                <div id="report-type-title" class="text-white text-right text-3xl font-bold tracking-widest">HARDWARE SERVICE REPORT</div>
+                            <!-- PDF HEADER - SIMPLIFIED AS REQUESTED -->
+                            <!-- Only banner logo on left + simple "HARDWARE" or "SOFTWARE" on right -->
+                            <!-- RARE GRADE TECH + IMAGINATION TO REALITY completely removed -->
+                            <div class="header-blue mb-6 flex items-center justify-between">
+                                <!-- Banner logo only -->
+                                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
+                                     alt="Rare Grade Tech" 
+                                     class="h-24 w-auto object-contain">
+                                <!-- Simple report type indicator -->
+                                <div id="report-type-title" class="text-white text-right text-5xl font-bold tracking-widest">HARDWARE</div>
                             </div>
                             <p class="text-center text-sm mb-6">Thank you for trusting us with your device. Below is the detailed report on the services performed by Rare Grade Tech.</p>
                             <!-- CLIENT INFORMATION -->
@@ -1083,7 +1081,8 @@
             }
             setReportType(type) {
                 this.currentReportType = type;
-                document.getElementById('report-type-title').innerText = type.toUpperCase() + ' SERVICE REPORT';
+                // SIMPLIFIED - only "HARDWARE" or "SOFTWARE"
+                document.getElementById('report-type-title').innerText = type.toUpperCase();
               
                 document.getElementById('report-type-hardware').classList.toggle('bg-brand-600', type === 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('text-white', type === 'Hardware');
