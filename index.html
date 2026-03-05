@@ -11,7 +11,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300 ;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js "></script>
     <!-- Firebase SDK (Realtime Database) -->
@@ -53,7 +53,7 @@
             background-color: #f8fafc;
             color: #0f172a;
         }
-  
+ 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -69,7 +69,7 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-  
+ 
         /* Glassmorphism Utilities - LIGHT VERSION */
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
@@ -82,7 +82,7 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 30px rgba(15, 23, 42, 0.06);
         }
-  
+ 
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -91,19 +91,19 @@
         .animate-fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-  
+ 
         /* Shimmer Effect */
         .shimmer-bg {
             background: linear-gradient(to right, #f6f7f8 4%, #edeef1 25%, #f6f7f8 36%);
             background-size: 1000px 100%;
             animation: shimmer 2s infinite linear;
         }
-   
+  
         .shimmer-overlay {
             position: relative;
             overflow: hidden;
         }
-   
+  
         .shimmer-overlay::after {
             content: '';
             position: absolute;
@@ -115,17 +115,17 @@
             transform: translateX(-100%);
             animation: shimmer-slide 2s infinite;
         }
-   
+  
         @keyframes shimmer {
             0% { background-position: -1000px 0; }
             100% { background-position: 1000px 0; }
         }
-   
+  
         @keyframes shimmer-slide {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-  
+ 
         /* Print Styles */
         @media print {
             body { background: white; color: black; }
@@ -139,7 +139,7 @@
             }
             input, textarea { border: none !important; background: transparent !important; color: black !important; }
         }
-  
+ 
         /* Input Styling */
         .input-field {
             background: white;
@@ -152,19 +152,19 @@
             box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
             outline: none;
         }
-  
+ 
         /* Light theme overrides for sidebar & cards */
         aside { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
         .nav-item { color: #475569 !important; }
         .nav-item:hover { background-color: #f1f5f9 !important; color: #0f172a !important; }
         .nav-item.active { background-color: #f0f9ff !important; color: #0ea5e9 !important; border-right: 3px solid #0ea5e9; }
-   
+  
         /* Table row shimmer on hover */
         .table-row-shimmer {
             position: relative;
             overflow: hidden;
         }
-   
+  
         .table-row-shimmer::before {
             content: '';
             position: absolute;
@@ -175,7 +175,7 @@
             background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.05), transparent);
             transition: left 0.5s;
         }
-   
+  
         .table-row-shimmer:hover::before {
             left: 100%;
             transition: left 0.8s ease-in-out;
@@ -198,7 +198,7 @@
         #report-paper .header-blue {
             background: #003087;
             color: white;
-            padding: 12px 20px;
+            padding: 8px 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -244,16 +244,23 @@
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
     <!-- Sidebar -->
     <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 no-print relative transition-all duration-300 md:block">
-        <!-- SIDEBAR LOGO -->
-        <div class="p-8 border-b border-slate-200">
-            <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
-                 alt="Rare Grade Tech" 
-                 class="w-full h-20 object-contain">
+        <!-- Logo Area -->
+        <div class="p-8 border-b border-slate-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-lg bg-white flex items-center justify-center shadow-lg overflow-hidden">
+                    <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png " alt="Rare Grade Tech Logo" class="w-full h-full object-contain">
+                </div>
+                <div class="logo-text">
+                    <h1 class="font-display font-bold text-xl tracking-tight text-slate-900">RARE GRADE</h1>
+                    <p class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Enterprise Cloud</p>
+                </div>
+            </div>
+            <button onclick="app.toggleSidebar()" class="md:hidden text-2xl text-slate-500"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Main</p>
-      
+     
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 <span class="nav-text">Dashboard</span>
@@ -285,11 +292,13 @@
     </aside>
     <!-- Main Content -->
     <main class="flex-1 relative overflow-hidden bg-slate-50 flex flex-col">
-        <!-- Header -->
+        <!-- Header - NEW BANNER LOGO ADDED HERE -->
         <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10 no-print">
             <div class="flex items-center gap-4">
                 <button onclick="app.toggleSidebar()" class="text-2xl text-slate-600 md:block hidden"><i class="fa-solid fa-bars"></i></button>
                 <button onclick="app.toggleSidebar()" class="text-2xl text-slate-600 md:hidden"><i class="fa-solid fa-bars"></i></button>
+                <!-- BANNER LOGO (exact match to the uploaded image) -->
+                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png " alt="Rare Grade Tech" class="h-9 w-auto">
                 <h2 id="page-title" class="text-2xl font-display font-bold text-slate-900">Dashboard</h2>
             </div>
             <div class="text-right hidden md:block">
@@ -306,6 +315,7 @@
             <section id="view-dashboard" class="view-section space-y-6 animate-fade-in">
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Stat 1 -->
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group shimmer-overlay">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-users text-6xl text-brand-500"></i>
@@ -316,6 +326,7 @@
                             <div class="h-full bg-brand-500 w-[75%] shimmer-bg"></div>
                         </div>
                     </div>
+                    <!-- Stat 2 -->
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group shimmer-overlay">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-clipboard-check text-6xl text-emerald-500"></i>
@@ -326,6 +337,7 @@
                             <div class="h-full bg-emerald-500 w-[45%] shimmer-bg"></div>
                         </div>
                     </div>
+                    <!-- Stat 3 -->
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group shimmer-overlay">
                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fa-solid fa-server text-6xl text-purple-500"></i>
@@ -398,7 +410,7 @@
                                 <input type="email" id="newClientEmail" required class="w-full p-4 rounded-xl input-field" placeholder="john@example.com">
                             </div>
                         </div>
-                  
+                 
                         <div class="pt-4 flex items-center justify-between border-t border-slate-200">
                             <div class="text-xs text-slate-500 font-mono">
                                 ID PREVIEW: <span id="preview-client-id" class="text-brand-600">---</span>
@@ -416,6 +428,7 @@
             <!-- VIEW: MANAGE CLIENTS -->
             <section id="view-manage-clients" class="view-section hidden animate-fade-in">
                 <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-[calc(100vh-180px)]">
+                    <!-- Toolbar -->
                     <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
                         <div class="relative w-full md:w-96">
                             <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
@@ -430,6 +443,7 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Table -->
                     <div class="flex-1 overflow-auto">
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-slate-100 text-slate-500 text-xs uppercase font-bold sticky top-0 backdrop-blur-md z-10">
@@ -445,6 +459,8 @@
                                 <!-- Rows generated by JS -->
                             </tbody>
                         </table>
+                 
+                        <!-- Empty State -->
                         <div id="empty-state" class="hidden h-full flex flex-col items-center justify-center text-slate-500">
                             <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
                             <p>No clients found in registry.</p>
@@ -454,10 +470,14 @@
             </section>
             <!-- VIEW: SERVICE FORM -->
             <section id="view-service-form" class="view-section hidden animate-fade-in">
+                <!-- Report Generator UI -->
                 <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+             
+                    <!-- Left: Controls -->
                     <div class="lg:col-span-1 space-y-6 no-print">
                         <div class="glass-card p-6 rounded-2xl shimmer-overlay">
                             <h3 class="text-lg font-bold text-slate-900 mb-4">Report Configuration</h3>
+                     
                             <div class="space-y-4">
                                 <div>
                                     <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Select Client</label>
@@ -486,18 +506,22 @@
                             </div>
                         </div>
                     </div>
+                 
+                    <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
                         <div id="report-paper" class="print-area mx-auto">
-                            <!-- PDF HEADER - SIMPLIFIED AS REQUESTED -->
-                            <!-- Only banner logo on left + simple "HARDWARE" or "SOFTWARE" on right -->
-                            <!-- RARE GRADE TECH + IMAGINATION TO REALITY completely removed -->
-                            <div class="header-blue mb-6 flex items-center justify-between">
-                                <!-- Banner logo only -->
-                                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
-                                     alt="Rare Grade Tech" 
-                                     class="h-24 w-auto object-contain">
-                                <!-- Simple report type indicator -->
-                                <div id="report-type-title" class="text-white text-right text-5xl font-bold tracking-widest">HARDWARE</div>
+                            <!-- HEADER - BANNER LOGO + TAGLINE ADDED (exact match to uploaded image) -->
+                            <div class="header-blue mb-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-white rounded flex items-center justify-center overflow-hidden shadow">
+                                        <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png " alt="Rare Grade Tech Logo" class="w-10 h-10 object-contain">
+                                    </div>
+                                    <div>
+                                        <div class="text-white text-2xl font-bold tracking-wider">RARE GRADE TECH</div>
+                                        <div class="text-white text-sm font-medium tracking-widest">IMAGINATION TO REALITY</div>
+                                    </div>
+                                </div>
+                                <div id="report-type-title" class="text-white text-right text-lg font-medium">Hardware Device Service Report</div>
                             </div>
                             <p class="text-center text-sm mb-6">Thank you for trusting us with your device. Below is the detailed report on the services performed by Rare Grade Tech.</p>
                             <!-- CLIENT INFORMATION -->
@@ -569,6 +593,7 @@
                             <div class="border-t border-black pt-6">
                                 <h4 class="font-medium text-sm mb-3">Client Acknowledgment:</h4>
                                 <p class="text-xs leading-tight mb-6">By signing below, the client confirms that they have received the device after the services have been completed as described above. Any issues not addressed in this report are either acknowledged or have been discussed with the technician.</p>
+                             
                                 <div class="flex justify-between items-end">
                                     <div>
                                         <div class="text-xs font-medium">Client Signature:</div>
@@ -657,22 +682,22 @@
                 this.sidebarOpen = true;
                 this.timeInterval = null;
                 this.pendingDeleteKey = null;
-                this.currentReportKey = null;
-          
+                this.currentReportKey = null; // Track if editing an existing report
+         
                 this.init();
             }
             init() {
                 this.initFirebase();
                 this.setupRealtimeListeners();
-          
+         
                 this.updateDate();
                 this.renderClientDropdown();
                 this.renderTables();
                 this.initChart();
                 this.generateReportID();
-          
+         
                 this.navigate('dashboard');
-          
+         
                 document.getElementById('newClientName')?.addEventListener('input', (e) => {
                     const name = e.target.value.trim();
                     const id = name ? 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000) : '---';
@@ -708,7 +733,7 @@
                     }
                     this.renderClientDropdown();
                 });
-          
+         
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
                     if (snapshot.exists()) {
@@ -726,7 +751,7 @@
                     el.classList.add('hidden');
                     el.classList.remove('animate-fade-in');
                 });
-          
+         
                 const target = document.getElementById(`view-${viewId}`);
                 if(target) {
                     target.classList.remove('hidden');
@@ -736,7 +761,7 @@
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
-          
+         
                 const titles = {
                     'dashboard': 'System Dashboard',
                     'add-client': 'Client Onboarding',
@@ -744,7 +769,7 @@
                     'service-form': 'Service Report Generator'
                 };
                 document.getElementById('page-title').innerText = titles[viewId] || 'Dashboard';
-          
+         
                 this.currentView = viewId;
                 if(viewId === 'manage-clients') this.renderTables();
                 if(viewId === 'service-form') {
@@ -752,17 +777,17 @@
                     this.setReportType(this.currentReportType);
                 }
             }
-       
+      
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
                 const phone = document.getElementById('newClientPhone').value.trim();
                 const email = document.getElementById('newClientEmail').value.trim();
-           
+          
                 if(!name || !phone) return;
-           
+          
                 const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
-           
+          
                 const newClient = {
                     displayId: displayId,
                     name: name,
@@ -771,7 +796,7 @@
                     date: new Date().toLocaleDateString(),
                     timestamp: Date.now()
                 };
-           
+          
                 this.db.ref('clients').push(newClient).then(() => {
                     e.target.reset();
                     document.getElementById('preview-client-id').innerText = '---';
@@ -779,26 +804,27 @@
                     setTimeout(() => this.navigate('manage-clients'), 800);
                 });
             }
-       
+      
             renderTables() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-          
+         
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
-          
+         
                 if(this.clients.length === 0) {
                     document.getElementById('empty-state').classList.remove('hidden');
                 } else {
                     document.getElementById('empty-state').classList.add('hidden');
                 }
-          
+         
                 const sortedClients = [...this.clients].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-          
+         
                 sortedClients.forEach(client => {
+                    // Count reports for this client
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const reportCount = clientReports.length;
-                   
+                  
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
                     tr.innerHTML = `
@@ -820,7 +846,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
-          
+         
                 sortedClients.slice(0, 5).forEach(client => {
                     const tr = document.createElement('tr');
                     tr.className = 'table-row-shimmer';
@@ -833,21 +859,22 @@
                     recentList.appendChild(tr);
                 });
             }
+            // View all reports for a client
             viewReports(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 if (!client) return;
-               
+              
                 const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a, b) => b.timestamp - a.timestamp);
-               
+              
                 document.getElementById('reports-modal-subtitle').innerText = `${client.name} - ${clientReports.length} Report(s)`;
-               
+              
                 const container = document.getElementById('reports-list-container');
                 container.innerHTML = '';
-               
+              
                 if (clientReports.length === 0) {
                     container.innerHTML = '<p class="text-center text-slate-500 py-8">No reports found for this client.</p>';
                 } else {
-                    clientReports.forEach((report) => {
+                    clientReports.forEach((report, index) => {
                         const reportCard = document.createElement('div');
                         reportCard.className = 'bg-slate-50 rounded-xl p-4 mb-4 border border-slate-200 hover:border-brand-300 transition-colors cursor-pointer';
                         reportCard.onclick = () => {
@@ -855,10 +882,10 @@
                             this.closeReportsModal();
                             this.navigate('service-form');
                         };
-                       
+                      
                         const date = new Date(report.timestamp).toLocaleString();
                         const type = report.type || 'Hardware';
-                       
+                      
                         reportCard.innerHTML = `
                             <div class="flex justify-between items-start mb-2">
                                 <div>
@@ -879,13 +906,14 @@
                         container.appendChild(reportCard);
                     });
                 }
-               
+              
+                // Show modal
                 const modal = document.getElementById('reports-modal');
                 const content = document.getElementById('reports-modal-content');
-               
+              
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-               
+              
                 setTimeout(() => {
                     content.classList.remove('scale-95', 'opacity-0');
                     content.classList.add('scale-100', 'opacity-100');
@@ -894,34 +922,40 @@
             closeReportsModal() {
                 const modal = document.getElementById('reports-modal');
                 const content = document.getElementById('reports-modal-content');
-               
+              
                 content.classList.remove('scale-100', 'opacity-100');
                 content.classList.add('scale-95', 'opacity-0');
-               
+              
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
                 }, 300);
             }
+            // Load saved report data into the form
             loadReportToForm(report) {
                 this.currentReportKey = report._key || null;
-               
+              
+                // Set client
                 document.getElementById('report-client-select').value = report.clientKey || '';
                 this.loadClientToForm(report.clientKey || '');
-               
+              
+                // Set report type
                 this.setReportType(report.type || 'Hardware');
-               
+              
+                // Load client info
                 if (report.clientInfo) {
                     document.getElementById('display-client-name').value = report.clientInfo.name || '';
                     document.getElementById('display-client-phone').value = report.clientInfo.phone || '';
                     document.getElementById('display-client-email').value = report.clientInfo.email || '';
                 }
-               
+              
+                // Load device info
                 if (report.deviceInfo) {
                     document.getElementById('display-device-model').value = report.deviceInfo.model || '';
                     document.getElementById('display-issue').value = report.deviceInfo.issue || '';
                 }
-               
+              
+                // Load service details
                 if (report.serviceDetails) {
                     document.getElementById('display-diagnosis').value = report.serviceDetails.diagnosis || '';
                     document.getElementById('display-resolution').value = report.serviceDetails.resolution || '';
@@ -935,7 +969,8 @@
                     document.getElementById('display-after-partial').value = report.serviceDetails.afterPartialDetails || '';
                     document.getElementById('display-issues-persisting').value = report.serviceDetails.issuesPersisting || '';
                 }
-               
+              
+                // Restore checkbox states
                 if (report.checkboxes) {
                     const checkboxes = document.querySelectorAll('.service-checkbox');
                     checkboxes.forEach((cb, index) => {
@@ -944,26 +979,30 @@
                         }
                     });
                 }
-               
+              
                 this.showToast('Report Loaded', 'Saved report data retrieved successfully');
             }
+            // FIXED: Search by text and date in single search bar
             filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase().trim();
                 const rows = document.querySelectorAll('#client-table-body tr');
-               
+              
+                // If search is empty, show all rows
                 if (!term) {
                     rows.forEach(row => row.style.display = '');
                     return;
                 }
-               
+              
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
-                    const dateCell = row.cells[3]?.innerText;
-                   
+                    const dateCell = row.cells[3]?.innerText; // Date column
+                  
                     let matchesText = text.includes(term);
                     let matchesDate = false;
-                   
+                  
+                    // Check if term matches date in various formats
                     if (dateCell) {
+                        // Try to parse the search term as a date
                         const searchDate = this.parseDate(term);
                         if (searchDate) {
                             const rowDate = new Date(dateCell);
@@ -972,71 +1011,92 @@
                                           rowDate.getDate() === searchDate.getDate();
                         }
                     }
-                   
+                  
+                    // Show row if matches text OR date
                     row.style.display = (matchesText || matchesDate) ? '' : 'none';
                 });
             }
+            // Helper to parse various date formats
             parseDate(dateStr) {
+                // Try common date formats: MM/DD/YYYY, DD/MM/YYYY, YYYY-MM-DD, etc.
                 const formats = [
+                    // MM/DD/YYYY or M/D/YYYY
                     /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
+                    // DD/MM/YYYY or D/M/YYYY
                     /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
+                    // YYYY-MM-DD
                     /^(\d{4})-(\d{1,2})-(\d{1,2})$/,
+                    // DD-MM-YYYY
                     /^(\d{1,2})-(\d{1,2})-(\d{4})$/
                 ];
-               
+              
                 for (let format of formats) {
                     const match = dateStr.match(format);
                     if (match) {
                         let year, month, day;
-                       
+                      
                         if (dateStr.includes('/')) {
+                            // Assume MM/DD/YYYY for slash format
                             month = parseInt(match[1]) - 1;
                             day = parseInt(match[2]);
                             year = parseInt(match[3]);
                         } else if (dateStr.startsWith(match[1]) && match[1].length === 4) {
+                            // YYYY-MM-DD
                             year = parseInt(match[1]);
                             month = parseInt(match[2]) - 1;
                             day = parseInt(match[3]);
                         } else {
+                            // DD-MM-YYYY or other dash format - try both
                             day = parseInt(match[1]);
                             month = parseInt(match[2]) - 1;
                             year = parseInt(match[3]);
                         }
-                       
+                      
                         const date = new Date(year, month, day);
                         if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
                             return date;
                         }
                     }
                 }
-               
+              
+                // Try parsing with Date constructor as fallback
                 const d = new Date(dateStr);
-                if (!isNaN(d.getTime())) return d;
+                if (!isNaN(d.getTime())) {
+                    return d;
+                }
+              
                 return null;
             }
+            // MODERN CONFIRMATION MODAL METHODS
             confirmDelete(key) {
                 this.pendingDeleteKey = key;
                 const modal = document.getElementById('confirm-modal');
                 const content = document.getElementById('confirm-modal-content');
-               
+              
+                // Show modal
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-               
+              
+                // Animate in
                 setTimeout(() => {
                     content.classList.remove('scale-95', 'opacity-0');
                     content.classList.add('scale-100', 'opacity-100');
                 }, 10);
-               
+              
+                // Set up action button
                 const actionBtn = document.getElementById('confirm-modal-action');
-                actionBtn.onclick = () => this.executeDelete();
+                actionBtn.onclick = () => {
+                    this.executeDelete();
+                };
             }
             closeConfirmModal() {
                 const modal = document.getElementById('confirm-modal');
                 const content = document.getElementById('confirm-modal-content');
-               
+              
+                // Animate out
                 content.classList.remove('scale-100', 'opacity-100');
                 content.classList.add('scale-95', 'opacity-0');
-               
+              
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
@@ -1045,7 +1105,7 @@
             }
             executeDelete() {
                 if (!this.pendingDeleteKey) return;
-               
+              
                 this.db.ref('clients/' + this.pendingDeleteKey).remove().then(() => {
                     this.closeConfirmModal();
                     this.showToast('Client Deleted', 'Client removed from Realtime Database');
@@ -1074,26 +1134,26 @@
             }
             prepReport(clientKey) {
                 this.navigate('service-form');
-                this.clearReportForm();
-                this.currentReportKey = null;
+                this.clearReportForm(); // Clear first to ensure fresh form
+                this.currentReportKey = null; // New report, not editing
                 document.getElementById('report-client-select').value = clientKey;
                 this.loadClientToForm(clientKey);
             }
             setReportType(type) {
                 this.currentReportType = type;
-                // SIMPLIFIED - only "HARDWARE" or "SOFTWARE"
-                document.getElementById('report-type-title').innerText = type.toUpperCase();
-              
+                document.getElementById('report-type-title').innerText = type + ' Device Service Report';
+             
                 document.getElementById('report-type-hardware').classList.toggle('bg-brand-600', type === 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('text-white', type === 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('bg-slate-100', type !== 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('text-slate-600', type !== 'Hardware');
-              
+             
                 document.getElementById('report-type-software').classList.toggle('bg-brand-600', type === 'Software');
                 document.getElementById('report-type-software').classList.toggle('text-white', type === 'Software');
                 document.getElementById('report-type-software').classList.toggle('bg-slate-100', type !== 'Software');
                 document.getElementById('report-type-software').classList.toggle('text-slate-600', type !== 'Software');
-               
+              
+                // Disable all checkboxes when Software is selected
                 const checkboxes = document.querySelectorAll('.service-checkbox');
                 checkboxes.forEach(cb => {
                     cb.disabled = (type === 'Software');
@@ -1105,12 +1165,12 @@
                 const id = `REP-${date}-${rand}`;
                 const now = new Date();
                 const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-              
+             
                 this.updateLiveTime();
                 if (!this.timeInterval) {
                     this.timeInterval = setInterval(() => this.updateLiveTime(), 1000);
                 }
-              
+             
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
             }
@@ -1124,15 +1184,17 @@
                 const timeEl = document.getElementById('display-time');
                 if (timeEl) timeEl.value = timeStr;
             }
+            // FIXED: Save all form information and clear after save
             saveReport() {
                 const clientKey = document.getElementById('report-client-select').value;
                 const client = this.clients.find(c => c._key === clientKey);
-               
+              
                 if(!client) {
                     this.showToast('Error', 'Please select a client first.', 'error');
                     return;
                 }
-               
+              
+                // Collect ALL form information
                 const reportData = {
                     id: "REP-" + Date.now().toString(36).toUpperCase(),
                     type: this.currentReportType,
@@ -1159,11 +1221,13 @@
                         afterPartialDetails: document.getElementById('display-after-partial').value,
                         issuesPersisting: document.getElementById('display-issues-persisting').value
                     },
+                    // Capture all checkbox states
                     checkboxes: this.captureCheckboxStates(),
                     timestamp: Date.now(),
                     createdAt: new Date().toISOString()
                 };
-               
+              
+                // If editing existing report, update it; otherwise create new
                 if (this.currentReportKey) {
                     this.db.ref('reports/' + this.currentReportKey).update(reportData).then(() => {
                         this.showToast('Report Updated', `Report ${reportData.id} updated successfully`);
@@ -1176,13 +1240,14 @@
                 } else {
                     this.db.ref('reports').push(reportData).then(() => {
                         this.showToast('Report Saved', `Report ${reportData.id} saved successfully`);
-                        this.clearReportForm();
-                        this.generateReportID();
+                        this.clearReportForm(); // Clear all fields for next client
+                        this.generateReportID(); // Generate new report ID
                     }).catch(err => {
                         this.showToast('Error', 'Failed to save report: ' + err.message, 'error');
                     });
                 }
             }
+            // Helper method to capture all checkbox states
             captureCheckboxStates() {
                 const checkboxes = document.querySelectorAll('.service-checkbox');
                 const states = {};
@@ -1191,25 +1256,41 @@
                 });
                 return states;
             }
+            // Clear all form fields after save
             clearReportForm() {
+                // Clear all text inputs in the report form (except dates)
                 const textInputs = [
-                    'display-client-name','display-client-phone','display-client-email',
-                    'display-device-model','display-issue','display-diagnosis','display-resolution',
-                    'display-technician-name','display-notes','display-client-signature',
-                    'display-other-service','display-before-partial','display-after-partial',
+                    'display-client-name',
+                    'display-client-phone',
+                    'display-client-email',
+                    'display-device-model',
+                    'display-issue',
+                    'display-diagnosis',
+                    'display-resolution',
+                    'display-technician-name',
+                    'display-notes',
+                    'display-client-signature',
+                    'display-other-service',
+                    'display-before-partial',
+                    'display-after-partial',
                     'display-issues-persisting'
                 ];
-               
+              
                 textInputs.forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = '';
                 });
-               
+              
+                // Clear all checkboxes
                 const checkboxes = document.querySelectorAll('.service-checkbox');
-                checkboxes.forEach(cb => cb.checked = false);
-               
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                });
+              
+                // Reset client dropdown
                 document.getElementById('report-client-select').value = '';
-               
+              
+                // Reset dates to today
                 const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
@@ -1217,17 +1298,17 @@
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 const reportId = "RGT_Service_Report_" + Date.now().toString(36).toUpperCase();
-            
+           
                 this.showToast('Generating PDF', 'Creating exact A4 replica of physical form...');
-            
+           
                 const originalShadow = element.style.boxShadow || '';
                 const originalWidth = element.style.width || '';
                 const originalMinHeight = element.style.minHeight || '';
-            
+           
                 element.style.boxShadow = 'none';
                 element.style.width = '210mm';
                 element.style.minHeight = '297mm';
-            
+           
                 const opt = {
                     margin: 0,
                     filename: `Rare_Grade_Tech_${this.currentReportType}_Service_Report_${reportId}.pdf`,
@@ -1247,7 +1328,7 @@
                     },
                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
-            
+           
                 html2pdf()
                     .set(opt)
                     .from(element)
@@ -1338,14 +1419,14 @@
                 this.chartInstance.data.datasets[0].data = newData;
                 this.chartInstance.update();
             }
-       
+      
             loadSampleData() {
                 const samples = [
                     { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString(), timestamp: Date.now() },
                     { displayId: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString(), timestamp: Date.now() - 86400000 },
                     { displayId: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString(), timestamp: Date.now() - 172800000 }
                 ];
-           
+          
                 samples.forEach(s => {
                     this.db.ref('clients').push(s);
                 });
