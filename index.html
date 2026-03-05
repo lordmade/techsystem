@@ -248,12 +248,12 @@
         <div class="p-8 border-b border-slate-200">
            <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png"
                                          alt="Rare Grade Tech"
-                                         class="h-20 w-auto object-contain">
+                                         class="h-12 w-auto object-contain mx-auto">
         </div>
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Main</p>
-     
+    
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                 <span class="nav-text">Dashboard</span>
@@ -398,7 +398,7 @@
                                 <input type="email" id="newClientEmail" required class="w-full p-4 rounded-xl input-field" placeholder="john@example.com">
                             </div>
                         </div>
-                 
+                
                         <div class="pt-4 flex items-center justify-between border-t border-slate-200">
                             <div class="text-xs text-slate-500 font-mono">
                                 ID PREVIEW: <span id="preview-client-id" class="text-brand-600">---</span>
@@ -495,10 +495,10 @@
                                     <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png"
                                          alt="Rare Grade Tech"
                                          class="h-20 w-auto object-contain">
-                                    <div id="report-type-title" class="text-white text-right text-4xl font-medium tracking-widest">HARDWARE</div>
+                                    <span class="text-white text-[10px] font-medium tracking-[2px] mt-1">IMAGINATION TO REALITY</span>
                                 </div>
                                 <!-- Report type (reduced font size) -->
-                                
+                                <div id="report-type-title" class="text-white text-right text-3xl font-bold tracking-widest">HARDWARE</div>
                             </div>
                             <p class="text-center text-sm mb-6">Thank you for trusting us with your device. Below is the detailed report on the services performed by Rare Grade Tech.</p>
                             <!-- CLIENT INFORMATION -->
@@ -659,21 +659,21 @@
                 this.timeInterval = null;
                 this.pendingDeleteKey = null;
                 this.currentReportKey = null;
-         
+        
                 this.init();
             }
             init() {
                 this.initFirebase();
                 this.setupRealtimeListeners();
-         
+        
                 this.updateDate();
                 this.renderClientDropdown();
                 this.renderTables();
                 this.initChart();
                 this.generateReportID();
-         
+        
                 this.navigate('dashboard');
-         
+        
                 document.getElementById('newClientName')?.addEventListener('input', (e) => {
                     const name = e.target.value.trim();
                     const id = name ? 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000) : '---';
@@ -709,7 +709,7 @@
                     }
                     this.renderClientDropdown();
                 });
-         
+        
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
                     if (snapshot.exists()) {
@@ -727,7 +727,7 @@
                     el.classList.add('hidden');
                     el.classList.remove('animate-fade-in');
                 });
-         
+        
                 const target = document.getElementById(`view-${viewId}`);
                 if(target) {
                     target.classList.remove('hidden');
@@ -737,7 +737,7 @@
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
-         
+        
                 const titles = {
                     'dashboard': 'System Dashboard',
                     'add-client': 'Client Onboarding',
@@ -745,7 +745,7 @@
                     'service-form': 'Service Report Generator'
                 };
                 document.getElementById('page-title').innerText = titles[viewId] || 'Dashboard';
-         
+        
                 this.currentView = viewId;
                 if(viewId === 'manage-clients') this.renderTables();
                 if(viewId === 'service-form') {
@@ -753,17 +753,17 @@
                     this.setReportType(this.currentReportType);
                 }
             }
-      
+     
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
                 const phone = document.getElementById('newClientPhone').value.trim();
                 const email = document.getElementById('newClientEmail').value.trim();
-          
+         
                 if(!name || !phone) return;
-          
+         
                 const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
-          
+         
                 const newClient = {
                     displayId: displayId,
                     name: name,
@@ -772,7 +772,7 @@
                     date: new Date().toLocaleDateString(),
                     timestamp: Date.now()
                 };
-          
+         
                 this.db.ref('clients').push(newClient).then(() => {
                     e.target.reset();
                     document.getElementById('preview-client-id').innerText = '---';
@@ -780,26 +780,26 @@
                     setTimeout(() => this.navigate('manage-clients'), 800);
                 });
             }
-      
+     
             renderTables() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-         
+        
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
-         
+        
                 if(this.clients.length === 0) {
                     document.getElementById('empty-state').classList.remove('hidden');
                 } else {
                     document.getElementById('empty-state').classList.add('hidden');
                 }
-         
+        
                 const sortedClients = [...this.clients].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-         
+        
                 sortedClients.forEach(client => {
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const reportCount = clientReports.length;
-                  
+                 
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
                     tr.innerHTML = `
@@ -821,7 +821,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
-         
+        
                 sortedClients.slice(0, 5).forEach(client => {
                     const tr = document.createElement('tr');
                     tr.className = 'table-row-shimmer';
@@ -837,14 +837,14 @@
             viewReports(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 if (!client) return;
-              
+             
                 const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a, b) => b.timestamp - a.timestamp);
-              
+             
                 document.getElementById('reports-modal-subtitle').innerText = `${client.name} - ${clientReports.length} Report(s)`;
-              
+             
                 const container = document.getElementById('reports-list-container');
                 container.innerHTML = '';
-              
+             
                 if (clientReports.length === 0) {
                     container.innerHTML = '<p class="text-center text-slate-500 py-8">No reports found for this client.</p>';
                 } else {
@@ -856,10 +856,10 @@
                             this.closeReportsModal();
                             this.navigate('service-form');
                         };
-                      
+                     
                         const date = new Date(report.timestamp).toLocaleString();
                         const type = report.type || 'Hardware';
-                      
+                     
                         reportCard.innerHTML = `
                             <div class="flex justify-between items-start mb-2">
                                 <div>
@@ -880,13 +880,13 @@
                         container.appendChild(reportCard);
                     });
                 }
-              
+             
                 const modal = document.getElementById('reports-modal');
                 const content = document.getElementById('reports-modal-content');
-              
+             
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-              
+             
                 setTimeout(() => {
                     content.classList.remove('scale-95', 'opacity-0');
                     content.classList.add('scale-100', 'opacity-100');
@@ -895,10 +895,10 @@
             closeReportsModal() {
                 const modal = document.getElementById('reports-modal');
                 const content = document.getElementById('reports-modal-content');
-              
+             
                 content.classList.remove('scale-100', 'opacity-100');
                 content.classList.add('scale-95', 'opacity-0');
-              
+             
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
@@ -906,23 +906,23 @@
             }
             loadReportToForm(report) {
                 this.currentReportKey = report._key || null;
-              
+             
                 document.getElementById('report-client-select').value = report.clientKey || '';
                 this.loadClientToForm(report.clientKey || '');
-              
+             
                 this.setReportType(report.type || 'Hardware');
-              
+             
                 if (report.clientInfo) {
                     document.getElementById('display-client-name').value = report.clientInfo.name || '';
                     document.getElementById('display-client-phone').value = report.clientInfo.phone || '';
                     document.getElementById('display-client-email').value = report.clientInfo.email || '';
                 }
-              
+             
                 if (report.deviceInfo) {
                     document.getElementById('display-device-model').value = report.deviceInfo.model || '';
                     document.getElementById('display-issue').value = report.deviceInfo.issue || '';
                 }
-              
+             
                 if (report.serviceDetails) {
                     document.getElementById('display-diagnosis').value = report.serviceDetails.diagnosis || '';
                     document.getElementById('display-resolution').value = report.serviceDetails.resolution || '';
@@ -936,7 +936,7 @@
                     document.getElementById('display-after-partial').value = report.serviceDetails.afterPartialDetails || '';
                     document.getElementById('display-issues-persisting').value = report.serviceDetails.issuesPersisting || '';
                 }
-              
+             
                 if (report.checkboxes) {
                     const checkboxes = document.querySelectorAll('.service-checkbox');
                     checkboxes.forEach((cb, index) => {
@@ -945,25 +945,25 @@
                         }
                     });
                 }
-              
+             
                 this.showToast('Report Loaded', 'Saved report data retrieved successfully');
             }
             filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase().trim();
                 const rows = document.querySelectorAll('#client-table-body tr');
-              
+             
                 if (!term) {
                     rows.forEach(row => row.style.display = '');
                     return;
                 }
-              
+             
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
                     const dateCell = row.cells[3]?.innerText;
-                  
+                 
                     let matchesText = text.includes(term);
                     let matchesDate = false;
-                  
+                 
                     if (dateCell) {
                         const searchDate = this.parseDate(term);
                         if (searchDate) {
@@ -973,7 +973,7 @@
                                           rowDate.getDate() === searchDate.getDate();
                         }
                     }
-                  
+                 
                     row.style.display = (matchesText || matchesDate) ? '' : 'none';
                 });
             }
@@ -984,12 +984,12 @@
                     /^(\d{4})-(\d{1,2})-(\d{1,2})$/,
                     /^(\d{1,2})-(\d{1,2})-(\d{4})$/
                 ];
-              
+             
                 for (let format of formats) {
                     const match = dateStr.match(format);
                     if (match) {
                         let year, month, day;
-                      
+                     
                         if (dateStr.includes('/')) {
                             month = parseInt(match[1]) - 1;
                             day = parseInt(match[2]);
@@ -1003,14 +1003,14 @@
                             month = parseInt(match[2]) - 1;
                             year = parseInt(match[3]);
                         }
-                      
+                     
                         const date = new Date(year, month, day);
                         if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
                             return date;
                         }
                     }
                 }
-              
+             
                 const d = new Date(dateStr);
                 if (!isNaN(d.getTime())) return d;
                 return null;
@@ -1019,25 +1019,25 @@
                 this.pendingDeleteKey = key;
                 const modal = document.getElementById('confirm-modal');
                 const content = document.getElementById('confirm-modal-content');
-              
+             
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-              
+             
                 setTimeout(() => {
                     content.classList.remove('scale-95', 'opacity-0');
                     content.classList.add('scale-100', 'opacity-100');
                 }, 10);
-              
+             
                 const actionBtn = document.getElementById('confirm-modal-action');
                 actionBtn.onclick = () => this.executeDelete();
             }
             closeConfirmModal() {
                 const modal = document.getElementById('confirm-modal');
                 const content = document.getElementById('confirm-modal-content');
-              
+             
                 content.classList.remove('scale-100', 'opacity-100');
                 content.classList.add('scale-95', 'opacity-0');
-              
+             
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
@@ -1046,7 +1046,7 @@
             }
             executeDelete() {
                 if (!this.pendingDeleteKey) return;
-              
+             
                 this.db.ref('clients/' + this.pendingDeleteKey).remove().then(() => {
                     this.closeConfirmModal();
                     this.showToast('Client Deleted', 'Client removed from Realtime Database');
@@ -1084,17 +1084,17 @@
                 this.currentReportType = type;
                 // SIMPLIFIED - only "HARDWARE" or "SOFTWARE"
                 document.getElementById('report-type-title').innerText = type.toUpperCase();
-             
+            
                 document.getElementById('report-type-hardware').classList.toggle('bg-brand-600', type === 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('text-white', type === 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('bg-slate-100', type !== 'Hardware');
                 document.getElementById('report-type-hardware').classList.toggle('text-slate-600', type !== 'Hardware');
-             
+            
                 document.getElementById('report-type-software').classList.toggle('bg-brand-600', type === 'Software');
                 document.getElementById('report-type-software').classList.toggle('text-white', type === 'Software');
                 document.getElementById('report-type-software').classList.toggle('bg-slate-100', type !== 'Software');
                 document.getElementById('report-type-software').classList.toggle('text-slate-600', type !== 'Software');
-              
+             
                 const checkboxes = document.querySelectorAll('.service-checkbox');
                 checkboxes.forEach(cb => {
                     cb.disabled = (type === 'Software');
@@ -1106,12 +1106,12 @@
                 const id = `REP-${date}-${rand}`;
                 const now = new Date();
                 const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-             
+            
                 this.updateLiveTime();
                 if (!this.timeInterval) {
                     this.timeInterval = setInterval(() => this.updateLiveTime(), 1000);
                 }
-             
+            
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
             }
@@ -1128,12 +1128,12 @@
             saveReport() {
                 const clientKey = document.getElementById('report-client-select').value;
                 const client = this.clients.find(c => c._key === clientKey);
-              
+             
                 if(!client) {
                     this.showToast('Error', 'Please select a client first.', 'error');
                     return;
                 }
-              
+             
                 const reportData = {
                     id: "REP-" + Date.now().toString(36).toUpperCase(),
                     type: this.currentReportType,
@@ -1164,7 +1164,7 @@
                     timestamp: Date.now(),
                     createdAt: new Date().toISOString()
                 };
-              
+             
                 if (this.currentReportKey) {
                     this.db.ref('reports/' + this.currentReportKey).update(reportData).then(() => {
                         this.showToast('Report Updated', `Report ${reportData.id} updated successfully`);
@@ -1200,17 +1200,17 @@
                     'display-other-service','display-before-partial','display-after-partial',
                     'display-issues-persisting'
                 ];
-              
+             
                 textInputs.forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = '';
                 });
-              
+             
                 const checkboxes = document.querySelectorAll('.service-checkbox');
                 checkboxes.forEach(cb => cb.checked = false);
-              
+             
                 document.getElementById('report-client-select').value = '';
-              
+             
                 const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
@@ -1218,17 +1218,17 @@
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 const reportId = "RGT_Service_Report_" + Date.now().toString(36).toUpperCase();
-           
+          
                 this.showToast('Generating PDF', 'Creating exact A4 replica of physical form...');
-           
+          
                 const originalShadow = element.style.boxShadow || '';
                 const originalWidth = element.style.width || '';
                 const originalMinHeight = element.style.minHeight || '';
-           
+          
                 element.style.boxShadow = 'none';
                 element.style.width = '210mm';
                 element.style.minHeight = '297mm';
-           
+          
                 const opt = {
                     margin: 0,
                     filename: `Rare_Grade_Tech_${this.currentReportType}_Service_Report_${reportId}.pdf`,
@@ -1248,7 +1248,7 @@
                     },
                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
-           
+          
                 html2pdf()
                     .set(opt)
                     .from(element)
@@ -1339,14 +1339,14 @@
                 this.chartInstance.data.datasets[0].data = newData;
                 this.chartInstance.update();
             }
-      
+     
             loadSampleData() {
                 const samples = [
                     { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: new Date().toLocaleDateString(), timestamp: Date.now() },
                     { displayId: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: new Date(Date.now() - 86400000).toLocaleDateString(), timestamp: Date.now() - 86400000 },
                     { displayId: 'RGT-SC-1120', name: 'Soylent Corp', phone: '+1 555-0188', email: 'hello@soylent.io', date: new Date(Date.now() - 172800000).toLocaleDateString(), timestamp: Date.now() - 172800000 }
                 ];
-          
+         
                 samples.forEach(s => {
                     this.db.ref('clients').push(s);
                 });
