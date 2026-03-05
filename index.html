@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rare Grade Tech | Enterprise Portal</title>
 <!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com "></script>
+<script src="https://cdn.tailwindcss.com  "></script>
 <!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js  "></script>
 <!-- FontAwesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css  ">
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300 ;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300  ;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- PDF Generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js "></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js  "></script>
 <!-- Firebase SDK (Realtime Database) -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js "></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js "></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js  "></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js  "></script>
 <script>
 tailwind.config = {
   theme: {
@@ -271,7 +271,7 @@ aside.collapsed .logo-text { display: none; }
   <!-- User Profile -->
   <div class="p-4 border-t border-slate-200">
     <div class="glass-panel p-3 rounded-xl flex items-center gap-3">
-      <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff " class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+      <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff  " class="w-10 h-10 rounded-full border-2 border-white" alt="User">
       <div class="flex-1 min-w-0 nav-text">
         <p class="text-sm font-medium text-slate-900 truncate">Vynix Lingua</p>
         <p class="text-xs text-slate-500 truncate">System Administrator</p>
@@ -480,6 +480,9 @@ aside.collapsed .logo-text { display: none; }
               <button onclick="app.downloadPDF()" class="w-full py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-file-pdf"></i> Export PDF
               </button>
+              <button onclick="app.deleteReport()" class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold shadow-lg shadow-red-500/20 transition-all flex items-center justify-center gap-2 shimmer-overlay">
+                <i class="fa-solid fa-trash"></i> Delete Report
+              </button>
             </div>
           </div>
         </div>
@@ -489,7 +492,7 @@ aside.collapsed .logo-text { display: none; }
             <div class="header-blue mb-6 flex items-center justify-between">
               <!-- Logo + Imagination to Reality (moved under logo) -->
               <div class="flex flex-col items-start">
-                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png "
+                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png  "
                      alt="Rare Grade Tech"
                      class="h-20 w-auto object-contain">
                 <div id="report-type-title" class="text-white text-right text-1xl font-bold tracking-widest">HARDWARE</div>
@@ -1270,6 +1273,23 @@ class RareGradeApp {
         console.error(err);
         this.showToast('PDF Error', 'Please try again', 'error');
       });
+  }
+  deleteReport() {
+    if (!this.currentReportKey) {
+      this.showToast('Error', 'No report loaded to delete. Please load a report first.', 'error');
+      return;
+    }
+    
+    if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+      this.db.ref('reports/' + this.currentReportKey).remove().then(() => {
+        this.showToast('Report Deleted', 'Report removed from Realtime Database');
+        this.clearReportForm();
+        this.generateReportID();
+        this.currentReportKey = null;
+      }).catch(err => {
+        this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
+      });
+    }
   }
   updateStats() {
     this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText) || 0, this.clients.length, 800);
