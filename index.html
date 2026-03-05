@@ -244,18 +244,11 @@
 <body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
     <!-- Sidebar -->
     <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 no-print relative transition-all duration-300 md:block">
-        <!-- Logo Area -->
-        <div class="p-8 border-b border-slate-200 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-lg bg-white flex items-center justify-center shadow-lg overflow-hidden">
-                    <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png " alt="Rare Grade Tech Logo" class="w-full h-full object-contain">
-                </div>
-                <div class="logo-text">
-                    <h1 class="font-display font-bold text-xl tracking-tight text-slate-900">RARE GRADE</h1>
-                    <p class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Enterprise Cloud</p>
-                </div>
-            </div>
-            <button onclick="app.toggleSidebar()" class="md:hidden text-2xl text-slate-500"><i class="fa-solid fa-xmark"></i></button>
+        <!-- NEW BANNER LOGO ON SIDEBAR HEADER (replaced the old small logo + text) -->
+        <div class="p-8 border-b border-slate-200">
+            <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
+                 alt="Rare Grade Tech" 
+                 class="w-full h-auto object-contain">
         </div>
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -292,13 +285,11 @@
     </aside>
     <!-- Main Content -->
     <main class="flex-1 relative overflow-hidden bg-slate-50 flex flex-col">
-        <!-- Header - NEW BANNER LOGO ADDED HERE -->
+        <!-- Header - EXISTING LOGO COMPLETELY REMOVED -->
         <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10 no-print">
             <div class="flex items-center gap-4">
                 <button onclick="app.toggleSidebar()" class="text-2xl text-slate-600 md:block hidden"><i class="fa-solid fa-bars"></i></button>
                 <button onclick="app.toggleSidebar()" class="text-2xl text-slate-600 md:hidden"><i class="fa-solid fa-bars"></i></button>
-                <!-- BANNER LOGO (exact match to the uploaded image) -->
-                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" alt="Rare Grade Tech" class="h-9 w-auto">
                 <h2 id="page-title" class="text-2xl font-display font-bold text-slate-900">Dashboard</h2>
             </div>
             <div class="text-right hidden md:block">
@@ -510,14 +501,19 @@
                     <!-- Right: Preview (Print Area) -->
                     <div class="lg:col-span-2">
                         <div id="report-paper" class="print-area mx-auto">
-                            <!-- HEADER - BANNER LOGO + TAGLINE ADDED (exact match to uploaded image) -->
+                            <!-- PDF HEADER - EXISTING SMALL WHITE LOGO KEPT + GIVEN IMAGE AS LARGE CLEAR LOGO -->
                             <div class="header-blue mb-6">
-                                <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-6">
+                                    <!-- Existing small white logo (kept as requested) -->
                                     <div class="w-12 h-12 bg-white rounded flex items-center justify-center overflow-hidden shadow">
                                         <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png " alt="Rare Grade Tech Logo" class="w-10 h-10 object-contain">
                                     </div>
+                                    <!-- Large clear given banner logo + full text -->
+                                    <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png" 
+                                         alt="Rare Grade Tech" 
+                                         class="h-20 w-auto object-contain">
                                     <div>
-                                        <div class="text-white text-2xl font-bold tracking-wider">RARE GRADE TECH</div>
+                                        <div class="text-white text-3xl font-bold tracking-wider">RARE GRADE TECH</div>
                                         <div class="text-white text-sm font-medium tracking-widest">IMAGINATION TO REALITY</div>
                                     </div>
                                 </div>
