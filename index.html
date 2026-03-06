@@ -235,7 +235,6 @@ aside.collapsed .logo-text { display: none; }
   <!-- Navigation -->
   <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
     <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Main</p>
- 
     <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
       <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-brand-500 transition-colors"></i>
       <span class="nav-text">Dashboard</span>
@@ -468,7 +467,7 @@ aside.collapsed .logo-text { display: none; }
               <input type="email" id="newClientEmail" required class="w-full p-4 rounded-xl input-field" placeholder="john@example.com">
             </div>
           </div>
-       
+      
           <div class="pt-4 flex items-center justify-between border-t border-slate-200">
             <div class="text-xs text-slate-500 font-mono">
               ID PREVIEW: <span id="preview-client-id" class="text-brand-600">---</span>
@@ -504,10 +503,11 @@ aside.collapsed .logo-text { display: none; }
           <table class="w-full text-left border-collapse">
             <thead class="bg-slate-100 text-slate-500 text-xs uppercase font-bold sticky top-0 backdrop-blur-md z-10">
               <tr>
-                <th class="p-4 border-b border-slate-200">Full Name</th>
-                <th class="p-4 border-b border-slate-200">Client ID</th>
-                <th class="p-4 border-b border-slate-200">Contact</th>
-                <th class="p-4 border-b border-slate-200">Date Added</th>
+                <th class="p-4 border-b border-slate-200 w-64 text-left">Full Name</th>
+                <th class="p-4 border-b border-slate-200 text-left">Client ID</th>
+                <th class="p-4 border-b border-slate-200 text-left">Phone</th>
+                <th class="p-4 border-b border-slate-200 text-left">Email</th>
+                <th class="p-4 border-b border-slate-200 text-left">Date Added</th>
                 <th class="p-4 border-b border-slate-200 text-right">Actions</th>
               </tr>
             </thead>
@@ -581,7 +581,7 @@ aside.collapsed .logo-text { display: none; }
                 <div id="report-type-title" class="text-white text-right text-1xl font-bold tracking-widest">HARDWARE</div>
               </div>
               <!-- Report type (reduced font size) -->
-           
+          
             </div>
             <p class="text-center text-sm mb-6">Thank you for trusting us with your device. Below is the detailed report on the services performed by Rare Grade Tech.</p>
             <!-- CLIENT INFORMATION -->
@@ -745,10 +745,9 @@ class RareGradeApp {
     this.currentReportKey = null;
     this.statuses = ['Received', 'In Repair', 'Waiting for Parts', 'Ready for Pickup', 'Completed'];
     this.dataLoaded = false;
- 
     this.init();
   }
-  
+ 
   init() {
     this.initFirebase();
     this.setupRealtimeListeners();
@@ -757,14 +756,13 @@ class RareGradeApp {
     this.initChart();
     this.generateReportID();
     this.navigate('dashboard');
- 
     document.getElementById('newClientName')?.addEventListener('input', (e) => {
       const name = e.target.value.trim();
       const id = name ? 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000) : '---';
       document.getElementById('preview-client-id').innerText = id;
     });
   }
-  
+ 
   initFirebase() {
     const firebaseConfig = {
       apiKey: "AIzaSyAxBT0oESoL62oz_x_Z8cMtdENWZPx4tMI",
@@ -779,7 +777,7 @@ class RareGradeApp {
     this.db = firebase.database();
     console.log('Firebase initialized');
   }
-  
+ 
   setupRealtimeListeners() {
     // Clients listener with immediate render
     this.db.ref('clients').on('value', (snapshot) => {
@@ -801,7 +799,6 @@ class RareGradeApp {
       console.error('Firebase clients error:', error);
       this.showToast('Connection Error', 'Failed to load clients: ' + error.message, 'error');
     });
- 
     // Reports listener
     this.db.ref('reports').on('value', (snapshot) => {
       console.log('Firebase reports update received:', snapshot.exists());
@@ -822,13 +819,12 @@ class RareGradeApp {
       console.error('Firebase reports error:', error);
     });
   }
-  
+ 
   navigate(viewId) {
     document.querySelectorAll('.view-section').forEach(el => {
       el.classList.add('hidden');
       el.classList.remove('animate-fade-in');
     });
- 
     const target = document.getElementById(`view-${viewId}`);
     if(target) {
       target.classList.remove('hidden');
@@ -838,7 +834,6 @@ class RareGradeApp {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     const activeBtn = document.getElementById(`nav-${viewId}`);
     if(activeBtn) activeBtn.classList.add('active');
- 
     const titles = {
       'dashboard': 'System Dashboard',
       'add-client': 'Client Onboarding',
@@ -846,9 +841,8 @@ class RareGradeApp {
       'service-form': 'Service Report Generator'
     };
     document.getElementById('page-title').innerText = titles[viewId] || 'Dashboard';
- 
     this.currentView = viewId;
-    
+   
     // Force re-render when navigating to ensure data is displayed
     if(viewId === 'manage-clients' || viewId === 'dashboard') {
       this.renderTables();
@@ -858,20 +852,17 @@ class RareGradeApp {
       this.setReportType(this.currentReportType);
     }
   }
-  
+ 
   handleAddClient(e) {
     e.preventDefault();
     const name = document.getElementById('newClientName').value.trim();
     const phone = document.getElementById('newClientPhone').value.trim();
     const email = document.getElementById('newClientEmail').value.trim();
- 
     if(!name || !phone) {
       this.showToast('Error', 'Name and phone are required', 'error');
       return;
     }
- 
     const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
- 
     const newClient = {
       displayId: displayId,
       name: name,
@@ -880,9 +871,8 @@ class RareGradeApp {
       date: new Date().toLocaleDateString(),
       timestamp: Date.now()
     };
- 
     console.log('Saving client:', newClient);
-    
+   
     this.db.ref('clients').push(newClient).then(() => {
       e.target.reset();
       document.getElementById('preview-client-id').innerText = '---';
@@ -893,113 +883,93 @@ class RareGradeApp {
       this.showToast('Error', 'Failed to save client: ' + err.message, 'error');
     });
   }
-  
-renderTables() {
+ 
+  renderTables() {
     const tbody = document.getElementById('client-table-body');
     const recentList = document.getElementById('recent-clients-list');
-    
+   
     if (!tbody || !recentList) {
-        console.error('Table elements not found');
-        return;
+      console.error('Table elements not found');
+      return;
     }
-
     tbody.innerHTML = '';
     recentList.innerHTML = '';
-
     console.log('Rendering tables with clients:', this.clients.length, this.clients);
-
+    // Handle empty state properly
     const emptyState = document.getElementById('empty-state');
     if (this.clients.length === 0) {
-        if (emptyState) emptyState.classList.remove('hidden');
-        return;
+      if (emptyState) emptyState.classList.remove('hidden');
+      console.log('No clients to display');
+      return;
     } else {
-        if (emptyState) emptyState.classList.add('hidden');
+      if (emptyState) emptyState.classList.add('hidden');
     }
-
+    // Sort with fallback for missing timestamps
     const sortedClients = [...this.clients].sort((a, b) => {
-        const timeA = a.timestamp || 0;
-        const timeB = b.timestamp || 0;
-        return timeB - timeA;
+      const timeA = a.timestamp || 0;
+      const timeB = b.timestamp || 0;
+      return timeB - timeA;
     });
-
     // Render main client table
     sortedClients.forEach(client => {
-        console.log('Processing client:', client);
-        
-        // Explicitly extract each property with fallbacks
-        const clientName = client.name ? String(client.name).trim() : 'Unknown';
-        const clientDisplayId = client.displayId ? String(client.displayId).trim() : (client.id ? String(client.id).trim() : 'N/A');
-        const clientPhone = client.phone ? String(client.phone).trim() : 'No phone';
-        const clientEmail = client.email ? String(client.email).trim() : '';
-        const clientDate = client.date ? String(client.date).trim() : new Date(client.timestamp).toLocaleDateString();
-        
-        console.log('Extracted values:', { clientName, clientDisplayId, clientPhone });
-        
-        const clientReports = this.reports.filter(r => r.clientKey === client._key);
-        const reportCount = clientReports.length;
-
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
-        tr.dataset.key = client._key;
-        
-        // Use template literal with explicit variable names - NO VARIABLE REUSE
-        tr.innerHTML = `
-            <td class="p-4 font-medium text-slate-900">${clientName}</td>
-            <td class="p-4 font-mono text-brand-600 font-medium">${clientDisplayId}</td>
-            <td class="p-4">
-                <div class="text-xs text-slate-600">${clientPhone}</div>
-                ${clientEmail ? `<div class="text-[10px] text-slate-500">${clientEmail}</div>` : ''}
-            </td>
-            <td class="p-4 text-slate-500 text-xs">${clientDate}</td>
-            <td class="p-4 text-right">
-                <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-                    Create Report
-                </button>
-                ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-                    View (${reportCount})
-                </button>` : ''}
-                <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-                    Delete
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+      // Safe data access with fallbacks
+      const displayId = client.displayId || client.id || 'N/A';
+      const name = client.name || 'Unknown';
+      const phone = client.phone || '—';
+      const email = client.email || '—';
+      const date = client.date || new Date(client.timestamp || Date.now()).toLocaleDateString('en-GB') || 'Unknown';
+     
+      const clientReports = this.reports.filter(r => r.clientKey === client._key);
+      const reportCount = clientReports.length;
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
+      tr.dataset.key = client._key;
+      tr.innerHTML = `
+        <td class="p-4 font-medium text-slate-900">${name}</td>
+        <td class="p-4 font-mono text-brand-600 font-medium">${displayId}</td>
+        <td class="p-4 text-slate-700">${phone}</td>
+        <td class="p-4 text-slate-600 text-sm">${email}</td>
+        <td class="p-4 text-slate-500 text-xs">${date}</td>
+        <td class="p-4 text-right">
+          <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+            Create Report
+          </button>
+          ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+            View (${reportCount})
+          </button>` : ''}
+          <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+            Delete
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
     });
-
     // Render recent clients list (top 5) for dashboard
     sortedClients.slice(0, 5).forEach(client => {
-        const recentName = client.name ? String(client.name).trim() : 'Unknown';
-        const recentId = client.displayId ? String(client.displayId).trim() : (client.id ? String(client.id).trim() : 'N/A');
-        const recentDate = client.date ? String(client.date).trim() : 'Unknown';
-        
-        const tr = document.createElement('tr');
-        tr.className = 'table-row-shimmer';
-        tr.dataset.key = client._key;
-        tr.innerHTML = `
-            <td class="px-6 py-4 font-medium text-slate-700">${recentName}</td>
-            <td class="px-6 py-4 font-mono text-xs text-brand-600">${recentId}</td>
-            <td class="px-6 py-4 text-xs">${recentDate}</td>
-            <td class="px-6 py-4">
-                <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
-            </td>
-        `;
-        recentList.appendChild(tr);
+      const tr = document.createElement('tr');
+      tr.className = 'table-row-shimmer';
+      tr.dataset.key = client._key;
+      tr.innerHTML = `
+        <td class="px-6 py-4 font-medium text-slate-700">${client.name || 'Unknown'}</td>
+        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
+        <td class="px-6 py-4 text-xs">${client.date || 'Unknown'}</td>
+        <td class="px-6 py-4">
+          <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
+        </td>
+      `;
+      recentList.appendChild(tr);
     });
-    
+   
     console.log('Tables rendered successfully');
-}
-  
+  }
+ 
   viewReports(clientKey) {
     const client = this.clients.find(c => c._key === clientKey);
     if (!client) return;
- 
     const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a, b) => b.timestamp - a.timestamp);
- 
     document.getElementById('reports-modal-subtitle').innerText = `${client.name} - ${clientReports.length} Report(s)`;
- 
     const container = document.getElementById('reports-list-container');
     container.innerHTML = '';
- 
     if (clientReports.length === 0) {
       container.innerHTML = '<p class="text-center text-slate-500 py-8">No reports found for this client.</p>';
     } else {
@@ -1012,10 +982,10 @@ renderTables() {
           this.closeReportsModal();
           this.navigate('service-form');
         };
-     
+    
         const date = new Date(report.timestamp).toLocaleString();
         const type = report.type || 'Hardware';
-     
+    
         reportCard.innerHTML = `
           <div class="flex justify-between items-start mb-2">
             <div>
@@ -1041,32 +1011,27 @@ renderTables() {
         container.appendChild(reportCard);
       });
     }
- 
     const modal = document.getElementById('reports-modal');
     const content = document.getElementById('reports-modal-content');
- 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
- 
     setTimeout(() => {
       content.classList.remove('scale-95', 'opacity-0');
       content.classList.add('scale-100', 'opacity-100');
     }, 10);
   }
-  
+ 
   closeReportsModal() {
     const modal = document.getElementById('reports-modal');
     const content = document.getElementById('reports-modal-content');
- 
     content.classList.remove('scale-100', 'opacity-100');
     content.classList.add('scale-95', 'opacity-0');
- 
     setTimeout(() => {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }, 300);
   }
-  
+ 
   deleteReportByKey(reportKey) {
     if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
       this.db.ref('reports/' + reportKey).remove().then(() => {
@@ -1076,13 +1041,12 @@ renderTables() {
       });
     }
   }
-  
+ 
   deleteCurrentReport() {
     if (!this.currentReportKey) {
       this.showToast('Error', 'No report loaded to delete. Please load a report first.', 'error');
       return;
     }
- 
     if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
       this.db.ref('reports/' + this.currentReportKey).remove().then(() => {
         this.showToast('Report Deleted', 'Report removed from Realtime Database');
@@ -1094,27 +1058,22 @@ renderTables() {
       });
     }
   }
-  
+ 
   loadReportToForm(report) {
     this.currentReportKey = report._key || null;
- 
     document.getElementById('report-client-select').value = report.clientKey || '';
     this.loadClientToForm(report.clientKey || '');
- 
     this.setReportType(report.type || 'Hardware');
- 
     if (report.clientInfo) {
       document.getElementById('display-client-name').value = report.clientInfo.name || '';
       document.getElementById('display-client-phone').value = report.clientInfo.phone || '';
       document.getElementById('display-client-email').value = report.clientInfo.email || '';
     }
- 
     if (report.deviceInfo) {
       document.getElementById('display-device-model').value = report.deviceInfo.model || '';
       document.getElementById('display-serial').value = report.deviceInfo.serial || '';
       document.getElementById('display-issue').value = report.deviceInfo.issue || '';
     }
- 
     if (report.serviceDetails) {
       document.getElementById('display-diagnosis').value = report.serviceDetails.diagnosis || '';
       document.getElementById('display-resolution').value = report.serviceDetails.resolution || '';
@@ -1128,7 +1087,6 @@ renderTables() {
       document.getElementById('display-after-partial').value = report.serviceDetails.afterPartialDetails || '';
       document.getElementById('display-issues-persisting').value = report.serviceDetails.issuesPersisting || '';
     }
- 
     if (report.checkboxes) {
       const checkboxes = document.querySelectorAll('.service-checkbox');
       checkboxes.forEach((cb, index) => {
@@ -1138,27 +1096,24 @@ renderTables() {
       });
     }
     document.getElementById('device-status').value = report.status || 'Received';
- 
     this.showToast('Report Loaded', 'Saved report data retrieved successfully');
   }
-  
+ 
   filterClients() {
     const term = document.getElementById('client-search').value.toLowerCase().trim();
     const rows = document.querySelectorAll('#client-table-body tr');
- 
     if (!term) {
       rows.forEach(row => row.style.display = '');
       return;
     }
- 
     rows.forEach(row => {
       const text = row.innerText.toLowerCase();
-      const dateCell = row.cells[3]?.innerText;
-   
+      const dateCell = row.cells[4]?.innerText;
+  
       let matchesText = text.includes(term);
       let matchesDate = false;
       let matches = matchesText;
-   
+  
       if (dateCell) {
         const searchDate = this.parseDate(term);
         if (searchDate) {
@@ -1169,7 +1124,7 @@ renderTables() {
           if (matchesDate) matches = true;
         }
       }
-   
+  
       if (!matches) {
         const key = row.dataset.key;
         if (key) {
@@ -1186,24 +1141,22 @@ renderTables() {
           }
         }
       }
-   
+  
       row.style.display = matches ? '' : 'none';
     });
   }
-  
+ 
   filterDashboard() {
     const term = document.getElementById('dashboard-search').value.toLowerCase().trim();
     const rows = document.querySelectorAll('#recent-clients-list tr');
- 
     if (!term) {
       rows.forEach(row => row.style.display = '');
       return;
     }
- 
     rows.forEach(row => {
       const text = row.innerText.toLowerCase();
       let matches = text.includes(term);
-   
+  
       if (!matches) {
         const key = row.dataset.key;
         if (key) {
@@ -1219,11 +1172,11 @@ renderTables() {
           }
         }
       }
-   
+  
       row.style.display = matches ? '' : 'none';
     });
   }
-  
+ 
   globalSearch(value) {
     const term = value.toLowerCase().trim();
     if (term.length >= 2) {
@@ -1232,7 +1185,7 @@ renderTables() {
       this.filterClients();
     }
   }
-  
+ 
   parseDate(dateStr) {
     const formats = [
       /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
@@ -1240,12 +1193,11 @@ renderTables() {
       /^(\d{4})-(\d{1,2})-(\d{1,2})$/,
       /^(\d{1,2})-(\d{1,2})-(\d{4})$/
     ];
- 
     for (let format of formats) {
       const match = dateStr.match(format);
       if (match) {
         let year, month, day;
-     
+    
         if (dateStr.includes('/')) {
           month = parseInt(match[1]) - 1;
           day = parseInt(match[2]);
@@ -1259,53 +1211,46 @@ renderTables() {
           month = parseInt(match[2]) - 1;
           year = parseInt(match[3]);
         }
-     
+    
         const date = new Date(year, month, day);
         if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
           return date;
         }
       }
     }
- 
     const d = new Date(dateStr);
     if (!isNaN(d.getTime())) return d;
     return null;
   }
-  
+ 
   confirmDelete(key) {
     this.pendingDeleteKey = key;
     const modal = document.getElementById('confirm-modal');
     const content = document.getElementById('confirm-modal-content');
- 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
- 
     setTimeout(() => {
       content.classList.remove('scale-95', 'opacity-0');
       content.classList.add('scale-100', 'opacity-100');
     }, 10);
- 
     const actionBtn = document.getElementById('confirm-modal-action');
     actionBtn.onclick = () => this.executeDelete();
   }
-  
+ 
   closeConfirmModal() {
     const modal = document.getElementById('confirm-modal');
     const content = document.getElementById('confirm-modal-content');
- 
     content.classList.remove('scale-100', 'opacity-100');
     content.classList.add('scale-95', 'opacity-0');
- 
     setTimeout(() => {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       this.pendingDeleteKey = null;
     }, 300);
   }
-  
+ 
   executeDelete() {
     if (!this.pendingDeleteKey) return;
- 
     this.db.ref('clients/' + this.pendingDeleteKey).remove().then(() => {
       this.closeConfirmModal();
       this.showToast('Client Deleted', 'Client removed from Realtime Database');
@@ -1314,11 +1259,11 @@ renderTables() {
       this.showToast('Error', 'Failed to delete client: ' + err.message, 'error');
     });
   }
-  
+ 
   renderClientDropdown() {
     const select = document.getElementById('report-client-select');
     if (!select) return;
-    
+   
     select.innerHTML = '<option value="">-- Select Client --</option>';
     this.clients.forEach(c => {
       const opt = document.createElement('option');
@@ -1327,7 +1272,7 @@ renderTables() {
       select.appendChild(opt);
     });
   }
-  
+ 
   loadClientToForm(clientKey) {
     const client = this.clients.find(c => c._key === clientKey);
     if(client) {
@@ -1336,7 +1281,7 @@ renderTables() {
       document.getElementById('display-client-email').value = client.email || '';
     }
   }
-  
+ 
   prepReport(clientKey) {
     this.navigate('service-form');
     this.clearReportForm();
@@ -1344,53 +1289,48 @@ renderTables() {
     document.getElementById('report-client-select').value = clientKey;
     this.loadClientToForm(clientKey);
   }
-  
+ 
   setReportType(type) {
     this.currentReportType = type;
     document.getElementById('report-type-title').innerText = type.toUpperCase();
- 
     const hwBtn = document.getElementById('report-type-hardware');
     const swBtn = document.getElementById('report-type-software');
-    
+   
     if (hwBtn) {
       hwBtn.classList.toggle('bg-brand-600', type === 'Hardware');
       hwBtn.classList.toggle('text-white', type === 'Hardware');
       hwBtn.classList.toggle('bg-slate-100', type !== 'Hardware');
       hwBtn.classList.toggle('text-slate-600', type !== 'Hardware');
     }
- 
     if (swBtn) {
       swBtn.classList.toggle('bg-brand-600', type === 'Software');
       swBtn.classList.toggle('text-white', type === 'Software');
       swBtn.classList.toggle('bg-slate-100', type !== 'Software');
       swBtn.classList.toggle('text-slate-600', type !== 'Software');
     }
- 
     const checkboxes = document.querySelectorAll('.service-checkbox');
     checkboxes.forEach(cb => {
       cb.disabled = (type === 'Software');
     });
   }
-  
+ 
   generateReportID() {
     const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
     const rand = Math.floor(1000 + Math.random() * 9000);
     const id = `REP-${date}-${rand}`;
     const now = new Date();
     const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-
     this.updateLiveTime();
     if (!this.timeInterval) {
       this.timeInterval = setInterval(() => this.updateLiveTime(), 1000);
     }
-
     const dateEl = document.getElementById('display-date');
     const dateFullEl = document.getElementById('display-date-full');
-    
+   
     if (dateEl) dateEl.value = today;
     if (dateFullEl) dateFullEl.value = today;
   }
-  
+ 
   updateLiveTime() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-GB', {
@@ -1401,16 +1341,14 @@ renderTables() {
     const timeEl = document.getElementById('display-time');
     if (timeEl) timeEl.value = timeStr;
   }
-  
+ 
   saveReport() {
     const clientKey = document.getElementById('report-client-select').value;
     const client = this.clients.find(c => c._key === clientKey);
- 
     if(!client) {
       this.showToast('Error', 'Please select a client first.', 'error');
       return;
     }
- 
     const reportData = {
       id: "REP-" + Date.now().toString(36).toUpperCase(),
       type: this.currentReportType,
@@ -1443,7 +1381,6 @@ renderTables() {
       timestamp: Date.now(),
       createdAt: new Date().toISOString()
     };
- 
     if (this.currentReportKey) {
       this.db.ref('reports/' + this.currentReportKey).update(reportData).then(() => {
         this.showToast('Report Updated', `Report ${reportData.id} updated successfully`);
@@ -1463,7 +1400,7 @@ renderTables() {
       });
     }
   }
-  
+ 
   captureCheckboxStates() {
     const checkboxes = document.querySelectorAll('.service-checkbox');
     const states = {};
@@ -1472,7 +1409,7 @@ renderTables() {
     });
     return states;
   }
-  
+ 
   clearReportForm() {
     const textInputs = [
       'display-client-name','display-client-phone','display-client-email',
@@ -1481,42 +1418,34 @@ renderTables() {
       'display-other-service','display-before-partial','display-after-partial',
       'display-issues-persisting'
     ];
- 
     textInputs.forEach(id => {
       const el = document.getElementById(id);
       if(el) el.value = '';
     });
- 
     const checkboxes = document.querySelectorAll('.service-checkbox');
     checkboxes.forEach(cb => cb.checked = false);
- 
     const clientSelect = document.getElementById('report-client-select');
     if (clientSelect) clientSelect.value = '';
- 
     const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
     const dateEl = document.getElementById('display-date');
     const dateFullEl = document.getElementById('display-date-full');
     const statusEl = document.getElementById('device-status');
-    
+   
     if (dateEl) dateEl.value = today;
     if (dateFullEl) dateFullEl.value = today;
     if (statusEl) statusEl.value = 'Received';
   }
-  
+ 
   downloadPDF() {
     const element = document.getElementById('report-paper');
     const reportId = "RGT_Service_Report_" + Date.now().toString(36).toUpperCase();
- 
     this.showToast('Generating PDF', 'Creating exact A4 replica of physical form...');
- 
     const originalShadow = element.style.boxShadow || '';
     const originalWidth = element.style.width || '';
     const originalMinHeight = element.style.minHeight || '';
- 
     element.style.boxShadow = 'none';
     element.style.width = '210mm';
     element.style.minHeight = '297mm';
- 
     const opt = {
       margin: 0,
       filename: `Rare_Grade_Tech_${this.currentReportType}_Service_Report_${reportId}.pdf`,
@@ -1536,7 +1465,6 @@ renderTables() {
       },
       pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
- 
     html2pdf()
       .set(opt)
       .from(element)
@@ -1555,7 +1483,7 @@ renderTables() {
         this.showToast('PDF Error', 'Please try again', 'error');
       });
   }
-  
+ 
   updateStats() {
     this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText) || 0, this.clients.length, 800);
     this.animateValue("stat-reports", parseInt(document.getElementById("stat-reports").innerText) || 0, this.reports.length, 800);
@@ -1564,17 +1492,17 @@ renderTables() {
       const statEl = document.getElementById(`stat-${kebab}`);
       const sideEl = document.getElementById(`side-${kebab}`);
       const count = this.countReportsByStatus(status);
-      
+     
       if (statEl) this.animateValue(`stat-${kebab}`, parseInt(statEl.innerText) || 0, count, 800);
       if (sideEl) sideEl.innerText = count;
     });
     if(this.chartInstance) this.updateChart();
   }
-  
+ 
   countReportsByStatus(status) {
     return this.reports.filter(r => r.status === status).length;
   }
-  
+ 
   animateValue(id, start, end, duration) {
     if (start === end) return;
     const range = end - start;
@@ -1583,7 +1511,7 @@ renderTables() {
     const stepTime = Math.max(Math.floor(duration / Math.abs(range)), 30);
     const obj = document.getElementById(id);
     if (!obj) return;
-    
+   
     const timer = setInterval(() => {
       current += increment;
       obj.innerHTML = current;
@@ -1592,21 +1520,21 @@ renderTables() {
       }
     }, stepTime);
   }
-  
+ 
   updateDate() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const dateEl = document.getElementById('current-date');
     if (dateEl) dateEl.innerText = new Date().toLocaleDateString('en-US', options);
   }
-  
+ 
   showToast(title, message, type = 'success') {
     const toast = document.getElementById('toast');
     const titleEl = document.getElementById('toast-title');
     const msgEl = document.getElementById('toast-msg');
     const icon = document.getElementById('toast-icon');
-    
+   
     if (!toast || !titleEl || !msgEl || !icon) return;
-    
+   
     titleEl.innerText = title;
     msgEl.innerText = message;
     icon.className = type === 'error'
@@ -1615,15 +1543,15 @@ renderTables() {
     toast.classList.remove('translate-y-20', 'opacity-0');
     setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
   }
-  
+ 
   initChart() {
     const ctx = document.getElementById('activityChart');
     if (!ctx) return;
-    
+   
     const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, 'rgba(14, 165, 233, 0.4)');
     gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
-    
+   
     this.chartInstance = new Chart(ctx.getContext('2d'), {
       type: 'line',
       data: {
@@ -1650,27 +1578,47 @@ renderTables() {
       }
     });
   }
-  
+ 
   updateChart() {
     if (!this.chartInstance) return;
     const newData = Array.from({length: 7}, () => Math.floor(Math.random() * 50));
     this.chartInstance.data.datasets[0].data = newData;
     this.chartInstance.update();
   }
-  
+ 
   loadSampleData() {
     const samples = [
-      { displayId: 'RGT-KGA-5372', name: 'Kgaogelo', phone: '0795372364', email: '', date: '05/03/2026', timestamp: Date.now() },
-      { displayId: 'RGT-THA-8821', name: 'Thabo Mokoena', phone: '0823456789', email: 'thabo@example.co.za', date: '04/03/2026', timestamp: Date.now() - 86400000 },
-      { displayId: 'RGT-LEB-2290', name: 'Lebogang Sithole', phone: '0712345678', email: 'lebogang@example.co.za', date: '03/03/2026', timestamp: Date.now() - 172800000 }
+      { 
+        displayId: 'RGT-KGA-5372', 
+        name: 'Kgaogelo Mohlatlole', 
+        phone: '079 537 2364', 
+        email: 'kgaogelo@raregradetech.co.za', 
+        date: '06/03/2026', 
+        timestamp: Date.now() 
+      },
+      { 
+        displayId: 'RGT-THA-8821', 
+        name: 'Thabo Mokoena', 
+        phone: '082 345 6789', 
+        email: 'thabo@example.co.za', 
+        date: '04/03/2026', 
+        timestamp: Date.now() - 86400000 
+      },
+      { 
+        displayId: 'RGT-LEB-2290', 
+        name: 'Lebogang Sithole', 
+        phone: '071 234 5678', 
+        email: 'lebogang@example.co.za', 
+        date: '03/03/2026', 
+        timestamp: Date.now() - 172800000 
+      }
     ];
- 
     samples.forEach(s => {
       this.db.ref('clients').push(s);
     });
-    this.showToast('Sample Data Loaded', 'Test clients saved to Realtime Database');
+    this.showToast('Sample Data Loaded', 'Kgaogelo Mohlatlole added as first client');
   }
-  
+ 
   toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
@@ -1679,7 +1627,6 @@ renderTables() {
     }
   }
 }
-
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new RareGradeApp();
