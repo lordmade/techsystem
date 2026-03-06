@@ -778,21 +778,20 @@ class RareGradeApp {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.database();
   }
-  setupRealtimeListeners() {
+setupRealtimeListeners() {
     this.db.ref('clients').on('value', (snapshot) => {
-      this.clients = [];
-      if (snapshot.exists()) {
-        snapshot.forEach(child => {
-          const client = child.val();
-          client._key = child.key;
-          this.clients.push(client);
-        });
-      }
-      this.updateStats();
-      if (this.currentView === 'manage-clients' || this.currentView === 'dashboard') {
-        this.renderTables();
-      }
-      this.renderClientDropdown();
+        this.clients = [];
+        if (snapshot.exists()) {
+            snapshot.forEach(child => {
+                const client = child.val();
+                client._key = child.key;
+                this.clients.push(client);
+            });
+            console.log('Firebase data loaded:', this.clients); // Debug
+        }
+        this.updateStats();
+        this.renderTables(); // Always render, don't check view
+        this.renderClientDropdown();
     });
  
     this.db.ref('reports').on('value', (snapshot) => {
@@ -864,64 +863,89 @@ class RareGradeApp {
       setTimeout(() => this.navigate('manage-clients'), 800);
     });
   }
-  renderTables() {
+renderTables() {
     const tbody = document.getElementById('client-table-body');
     const recentList = document.getElementById('recent-clients-list');
- 
+    
+    if (!tbody || !recentList) {
+        console.error('Table elements not found');
+        return;
+    }
+
     tbody.innerHTML = '';
     recentList.innerHTML = '';
- 
-    if(this.clients.length === 0) {
-      document.getElementById('empty-state').classList.remove('hidden');
+
+    console.log('Rendering tables with clients:', this.clients.length, this.clients);
+
+    // Handle empty state properly
+    const emptyState = document.getElementById('empty-state');
+    if (this.clients.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
     } else {
-      document.getElementById('empty-state').classList.add('hidden');
+        if (emptyState) emptyState.classList.add('hidden');
     }
- 
-    const sortedClients = [...this.clients].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
- 
+
+    // Sort with fallback for missing timestamps
+    const sortedClients = [...this.clients].sort((a, b) => {
+        const timeA = a.timestamp || 0;
+        const timeB = b.timestamp || 0;
+        return timeB - timeA;
+    });
+
     sortedClients.forEach(client => {
-      const clientReports = this.reports.filter(r => r.clientKey === client._key);
-      const reportCount = clientReports.length;
-   
-      const tr = document.createElement('tr');
-      tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
-      tr.dataset.key = client._key;
-      tr.innerHTML = `
-        <td class="p-4 font-medium text-slate-900">${client.name}</td>
-        <td class="p-4 font-mono text-brand-600 font-medium">${client.displayId || client.id || 'N/A'}</td>
-        <td class="p-4">
-          <div class="text-xs text-slate-600">${client.phone}</div>
-          <div class="text-[10px] text-slate-500">${client.email}</div>
-        </td>
-        <td class="p-4 text-slate-500 text-xs">${client.date}</td>
-        <td class="p-4 text-right">
-          <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium shimmer-overlay">
-            Create Report
-          </button>
-          ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-            View Reports (${reportCount})
-          </button>` : ''}
-          <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-            Delete
-          </button>
-        </td>
-      `;
-      tbody.appendChild(tr);
+        // Safe data access with fallbacks
+        const displayId = client.displayId || client.id || 'N/A';
+        const name = client.name || 'Unknown';
+        const phone = client.phone || 'No phone';
+        const email = client.email || '';
+        const date = client.date || new Date(client.timestamp).toLocaleDateString() || 'Unknown';
+        
+        const clientReports = this.reports.filter(r => r.clientKey === client._key);
+        const reportCount = clientReports.length;
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
+        tr.dataset.key = client._key;
+        tr.innerHTML = `
+            <td class="p-4 font-medium text-slate-900">${name}</td>
+            <td class="p-4 font-mono text-brand-600 font-medium">${displayId}</td>
+            <td class="p-4">
+                <div class="text-xs text-slate-600">${phone}</div>
+                ${email ? `<div class="text-[10px] text-slate-500">${email}</div>` : ''}
+            </td>
+            <td class="p-4 text-slate-500 text-xs">${date}</td>
+            <td class="p-4 text-right">
+                <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                    Create Report
+                </button>
+                ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                    View (${reportCount})
+                </button>` : ''}
+                <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                    Delete
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
     });
- 
+
+    // Recent clients list (top 5)
     sortedClients.slice(0, 5).forEach(client => {
-      const tr = document.createElement('tr');
-      tr.className = 'table-row-shimmer';
-      tr.dataset.key = client._key;
-      tr.innerHTML = `
-        <td class="px-6 py-4 font-medium text-slate-700">${client.name}</td>
-        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
-        <td class="px-6 py-4 text-xs">${client.date}</td>
-        <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span></td>
-      `;
-      recentList.appendChild(tr);
+        const tr = document.createElement('tr');
+        tr.className = 'table-row-shimmer';
+        tr.dataset.key = client._key;
+        tr.innerHTML = `
+            <td class="px-6 py-4 font-medium text-slate-700">${client.name || 'Unknown'}</td>
+            <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
+            <td class="px-6 py-4 text-xs">${client.date || 'Unknown'}</td>
+            <td class="px-6 py-4">
+                <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
+            </td>
+        `;
+        recentList.appendChild(tr);
     });
-  }
+}
   viewReports(clientKey) {
     const client = this.clients.find(c => c._key === clientKey);
     if (!client) return;
