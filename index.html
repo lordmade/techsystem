@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rare Grade Tech | Enterprise Portal</title>
 <!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com "></script>
+<script src="https://cdn.tailwindcss.com"></script>
 <!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- FontAwesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300 ;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- PDF Generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js "></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <!-- Firebase SDK (Realtime Database) -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js "></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js "></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <script>
 tailwind.config = {
   theme: {
@@ -284,7 +284,7 @@ aside.collapsed .logo-text { display: none; }
   <!-- User Profile -->
   <div class="p-4 border-t border-slate-200">
     <div class="glass-panel p-3 rounded-xl flex items-center gap-3">
-      <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff " class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+      <img src="https://ui-avatars.com/api/?name=Vynix+Lingua&background=0ea5e9&color=fff" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
       <div class="flex-1 min-w-0 nav-text">
         <p class="text-sm font-medium text-slate-900 truncate">Vynix Lingua</p>
         <p class="text-xs text-slate-500 truncate">System Administrator</p>
@@ -575,7 +575,7 @@ aside.collapsed .logo-text { display: none; }
             <div class="header-blue mb-6 flex items-center justify-between">
               <!-- Logo + Imagination to Reality (moved under logo) -->
               <div class="flex flex-col items-start">
-                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png "
+                <img src="https://raregradetech.com/wp-content/uploads/2023/08/website-logo-e1738227303766.png"
                      alt="Rare Grade Tech"
                      class="h-20 w-auto object-contain">
                 <div id="report-type-title" class="text-white text-right text-1xl font-bold tracking-widest">HARDWARE</div>
@@ -744,19 +744,18 @@ class RareGradeApp {
     this.pendingDeleteKey = null;
     this.currentReportKey = null;
     this.statuses = ['Received', 'In Repair', 'Waiting for Parts', 'Ready for Pickup', 'Completed'];
+    this.dataLoaded = false;
  
     this.init();
   }
+  
   init() {
     this.initFirebase();
     this.setupRealtimeListeners();
- 
     this.updateDate();
     this.renderClientDropdown();
-    this.renderTables();
     this.initChart();
     this.generateReportID();
- 
     this.navigate('dashboard');
  
     document.getElementById('newClientName')?.addEventListener('input', (e) => {
@@ -765,36 +764,47 @@ class RareGradeApp {
       document.getElementById('preview-client-id').innerText = id;
     });
   }
+  
   initFirebase() {
-   const firebaseConfig = {
-  apiKey: "AIzaSyAxBT0oESoL62oz_x_Z8cMtdENWZPx4tMI",
-  authDomain: "pinotp-d7ef5.firebaseapp.com",
-  databaseURL: "https://pinotp-d7ef5-default-rtdb.firebaseio.com",
-  projectId: "pinotp-d7ef5",
-  storageBucket: "pinotp-d7ef5.firebasestorage.app",
-  messagingSenderId: "708458917827",
-  appId: "1:708458917827:web:375de278577df0adcf9776"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxBT0oESoL62oz_x_Z8cMtdENWZPx4tMI",
+      authDomain: "pinotp-d7ef5.firebaseapp.com",
+      databaseURL: "https://pinotp-d7ef5-default-rtdb.firebaseio.com",
+      projectId: "pinotp-d7ef5",
+      storageBucket: "pinotp-d7ef5.firebasestorage.app",
+      messagingSenderId: "708458917827",
+      appId: "1:708458917827:web:375de278577df0adcf9776"
+    };
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.database();
+    console.log('Firebase initialized');
   }
-setupRealtimeListeners() {
+  
+  setupRealtimeListeners() {
+    // Clients listener with immediate render
     this.db.ref('clients').on('value', (snapshot) => {
-        this.clients = [];
-        if (snapshot.exists()) {
-            snapshot.forEach(child => {
-                const client = child.val();
-                client._key = child.key;
-                this.clients.push(client);
-            });
-            console.log('Firebase data loaded:', this.clients); // Debug
-        }
-        this.updateStats();
-        this.renderTables(); // Always render, don't check view
-        this.renderClientDropdown();
+      console.log('Firebase clients update received:', snapshot.exists(), snapshot.val());
+      this.clients = [];
+      if (snapshot.exists()) {
+        snapshot.forEach(child => {
+          const client = child.val();
+          client._key = child.key;
+          this.clients.push(client);
+          console.log('Loaded client:', client.name, 'Key:', child.key);
+        });
+      }
+      this.dataLoaded = true;
+      this.updateStats();
+      this.renderTables();
+      this.renderClientDropdown();
+    }, (error) => {
+      console.error('Firebase clients error:', error);
+      this.showToast('Connection Error', 'Failed to load clients: ' + error.message, 'error');
     });
  
+    // Reports listener
     this.db.ref('reports').on('value', (snapshot) => {
+      console.log('Firebase reports update received:', snapshot.exists());
       this.reports = [];
       if (snapshot.exists()) {
         snapshot.forEach(child => {
@@ -804,8 +814,15 @@ setupRealtimeListeners() {
         });
       }
       this.updateStats();
+      // Refresh tables to show report counts
+      if (this.currentView === 'manage-clients') {
+        this.renderTables();
+      }
+    }, (error) => {
+      console.error('Firebase reports error:', error);
     });
   }
+  
   navigate(viewId) {
     document.querySelectorAll('.view-section').forEach(el => {
       el.classList.add('hidden');
@@ -831,19 +848,27 @@ setupRealtimeListeners() {
     document.getElementById('page-title').innerText = titles[viewId] || 'Dashboard';
  
     this.currentView = viewId;
-    if(viewId === 'manage-clients') this.renderTables();
+    
+    // Force re-render when navigating to ensure data is displayed
+    if(viewId === 'manage-clients' || viewId === 'dashboard') {
+      this.renderTables();
+    }
     if(viewId === 'service-form') {
       this.renderClientDropdown();
       this.setReportType(this.currentReportType);
     }
   }
+  
   handleAddClient(e) {
     e.preventDefault();
     const name = document.getElementById('newClientName').value.trim();
     const phone = document.getElementById('newClientPhone').value.trim();
     const email = document.getElementById('newClientEmail').value.trim();
  
-    if(!name || !phone) return;
+    if(!name || !phone) {
+      this.showToast('Error', 'Name and phone are required', 'error');
+      return;
+    }
  
     const displayId = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
  
@@ -856,20 +881,26 @@ setupRealtimeListeners() {
       timestamp: Date.now()
     };
  
+    console.log('Saving client:', newClient);
+    
     this.db.ref('clients').push(newClient).then(() => {
       e.target.reset();
       document.getElementById('preview-client-id').innerText = '---';
       this.showToast('Client Registered', `${name} saved to Realtime Database`);
       setTimeout(() => this.navigate('manage-clients'), 800);
+    }).catch(err => {
+      console.error('Save error:', err);
+      this.showToast('Error', 'Failed to save client: ' + err.message, 'error');
     });
   }
-renderTables() {
+  
+  renderTables() {
     const tbody = document.getElementById('client-table-body');
     const recentList = document.getElementById('recent-clients-list');
     
     if (!tbody || !recentList) {
-        console.error('Table elements not found');
-        return;
+      console.error('Table elements not found');
+      return;
     }
 
     tbody.innerHTML = '';
@@ -880,72 +911,77 @@ renderTables() {
     // Handle empty state properly
     const emptyState = document.getElementById('empty-state');
     if (this.clients.length === 0) {
-        if (emptyState) emptyState.classList.remove('hidden');
-        return;
+      if (emptyState) emptyState.classList.remove('hidden');
+      console.log('No clients to display');
+      return;
     } else {
-        if (emptyState) emptyState.classList.add('hidden');
+      if (emptyState) emptyState.classList.add('hidden');
     }
 
     // Sort with fallback for missing timestamps
     const sortedClients = [...this.clients].sort((a, b) => {
-        const timeA = a.timestamp || 0;
-        const timeB = b.timestamp || 0;
-        return timeB - timeA;
+      const timeA = a.timestamp || 0;
+      const timeB = b.timestamp || 0;
+      return timeB - timeA;
     });
 
+    // Render main client table
     sortedClients.forEach(client => {
-        // Safe data access with fallbacks
-        const displayId = client.displayId || client.id || 'N/A';
-        const name = client.name || 'Unknown';
-        const phone = client.phone || 'No phone';
-        const email = client.email || '';
-        const date = client.date || new Date(client.timestamp).toLocaleDateString() || 'Unknown';
-        
-        const clientReports = this.reports.filter(r => r.clientKey === client._key);
-        const reportCount = clientReports.length;
+      // Safe data access with fallbacks
+      const displayId = client.displayId || client.id || 'N/A';
+      const name = client.name || 'Unknown';
+      const phone = client.phone || 'No phone';
+      const email = client.email || '';
+      const date = client.date || new Date(client.timestamp).toLocaleDateString() || 'Unknown';
+      
+      const clientReports = this.reports.filter(r => r.clientKey === client._key);
+      const reportCount = clientReports.length;
 
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
-        tr.dataset.key = client._key;
-        tr.innerHTML = `
-            <td class="p-4 font-medium text-slate-900">${name}</td>
-            <td class="p-4 font-mono text-brand-600 font-medium">${displayId}</td>
-            <td class="p-4">
-                <div class="text-xs text-slate-600">${phone}</div>
-                ${email ? `<div class="text-[10px] text-slate-500">${email}</div>` : ''}
-            </td>
-            <td class="p-4 text-slate-500 text-xs">${date}</td>
-            <td class="p-4 text-right">
-                <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-                    Create Report
-                </button>
-                ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-                    View (${reportCount})
-                </button>` : ''}
-                <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-                    Delete
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
+      tr.dataset.key = client._key;
+      tr.innerHTML = `
+        <td class="p-4 font-medium text-slate-900">${name}</td>
+        <td class="p-4 font-mono text-brand-600 font-medium">${displayId}</td>
+        <td class="p-4">
+          <div class="text-xs text-slate-600">${phone}</div>
+          ${email ? `<div class="text-[10px] text-slate-500">${email}</div>` : ''}
+        </td>
+        <td class="p-4 text-slate-500 text-xs">${date}</td>
+        <td class="p-4 text-right">
+          <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+            Create Report
+          </button>
+          ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+            View (${reportCount})
+          </button>` : ''}
+          <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+            Delete
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
     });
 
-    // Recent clients list (top 5)
+    // Render recent clients list (top 5) for dashboard
     sortedClients.slice(0, 5).forEach(client => {
-        const tr = document.createElement('tr');
-        tr.className = 'table-row-shimmer';
-        tr.dataset.key = client._key;
-        tr.innerHTML = `
-            <td class="px-6 py-4 font-medium text-slate-700">${client.name || 'Unknown'}</td>
-            <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
-            <td class="px-6 py-4 text-xs">${client.date || 'Unknown'}</td>
-            <td class="px-6 py-4">
-                <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
-            </td>
-        `;
-        recentList.appendChild(tr);
+      const tr = document.createElement('tr');
+      tr.className = 'table-row-shimmer';
+      tr.dataset.key = client._key;
+      tr.innerHTML = `
+        <td class="px-6 py-4 font-medium text-slate-700">${client.name || 'Unknown'}</td>
+        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
+        <td class="px-6 py-4 text-xs">${client.date || 'Unknown'}</td>
+        <td class="px-6 py-4">
+          <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
+        </td>
+      `;
+      recentList.appendChild(tr);
     });
-}
+    
+    console.log('Tables rendered successfully');
+  }
+  
   viewReports(clientKey) {
     const client = this.clients.find(c => c._key === clientKey);
     if (!client) return;
@@ -1010,6 +1046,7 @@ renderTables() {
       content.classList.add('scale-100', 'opacity-100');
     }, 10);
   }
+  
   closeReportsModal() {
     const modal = document.getElementById('reports-modal');
     const content = document.getElementById('reports-modal-content');
@@ -1022,6 +1059,7 @@ renderTables() {
       modal.classList.remove('flex');
     }, 300);
   }
+  
   deleteReportByKey(reportKey) {
     if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
       this.db.ref('reports/' + reportKey).remove().then(() => {
@@ -1031,6 +1069,7 @@ renderTables() {
       });
     }
   }
+  
   deleteCurrentReport() {
     if (!this.currentReportKey) {
       this.showToast('Error', 'No report loaded to delete. Please load a report first.', 'error');
@@ -1048,6 +1087,7 @@ renderTables() {
       });
     }
   }
+  
   loadReportToForm(report) {
     this.currentReportKey = report._key || null;
  
@@ -1094,6 +1134,7 @@ renderTables() {
  
     this.showToast('Report Loaded', 'Saved report data retrieved successfully');
   }
+  
   filterClients() {
     const term = document.getElementById('client-search').value.toLowerCase().trim();
     const rows = document.querySelectorAll('#client-table-body tr');
@@ -1142,6 +1183,7 @@ renderTables() {
       row.style.display = matches ? '' : 'none';
     });
   }
+  
   filterDashboard() {
     const term = document.getElementById('dashboard-search').value.toLowerCase().trim();
     const rows = document.querySelectorAll('#recent-clients-list tr');
@@ -1174,6 +1216,7 @@ renderTables() {
       row.style.display = matches ? '' : 'none';
     });
   }
+  
   globalSearch(value) {
     const term = value.toLowerCase().trim();
     if (term.length >= 2) {
@@ -1182,6 +1225,7 @@ renderTables() {
       this.filterClients();
     }
   }
+  
   parseDate(dateStr) {
     const formats = [
       /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
@@ -1220,6 +1264,7 @@ renderTables() {
     if (!isNaN(d.getTime())) return d;
     return null;
   }
+  
   confirmDelete(key) {
     this.pendingDeleteKey = key;
     const modal = document.getElementById('confirm-modal');
@@ -1236,6 +1281,7 @@ renderTables() {
     const actionBtn = document.getElementById('confirm-modal-action');
     actionBtn.onclick = () => this.executeDelete();
   }
+  
   closeConfirmModal() {
     const modal = document.getElementById('confirm-modal');
     const content = document.getElementById('confirm-modal-content');
@@ -1249,6 +1295,7 @@ renderTables() {
       this.pendingDeleteKey = null;
     }, 300);
   }
+  
   executeDelete() {
     if (!this.pendingDeleteKey) return;
  
@@ -1260,8 +1307,11 @@ renderTables() {
       this.showToast('Error', 'Failed to delete client: ' + err.message, 'error');
     });
   }
+  
   renderClientDropdown() {
     const select = document.getElementById('report-client-select');
+    if (!select) return;
+    
     select.innerHTML = '<option value="">-- Select Client --</option>';
     this.clients.forEach(c => {
       const opt = document.createElement('option');
@@ -1270,6 +1320,7 @@ renderTables() {
       select.appendChild(opt);
     });
   }
+  
   loadClientToForm(clientKey) {
     const client = this.clients.find(c => c._key === clientKey);
     if(client) {
@@ -1278,6 +1329,7 @@ renderTables() {
       document.getElementById('display-client-email').value = client.email || '';
     }
   }
+  
   prepReport(clientKey) {
     this.navigate('service-form');
     this.clearReportForm();
@@ -1285,41 +1337,53 @@ renderTables() {
     document.getElementById('report-client-select').value = clientKey;
     this.loadClientToForm(clientKey);
   }
+  
   setReportType(type) {
     this.currentReportType = type;
-    // SIMPLIFIED - only "HARDWARE" or "SOFTWARE"
     document.getElementById('report-type-title').innerText = type.toUpperCase();
  
-    document.getElementById('report-type-hardware').classList.toggle('bg-brand-600', type === 'Hardware');
-    document.getElementById('report-type-hardware').classList.toggle('text-white', type === 'Hardware');
-    document.getElementById('report-type-hardware').classList.toggle('bg-slate-100', type !== 'Hardware');
-    document.getElementById('report-type-hardware').classList.toggle('text-slate-600', type !== 'Hardware');
+    const hwBtn = document.getElementById('report-type-hardware');
+    const swBtn = document.getElementById('report-type-software');
+    
+    if (hwBtn) {
+      hwBtn.classList.toggle('bg-brand-600', type === 'Hardware');
+      hwBtn.classList.toggle('text-white', type === 'Hardware');
+      hwBtn.classList.toggle('bg-slate-100', type !== 'Hardware');
+      hwBtn.classList.toggle('text-slate-600', type !== 'Hardware');
+    }
  
-    document.getElementById('report-type-software').classList.toggle('bg-brand-600', type === 'Software');
-    document.getElementById('report-type-software').classList.toggle('text-white', type === 'Software');
-    document.getElementById('report-type-software').classList.toggle('bg-slate-100', type !== 'Software');
-    document.getElementById('report-type-software').classList.toggle('text-slate-600', type !== 'Software');
+    if (swBtn) {
+      swBtn.classList.toggle('bg-brand-600', type === 'Software');
+      swBtn.classList.toggle('text-white', type === 'Software');
+      swBtn.classList.toggle('bg-slate-100', type !== 'Software');
+      swBtn.classList.toggle('text-slate-600', type !== 'Software');
+    }
  
     const checkboxes = document.querySelectorAll('.service-checkbox');
     checkboxes.forEach(cb => {
       cb.disabled = (type === 'Software');
     });
   }
+  
   generateReportID() {
     const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
     const rand = Math.floor(1000 + Math.random() * 9000);
     const id = `REP-${date}-${rand}`;
     const now = new Date();
     const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
- 
+
     this.updateLiveTime();
     if (!this.timeInterval) {
       this.timeInterval = setInterval(() => this.updateLiveTime(), 1000);
     }
- 
-    document.getElementById('display-date').value = today;
-    document.getElementById('display-date-full').value = today;
+
+    const dateEl = document.getElementById('display-date');
+    const dateFullEl = document.getElementById('display-date-full');
+    
+    if (dateEl) dateEl.value = today;
+    if (dateFullEl) dateFullEl.value = today;
   }
+  
   updateLiveTime() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-GB', {
@@ -1330,6 +1394,7 @@ renderTables() {
     const timeEl = document.getElementById('display-time');
     if (timeEl) timeEl.value = timeStr;
   }
+  
   saveReport() {
     const clientKey = document.getElementById('report-client-select').value;
     const client = this.clients.find(c => c._key === clientKey);
@@ -1391,6 +1456,7 @@ renderTables() {
       });
     }
   }
+  
   captureCheckboxStates() {
     const checkboxes = document.querySelectorAll('.service-checkbox');
     const states = {};
@@ -1399,6 +1465,7 @@ renderTables() {
     });
     return states;
   }
+  
   clearReportForm() {
     const textInputs = [
       'display-client-name','display-client-phone','display-client-email',
@@ -1416,13 +1483,19 @@ renderTables() {
     const checkboxes = document.querySelectorAll('.service-checkbox');
     checkboxes.forEach(cb => cb.checked = false);
  
-    document.getElementById('report-client-select').value = '';
+    const clientSelect = document.getElementById('report-client-select');
+    if (clientSelect) clientSelect.value = '';
  
     const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-    document.getElementById('display-date').value = today;
-    document.getElementById('display-date-full').value = today;
-    if (document.getElementById('device-status')) document.getElementById('device-status').value = 'Received';
+    const dateEl = document.getElementById('display-date');
+    const dateFullEl = document.getElementById('display-date-full');
+    const statusEl = document.getElementById('device-status');
+    
+    if (dateEl) dateEl.value = today;
+    if (dateFullEl) dateFullEl.value = today;
+    if (statusEl) statusEl.value = 'Received';
   }
+  
   downloadPDF() {
     const element = document.getElementById('report-paper');
     const reportId = "RGT_Service_Report_" + Date.now().toString(36).toUpperCase();
@@ -1475,57 +1548,76 @@ renderTables() {
         this.showToast('PDF Error', 'Please try again', 'error');
       });
   }
+  
   updateStats() {
     this.animateValue("stat-clients", parseInt(document.getElementById("stat-clients").innerText) || 0, this.clients.length, 800);
     this.animateValue("stat-reports", parseInt(document.getElementById("stat-reports").innerText) || 0, this.reports.length, 800);
     this.statuses.forEach(status => {
       const kebab = status.toLowerCase().replace(/\s+/g, '-');
-      this.animateValue(`stat-${kebab}`, parseInt(document.getElementById(`stat-${kebab}`)?.innerText || 0), this.countReportsByStatus(status), 800);
+      const statEl = document.getElementById(`stat-${kebab}`);
       const sideEl = document.getElementById(`side-${kebab}`);
-      if (sideEl) sideEl.innerText = this.countReportsByStatus(status);
+      const count = this.countReportsByStatus(status);
+      
+      if (statEl) this.animateValue(`stat-${kebab}`, parseInt(statEl.innerText) || 0, count, 800);
+      if (sideEl) sideEl.innerText = count;
     });
     if(this.chartInstance) this.updateChart();
   }
+  
   countReportsByStatus(status) {
     return this.reports.filter(r => r.status === status).length;
   }
+  
   animateValue(id, start, end, duration) {
     if (start === end) return;
     const range = end - start;
     let current = start;
     const increment = end > start ? 1 : -1;
-    const stepTime = Math.max(Math.floor(duration / range), 30);
+    const stepTime = Math.max(Math.floor(duration / Math.abs(range)), 30);
     const obj = document.getElementById(id);
+    if (!obj) return;
+    
     const timer = setInterval(() => {
       current += increment;
       obj.innerHTML = current;
-      if (current >= end) {
-        obj.innerHTML = end;
+      if (current === end) {
         clearInterval(timer);
       }
     }, stepTime);
   }
+  
   updateDate() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', options);
+    const dateEl = document.getElementById('current-date');
+    if (dateEl) dateEl.innerText = new Date().toLocaleDateString('en-US', options);
   }
+  
   showToast(title, message, type = 'success') {
     const toast = document.getElementById('toast');
-    document.getElementById('toast-title').innerText = title;
-    document.getElementById('toast-msg').innerText = message;
+    const titleEl = document.getElementById('toast-title');
+    const msgEl = document.getElementById('toast-msg');
     const icon = document.getElementById('toast-icon');
+    
+    if (!toast || !titleEl || !msgEl || !icon) return;
+    
+    titleEl.innerText = title;
+    msgEl.innerText = message;
     icon.className = type === 'error'
       ? 'fa-solid fa-circle-exclamation text-red-500 text-xl'
       : 'fa-solid fa-check-circle text-emerald-500 text-xl';
     toast.classList.remove('translate-y-20', 'opacity-0');
     setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
   }
+  
   initChart() {
-    const ctx = document.getElementById('activityChart').getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    const ctx = document.getElementById('activityChart');
+    if (!ctx) return;
+    
+    const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, 'rgba(14, 165, 233, 0.4)');
     gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
-    this.chartInstance = new Chart(ctx, {
+    
+    this.chartInstance = new Chart(ctx.getContext('2d'), {
       type: 'line',
       data: {
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -1551,11 +1643,14 @@ renderTables() {
       }
     });
   }
+  
   updateChart() {
+    if (!this.chartInstance) return;
     const newData = Array.from({length: 7}, () => Math.floor(Math.random() * 50));
     this.chartInstance.data.datasets[0].data = newData;
     this.chartInstance.update();
   }
+  
   loadSampleData() {
     const samples = [
       { displayId: 'RGT-KGA-5372', name: 'Kgaogelo', phone: '0795372364', email: '', date: '05/03/2026', timestamp: Date.now() },
@@ -1568,13 +1663,20 @@ renderTables() {
     });
     this.showToast('Sample Data Loaded', 'Test clients saved to Realtime Database');
   }
+  
   toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('collapsed');
-    sidebar.classList.toggle('open');
+    if (sidebar) {
+      sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('open');
+    }
   }
 }
-const app = new RareGradeApp();
+
+// Initialize app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  window.app = new RareGradeApp();
+});
 </script>
 </body>
 </html>
