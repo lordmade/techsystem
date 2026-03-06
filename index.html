@@ -1,110 +1,439 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rare Grade Tech | Enterprise Portal</title>
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- FontAwesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- PDF Generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<!-- Firebase SDK (Realtime Database) -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Space Grotesk', 'sans-serif'],
-      },
-      colors: {
-        brand: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          900: '#0c4a6e',
-          950: '#082f49',
-        }
-      },
-      animation: {
-        'shimmer': 'shimmer 2s linear infinite',
-      },
-      keyframes: {
-        shimmer: {
-          '0%': { backgroundPosition: '-1000px 0' },
-          '100%': { backgroundPosition: '1000px 0' }
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rare Grade Tech • Dashboard</title>
+
+  <!-- Tailwind + daisyUI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+  <style>
+    .sidebar {
+      transition: transform 0.3s ease-in-out;
+    }
+    @media (max-width: 768px) {
+      .sidebar-closed {
+        transform: translateX(-100%);
       }
     }
-  }
-}
-</script>
-<style>
-/* ... (all your existing styles remain exactly the same) ... */
-#client-table {
-  min-width: 900px;
-}
-#client-table th {
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  padding-right: 1.75rem !important;
-}
-#client-table th.sort-asc::after,
-#client-table th.sort-desc::after {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-}
-#client-table th.sort-asc::after { content: '\f0de'; }
-#client-table th.sort-desc::after { content: '\f0dd'; }
-#client-table td {
-  vertical-align: middle;
-  padding: 1rem;
-}
-#client-table td:nth-child(1) { font-weight: 500; color: #0f172a; }
-#client-table td:nth-child(2) { font-family: ui-monospace, monospace; color: #0ea5e9; letter-spacing: 0.5px; }
-#client-table .contact-phone { font-size: 0.875rem; color: #334155; }
-#client-table .contact-email { font-size: 0.75rem; color: #64748b; opacity: 0.9; }
-</style>
+    .status-badge {
+      font-size: 0.875rem;
+      padding: 0.4rem 0.85rem;
+    }
+  </style>
 </head>
-<body class="flex h-screen overflow-hidden font-sans selection:bg-brand-500 selection:text-white">
-<!-- Sidebar, Header, all views remain 100% unchanged -->
-<!-- ... (your full HTML structure from the code you sent) ... -->
+<body class="bg-base-200 min-h-screen">
+
+<!-- ──── SIDEBAR ──── -->
+<aside id="sidebar" class="sidebar fixed md:static inset-y-0 left-0 z-50 w-72 bg-base-100 border-r border-base-300 transform md:translate-x-0 flex flex-col h-screen overflow-y-auto">
+  <div class="p-5 border-b flex items-center justify-between">
+    <h2 class="text-xl font-bold text-primary flex items-center gap-2">
+      <i class="fa-solid fa-laptop-medical"></i>
+      Rare Grade Tech
+    </h2>
+    <button class="btn btn-ghost btn-sm md:hidden" onclick="toggleSidebar()">
+      <i class="fa fa-times text-xl"></i>
+    </button>
+  </div>
+
+  <div class="flex-1 p-3">
+    <ul class="menu menu-lg">
+      <li class="menu-title text-xs opacity-60 uppercase tracking-wider mb-2">Main</li>
+      <li><a onclick="navigate('dashboard')" class="active"><i class="fa fa-chart-line"></i> Dashboard</a></li>
+      <li><a onclick="navigate('add-client')"><i class="fa fa-user-plus"></i> Add Client</a></li>
+      <li><a onclick="navigate('clients')"><i class="fa fa-users"></i> Clients</a></li>
+      <li><a onclick="navigate('reports')"><i class="fa fa-file-lines"></i> Reports</a></li>
+    </ul>
+  </div>
+
+  <div class="p-4 border-t mt-auto">
+    <div class="flex items-center gap-3">
+      <div class="avatar">
+        <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+          <img id="userPhoto" src="https://ui-avatars.com/api/?name=Guest&background=e2e8f0&color=666" alt="user"/>
+        </div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p id="userName" class="font-medium">Not signed in</p>
+        <p class="text-xs opacity-60">Guest</p>
+      </div>
+    </div>
+    <button id="signOutBtn" class="btn btn-error btn-sm w-full mt-4 hidden" onclick="signOut()">
+      <i class="fa fa-sign-out-alt mr-2"></i> Sign Out
+    </button>
+  </div>
+</aside>
+
+<!-- Overlay for mobile -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 md:hidden hidden" onclick="toggleSidebar()"></div>
+
+<!-- ──── MAIN CONTENT ──── -->
+<main id="mainContent" class="md:ml-72 transition-all duration-300 p-4 md:p-6 lg:p-8">
+
+  <!-- Page title & actions -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <h1 id="pageTitle" class="text-3xl font-bold">Dashboard</h1>
+    <div class="flex gap-3">
+      <button class="btn btn-primary gap-2" onclick="navigate('add-client')">
+        <i class="fa fa-plus"></i> New Client
+      </button>
+      <button class="btn btn-outline gap-2" onclick="window.location.reload()">
+        <i class="fa fa-sync"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- ──── DASHBOARD VIEW ──── -->
+  <div id="view-dashboard" class="space-y-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="stats shadow-lg bg-base-100">
+        <div class="stat">
+          <div class="stat-figure text-primary">
+            <i class="fa-solid fa-users text-5xl opacity-30"></i>
+          </div>
+          <div class="stat-title">Total Clients</div>
+          <div class="stat-value text-primary" id="stat-clients">—</div>
+        </div>
+      </div>
+
+      <div class="stats shadow-lg bg-base-100">
+        <div class="stat">
+          <div class="stat-figure text-success">
+            <i class="fa-solid fa-file-circle-check text-5xl opacity-30"></i>
+          </div>
+          <div class="stat-title">Service Reports</div>
+          <div class="stat-value text-success" id="stat-reports">—</div>
+        </div>
+      </div>
+
+      <div class="stats shadow-lg bg-base-100">
+        <div class="stat">
+          <div class="stat-figure text-warning">
+            <i class="fa-solid fa-screwdriver-wrench text-5xl opacity-30"></i>
+          </div>
+          <div class="stat-title">In Repair</div>
+          <div class="stat-value text-warning" id="stat-in-repair">—</div>
+        </div>
+      </div>
+
+      <div class="stats shadow-lg bg-base-100">
+        <div class="stat">
+          <div class="stat-figure text-info">
+            <i class="fa-solid fa-check-double text-5xl opacity-30"></i>
+          </div>
+          <div class="stat-title">Completed This Month</div>
+          <div class="stat-value text-info" id="stat-completed-month">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status breakdown -->
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title mb-6">
+          <i class="fa-solid fa-chart-simple mr-2 text-primary"></i>
+          Device Status Distribution
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div class="bg-base-200 rounded-2xl p-6 text-center">
+            <div class="text-4xl font-bold text-indigo-600 mb-2" id="count-received">0</div>
+            <div class="text-sm font-medium">Received</div>
+          </div>
+          <div class="bg-base-200 rounded-2xl p-6 text-center">
+            <div class="text-4xl font-bold text-orange-600 mb-2" id="count-in-repair">0</div>
+            <div class="text-sm font-medium">In Repair</div>
+          </div>
+          <div class="bg-base-200 rounded-2xl p-6 text-center">
+            <div class="text-4xl font-bold text-yellow-600 mb-2" id="count-waiting-parts">0</div>
+            <div class="text-sm font-medium">Waiting Parts</div>
+          </div>
+          <div class="bg-base-200 rounded-2xl p-6 text-center">
+            <div class="text-4xl font-bold text-green-600 mb-2" id="count-ready-pickup">0</div>
+            <div class="text-sm font-medium">Ready Pickup</div>
+          </div>
+          <div class="bg-base-200 rounded-2xl p-6 text-center">
+            <div class="text-4xl font-bold text-blue-600 mb-2" id="count-completed">0</div>
+            <div class="text-sm font-medium">Completed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title mb-6">
+          <i class="fa-solid fa-clock-rotate-left mr-2 text-primary"></i>
+          Recent Activity
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Device</th>
+                <th>Status</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody id="recent-activity-table">
+              <tr>
+                <td colspan="5" class="text-center py-20 opacity-50 italic">
+                  Sign in to see recent activity...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──── ADD CLIENT VIEW ──── -->
+  <div id="view-add-client" class="hidden">
+    <div class="card bg-base-100 shadow-2xl max-w-2xl mx-auto">
+      <div class="card-body p-8">
+        <h2 class="card-title text-2xl mb-6">Add New Client</h2>
+
+        <form id="clientForm" class="space-y-5">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-medium">Full Name <span class="text-error">*</span></span>
+            </label>
+            <input type="text" id="clientName" class="input input-bordered input-lg w-full" required placeholder="John Doe" />
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-medium">Phone Number <span class="text-error">*</span></span>
+            </label>
+            <input type="tel" id="clientPhone" class="input input-bordered input-lg w-full" required placeholder="+27 82 123 4567" />
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-medium">Email (optional)</span>
+            </label>
+            <input type="email" id="clientEmail" class="input input-bordered input-lg w-full" placeholder="client@example.com" />
+          </div>
+
+          <div class="form-control mt-6">
+            <button type="submit" class="btn btn-primary btn-lg w-full">
+              <i class="fa fa-save mr-2"></i> Save Client
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ──── GOOGLE SIGN-IN MODAL ──── -->
+<dialog id="loginModal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box max-w-md">
+    <h3 class="font-bold text-2xl text-center mb-6">Welcome to Rare Grade Tech</h3>
+    
+    <p class="text-center opacity-70 mb-8">
+      Sign in with your Google account to access the portal
+    </p>
+
+    <div class="flex justify-center">
+      <button id="googleSignInBtn" class="btn btn-outline normal-case text-lg gap-3 hover:bg-blue-50">
+        <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6"/>
+        Sign in with Google
+      </button>
+    </div>
+
+    <div class="modal-action mt-8">
+      <p class="text-xs text-center opacity-60">
+        By signing in you agree to our <a href="#" class="link">Terms of Service</a>
+      </p>
+    </div>
+  </div>
+</dialog>
 
 <script>
-class RareGradeApp {
-  // ... (all your existing methods remain unchanged) ...
+// ────────────────────────────────────────────────
+//  Firebase Configuration
+// ────────────────────────────────────────────────
 
-  loadSampleData() {
-    const samples = [
-      { displayId: 'RGT-AC-4829', name: 'Acme Corp', phone: '+1 555-0192', email: 'support@acme.com', date: '05/03/2026', timestamp: Date.now() },
-      { displayId: 'RGT-KGA3727', name: 'Kgaogelo Mohlatle', phone: '+27795357179', email: 'Mohlatlekgaogelo115@gmail.com', date: '05/03/2026', timestamp: Date.now() - 86400000 },
-      { displayId: 'RGT-GL-9921', name: 'Globex Inc', phone: '+1 555-0143', email: 'tech@globex.com', date: '04/03/2026', timestamp: Date.now() - 172800000 }
-    ];
+const firebaseConfig = {
+  apiKey: "AIzaSyAEoYlvqPCNwFAqqJ7fLVFd6ZskCkMy5Y4",
+  authDomain: "joyjam-ad90e.firebaseapp.com",
+  databaseURL: "https://joyjam-ad90e-default-rtdb.firebaseio.com",
+  projectId: "joyjam-ad90e",
+  storageBucket: "joyjam-ad90e.firebasestorage.app",
+  messagingSenderId: "71554980471",
+  appId: "1:71554980471:web:d62a9f560232575faa8472"
+};
 
-    samples.forEach(s => {
-      this.db.ref('clients').push(s);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+// ────────────────────────────────────────────────
+//  State & Navigation
+// ────────────────────────────────────────────────
+
+let currentView = 'dashboard';
+let currentUser = null;
+
+function navigate(view) {
+  currentView = view;
+  document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`view-${view}`)?.classList.remove('hidden');
+
+  document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+  document.querySelector(`a[onclick="navigate('${view}')"]`)?.classList.add('active');
+
+  document.getElementById('pageTitle').textContent = {
+    dashboard: 'Dashboard',
+    'add-client': 'Add New Client',
+    clients: 'All Clients',
+    reports: 'Service Reports'
+  }[view] || 'Dashboard';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('sidebar-closed');
+  document.getElementById('sidebarOverlay').classList.toggle('hidden');
+}
+
+// ────────────────────────────────────────────────
+//  Authentication
+// ────────────────────────────────────────────────
+
+const loginModal = document.getElementById('loginModal');
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  
+  if (user) {
+    // Signed in
+    loginModal.close();
+    document.getElementById('userName').textContent = user.displayName || 'User';
+    document.getElementById('userPhoto').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User');
+    document.getElementById('signOutBtn').classList.remove('hidden');
+    loadDashboardData();
+  } else {
+    // Not signed in
+    loginModal.showModal();
+    document.getElementById('userName').textContent = 'Not signed in';
+    document.getElementById('userPhoto').src = 'https://ui-avatars.com/api/?name=Guest&background=e2e8f0&color=666';
+    document.getElementById('signOutBtn').classList.add('hidden');
+  }
+});
+
+document.getElementById('googleSignInBtn').onclick = () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .catch(err => {
+      console.error("Google Sign-In error:", err);
+      alert("Sign-in failed: " + err.message);
     });
-    this.showToast('Sample Data Loaded', 'Client Registry now matches your screenshot');
+};
+
+function signOut() {
+  auth.signOut().then(() => {
+    location.reload();
+  });
+}
+
+// ────────────────────────────────────────────────
+//  Data Loading & Rendering
+// ────────────────────────────────────────────────
+
+function loadDashboardData() {
+  if (!currentUser) return;
+
+  db.ref('clients').on('value', snap => {
+    const clients = [];
+    snap.forEach(child => clients.push({key: child.key, ...child.val()}));
+    document.getElementById('stat-clients').textContent = clients.length;
+  });
+
+  db.ref('reports').on('value', snap => {
+    const reports = [];
+    snap.forEach(child => reports.push({key: child.key, ...child.val()}));
+    
+    document.getElementById('stat-reports').textContent = reports.length;
+
+    const statusCount = {received:0, inRepair:0, waitingParts:0, readyPickup:0, completed:0};
+    reports.forEach(r => {
+      const s = (r.status || 'received').toLowerCase().replace(/\s+/g,'');
+      if (s in statusCount) statusCount[s]++;
+    });
+
+    document.getElementById('count-received').textContent     = statusCount.received;
+    document.getElementById('count-in-repair').textContent    = statusCount.inRepair;
+    document.getElementById('count-waiting-parts').textContent = statusCount.waitingParts;
+    document.getElementById('count-ready-pickup').textContent = statusCount.readyPickup;
+    document.getElementById('count-completed').textContent    = statusCount.completed;
+
+    // This month completed
+    const now = new Date();
+    const thisMonth = reports.filter(r => {
+      if (r.status !== 'Completed') return false;
+      const d = new Date(r.timestamp || 0);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).length;
+
+    document.getElementById('stat-completed-month').textContent = thisMonth;
+  });
+}
+
+// ────────────────────────────────────────────────
+//  Add Client Form
+// ────────────────────────────────────────────────
+
+document.getElementById('clientForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  
+  const name  = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+
+  if (!name || !phone) {
+    alert('Name and Phone are required');
+    return;
   }
 
-  // ... (rest of your class unchanged) ...
-}
-const app = new RareGradeApp();
+  const clientData = {
+    name,
+    phone,
+    email: email || null,
+    createdBy: currentUser?.uid || 'anonymous',
+    createdAt: firebase.database.ServerValue.TIMESTAMP
+  };
+
+  db.ref('clients').push(clientData)
+    .then(() => {
+      alert('Client added successfully!');
+      document.getElementById('clientForm').reset();
+      navigate('dashboard');
+    })
+    .catch(err => alert('Error: ' + err.message));
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  // Show login modal if not signed in
+  if (!auth.currentUser) {
+    document.getElementById('loginModal').showModal();
+  }
+});
 </script>
 </body>
 </html>
