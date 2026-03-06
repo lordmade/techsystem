@@ -894,13 +894,13 @@ class RareGradeApp {
     });
   }
   
-  renderTables() {
+renderTables() {
     const tbody = document.getElementById('client-table-body');
     const recentList = document.getElementById('recent-clients-list');
     
     if (!tbody || !recentList) {
-      console.error('Table elements not found');
-      return;
+        console.error('Table elements not found');
+        return;
     }
 
     tbody.innerHTML = '';
@@ -908,79 +908,86 @@ class RareGradeApp {
 
     console.log('Rendering tables with clients:', this.clients.length, this.clients);
 
-    // Handle empty state properly
     const emptyState = document.getElementById('empty-state');
     if (this.clients.length === 0) {
-      if (emptyState) emptyState.classList.remove('hidden');
-      console.log('No clients to display');
-      return;
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
     } else {
-      if (emptyState) emptyState.classList.add('hidden');
+        if (emptyState) emptyState.classList.add('hidden');
     }
 
-    // Sort with fallback for missing timestamps
     const sortedClients = [...this.clients].sort((a, b) => {
-      const timeA = a.timestamp || 0;
-      const timeB = b.timestamp || 0;
-      return timeB - timeA;
+        const timeA = a.timestamp || 0;
+        const timeB = b.timestamp || 0;
+        return timeB - timeA;
     });
 
     // Render main client table
     sortedClients.forEach(client => {
-      // Safe data access with fallbacks
-      const displayId = client.displayId || client.id || 'N/A';
-      const name = client.name || 'Unknown';
-      const phone = client.phone || 'No phone';
-      const email = client.email || '';
-      const date = client.date || new Date(client.timestamp).toLocaleDateString() || 'Unknown';
-      
-      const clientReports = this.reports.filter(r => r.clientKey === client._key);
-      const reportCount = clientReports.length;
+        console.log('Processing client:', client);
+        
+        // Explicitly extract each property with fallbacks
+        const clientName = client.name ? String(client.name).trim() : 'Unknown';
+        const clientDisplayId = client.displayId ? String(client.displayId).trim() : (client.id ? String(client.id).trim() : 'N/A');
+        const clientPhone = client.phone ? String(client.phone).trim() : 'No phone';
+        const clientEmail = client.email ? String(client.email).trim() : '';
+        const clientDate = client.date ? String(client.date).trim() : new Date(client.timestamp).toLocaleDateString();
+        
+        console.log('Extracted values:', { clientName, clientDisplayId, clientPhone });
+        
+        const clientReports = this.reports.filter(r => r.clientKey === client._key);
+        const reportCount = clientReports.length;
 
-      const tr = document.createElement('tr');
-      tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
-      tr.dataset.key = client._key;
-      tr.innerHTML = `
-        <td class="p-4 font-medium text-slate-900">${name}</td>
-        <td class="p-4 font-mono text-brand-600 font-medium">${displayId}</td>
-        <td class="p-4">
-          <div class="text-xs text-slate-600">${phone}</div>
-          ${email ? `<div class="text-[10px] text-slate-500">${email}</div>` : ''}
-        </td>
-        <td class="p-4 text-slate-500 text-xs">${date}</td>
-        <td class="p-4 text-right">
-          <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-            Create Report
-          </button>
-          ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-            View (${reportCount})
-          </button>` : ''}
-          <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
-            Delete
-          </button>
-        </td>
-      `;
-      tbody.appendChild(tr);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 table-row-shimmer';
+        tr.dataset.key = client._key;
+        
+        // Use template literal with explicit variable names - NO VARIABLE REUSE
+        tr.innerHTML = `
+            <td class="p-4 font-medium text-slate-900">${clientName}</td>
+            <td class="p-4 font-mono text-brand-600 font-medium">${clientDisplayId}</td>
+            <td class="p-4">
+                <div class="text-xs text-slate-600">${clientPhone}</div>
+                ${clientEmail ? `<div class="text-[10px] text-slate-500">${clientEmail}</div>` : ''}
+            </td>
+            <td class="p-4 text-slate-500 text-xs">${clientDate}</td>
+            <td class="p-4 text-right">
+                <button onclick="app.prepReport('${client._key}')" class="text-xs bg-brand-100 text-brand-600 hover:bg-brand-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                    Create Report
+                </button>
+                ${reportCount > 0 ? `<button onclick="app.viewReports('${client._key}')" class="ml-1 text-xs bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                    View (${reportCount})
+                </button>` : ''}
+                <button onclick="app.confirmDelete('${client._key}')" class="ml-1 text-xs bg-red-100 text-red-600 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg transition-colors font-medium">
+                    Delete
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
     });
 
     // Render recent clients list (top 5) for dashboard
     sortedClients.slice(0, 5).forEach(client => {
-      const tr = document.createElement('tr');
-      tr.className = 'table-row-shimmer';
-      tr.dataset.key = client._key;
-      tr.innerHTML = `
-        <td class="px-6 py-4 font-medium text-slate-700">${client.name || 'Unknown'}</td>
-        <td class="px-6 py-4 font-mono text-xs text-brand-600">${client.displayId || client.id || 'N/A'}</td>
-        <td class="px-6 py-4 text-xs">${client.date || 'Unknown'}</td>
-        <td class="px-6 py-4">
-          <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
-        </td>
-      `;
-      recentList.appendChild(tr);
+        const recentName = client.name ? String(client.name).trim() : 'Unknown';
+        const recentId = client.displayId ? String(client.displayId).trim() : (client.id ? String(client.id).trim() : 'N/A');
+        const recentDate = client.date ? String(client.date).trim() : 'Unknown';
+        
+        const tr = document.createElement('tr');
+        tr.className = 'table-row-shimmer';
+        tr.dataset.key = client._key;
+        tr.innerHTML = `
+            <td class="px-6 py-4 font-medium text-slate-700">${recentName}</td>
+            <td class="px-6 py-4 font-mono text-xs text-brand-600">${recentId}</td>
+            <td class="px-6 py-4 text-xs">${recentDate}</td>
+            <td class="px-6 py-4">
+                <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded uppercase font-bold border border-emerald-200">Active</span>
+            </td>
+        `;
+        recentList.appendChild(tr);
     });
     
     console.log('Tables rendered successfully');
-  }
+}
   
   viewReports(clientKey) {
     const client = this.clients.find(c => c._key === clientKey);
