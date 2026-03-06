@@ -491,9 +491,6 @@ aside.collapsed .logo-text { display: none; }
             <input type="text" id="client-search" onkeyup="app.filterClients()" placeholder="Search by ID, Name, Email, or Date (e.g., 12/25/2023)..." class="w-full pl-10 pr-4 py-3 rounded-xl input-field text-sm">
           </div>
           <div class="flex gap-3">
-            <button onclick="app.loadSampleData()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition-colors">
-              <i class="fa-solid fa-database mr-2"></i>Load Sample Data
-            </button>
             <button onclick="app.navigate('add-client')" class="px-4 py-2 rounded-lg text-xs font-medium bg-brand-600 text-white hover:bg-brand-500 transition-colors shadow-lg shadow-brand-500/20 shimmer-overlay">
               <i class="fa-solid fa-plus mr-2"></i>New Client
             </button>
@@ -1320,26 +1317,11 @@ class RareGradeApp {
     const id = `REP-${date}-${rand}`;
     const now = new Date();
     const today = now.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric' });
-    this.updateLiveTime();
-    if (!this.timeInterval) {
-      this.timeInterval = setInterval(() => this.updateLiveTime(), 1000);
-    }
     const dateEl = document.getElementById('display-date');
     const dateFullEl = document.getElementById('display-date-full');
    
     if (dateEl) dateEl.value = today;
     if (dateFullEl) dateFullEl.value = today;
-  }
- 
-  updateLiveTime() {
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-    const timeEl = document.getElementById('display-time');
-    if (timeEl) timeEl.value = timeStr;
   }
  
   saveReport() {
@@ -1584,39 +1566,6 @@ class RareGradeApp {
     const newData = Array.from({length: 7}, () => Math.floor(Math.random() * 50));
     this.chartInstance.data.datasets[0].data = newData;
     this.chartInstance.update();
-  }
- 
-  loadSampleData() {
-    const samples = [
-      { 
-        displayId: 'RGT-KGA-5372', 
-        name: 'Kgaogelo Mohlatlole', 
-        phone: '079 537 2364', 
-        email: 'kgaogelo@raregradetech.co.za', 
-        date: '06/03/2026', 
-        timestamp: Date.now() 
-      },
-      { 
-        displayId: 'RGT-THA-8821', 
-        name: 'Thabo Mokoena', 
-        phone: '082 345 6789', 
-        email: 'thabo@example.co.za', 
-        date: '04/03/2026', 
-        timestamp: Date.now() - 86400000 
-      },
-      { 
-        displayId: 'RGT-LEB-2290', 
-        name: 'Lebogang Sithole', 
-        phone: '071 234 5678', 
-        email: 'lebogang@example.co.za', 
-        date: '03/03/2026', 
-        timestamp: Date.now() - 172800000 
-      }
-    ];
-    samples.forEach(s => {
-      this.db.ref('clients').push(s);
-    });
-    this.showToast('Sample Data Loaded', 'Kgaogelo Mohlatlole added as first client');
   }
  
   toggleSidebar() {
