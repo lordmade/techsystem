@@ -4,18 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rare Grade Tech | Enterprise Portal</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-    <!-- html2pdf -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -25,7 +19,7 @@
             --text-main: #1f2937;
             --text-muted: #6b7280;
             --border: #e5e7eb;
-            --accent: #003087; /* Rare Grade Blue */
+            --accent: #003087;
             --accent-light: #e0e7ff;
             --success: #10b981;
             --warning: #f59e0b;
@@ -43,13 +37,10 @@
 
         h1, h2, h3, .font-display { font-family: 'Syne', sans-serif; }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Sidebar */
         #sidebar {
             width: 260px;
             background: var(--bg-card);
@@ -66,7 +57,6 @@
         #sidebar.collapsed .logo-text,
         #sidebar.collapsed .user-info { display: none; }
         #sidebar.collapsed .nav-item { justify-content: center; padding: 12px; }
-        #sidebar.collapsed .logo-mark { margin: 0 auto; }
 
         .nav-item {
             display: flex;
@@ -85,7 +75,6 @@
         .nav-item:hover { background: #f1f5f9; color: var(--accent); }
         .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
 
-        /* Main Content */
         main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
         header {
@@ -99,13 +88,8 @@
             flex-shrink: 0;
         }
 
-        .content-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-        }
+        .content-area { flex: 1; overflow-y: auto; padding: 24px; }
 
-        /* Cards */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -114,11 +98,7 @@
             overflow: hidden;
         }
 
-        .stat-card {
-            padding: 20px;
-            position: relative;
-            transition: transform 0.2s;
-        }
+        .stat-card { padding: 20px; position: relative; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-2px); }
         
         .stat-icon-bg {
@@ -130,7 +110,6 @@
             color: var(--accent);
         }
 
-        /* Table */
         table { width: 100%; border-collapse: collapse; }
         thead th {
             padding: 12px 16px;
@@ -152,7 +131,6 @@
         tbody tr:hover { background: #f8fafc; }
         tbody tr:last-child td { border-bottom: none; }
 
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -171,7 +149,6 @@
         .btn-ghost:hover { background: #f1f5f9; color: var(--text-main); }
         .btn-sm { padding: 6px 12px; font-size: 13px; }
 
-        /* Inputs */
         .input {
             width: 100%;
             background: white;
@@ -182,19 +159,13 @@
             font-size: 14px;
             transition: all 0.2s;
         }
-        .input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1);
-        }
+        .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1); }
 
-        /* View Sections */
         .view-section { display: none; animation: fadeIn 0.3s ease; }
         .view-section.active { display: block; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Badges */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -206,6 +177,7 @@
         .badge-blue { background: #dbeafe; color: #1e40af; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-orange { background: #ffedd5; color: #9a3412; }
+        .badge-gray { background: #f3f4f6; color: #374151; }
 
         /* Toast */
         #toast {
@@ -223,57 +195,53 @@
             z-index: 1000;
             transform: translateY(100px);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            transition: all 0.3s;
         }
         #toast.show { transform: translateY(0); opacity: 1; }
 
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 50; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: white; border-radius: 12px; width: 90%; max-width: 600px;
+            max-height: 80vh; overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+        .report-list-item {
+            border: 1px solid var(--border); border-radius: 8px; padding: 16px;
+            margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+        }
+        .report-list-item:hover { border-color: var(--accent); background: var(--accent-light); }
+
         /* Report Paper */
         #report-paper {
-            font-family: 'Times New Roman', serif;
-            font-size: 11pt;
-            line-height: 1.4;
-            color: #000;
-            background: white;
-            padding: 20mm;
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            border-radius: 4px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.4;
+            color: #000; background: white; padding: 20mm; width: 210mm;
+            min-height: 297mm; margin: 0 auto; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         #report-paper .rpt-header {
-            background: #003087;
-            color: white;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            background: #003087; color: white; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
             margin: -20mm -20mm 20px;
         }
         #report-paper .form-line {
-            border: none;
-            border-bottom: 1px solid #999;
-            background: transparent;
-            width: 100%;
-            font-size: 11pt;
-            font-family: 'Times New Roman', serif;
-            padding: 2px 0;
+            border: none; border-bottom: 1px solid #999; background: transparent;
+            width: 100%; font-size: 11pt; font-family: 'Times New Roman', serif; padding: 2px 0;
         }
         #report-paper .form-line:focus { outline: none; border-bottom-color: #003087; }
         
         @media print {
             body * { visibility: hidden; }
             #report-paper, #report-paper * { visibility: visible; }
-            #report-paper {
-                position: absolute;
-                left: 0; top: 0;
-                width: 100%;
-                margin: 0;
-                box-shadow: none;
-            }
+            #report-paper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; box-shadow: none; }
         }
 
-        /* Mobile */
         @media (max-width: 768px) {
             #sidebar { position: fixed; left: -260px; height: 100vh; box-shadow: 5px 0 20px rgba(0,0,0,0.1); }
             #sidebar.open { left: 0; }
@@ -344,7 +312,6 @@
         </div>
     </aside>
 
-    <!-- Overlay for mobile -->
     <div class="overlay" onclick="app.toggleSidebar()"></div>
 
     <!-- Main Content -->
@@ -370,39 +337,31 @@
 
         <div class="content-area">
             
-            <!-- DASHBOARD VIEW -->
+            <!-- DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
-                <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="card stat-card">
                         <i class="fa-solid fa-users stat-icon-bg"></i>
                         <p class="text-sm text-gray-500 font-medium mb-1">Total Clients</p>
                         <h3 class="text-3xl font-bold text-gray-900" id="stat-clients">0</h3>
-                        <div class="mt-2 text-xs text-green-600 font-medium flex items-center gap-1">
-                            <i class="fa-solid fa-arrow-trend-up"></i> +12% this month
-                        </div>
                     </div>
                     <div class="card stat-card">
                         <i class="fa-solid fa-clipboard-check stat-icon-bg text-orange-500"></i>
                         <p class="text-sm text-gray-500 font-medium mb-1">Active Reports</p>
                         <h3 class="text-3xl font-bold text-gray-900" id="stat-reports">0</h3>
-                        <div class="mt-2 text-xs text-gray-400">Across all departments</div>
                     </div>
                     <div class="card stat-card">
                         <i class="fa-solid fa-screwdriver-wrench stat-icon-bg text-orange-500"></i>
                         <p class="text-sm text-gray-500 font-medium mb-1">In Repair</p>
                         <h3 class="text-3xl font-bold text-gray-900" id="stat-in-repair">0</h3>
-                        <div class="mt-2 text-xs text-orange-600 font-medium">Requires attention</div>
                     </div>
                     <div class="card stat-card">
                         <i class="fa-solid fa-check-circle stat-icon-bg text-green-500"></i>
                         <p class="text-sm text-gray-500 font-medium mb-1">Completed</p>
                         <h3 class="text-3xl font-bold text-gray-900" id="stat-completed">0</h3>
-                        <div class="mt-2 text-xs text-green-600 font-medium">Ready for pickup</div>
                     </div>
                 </div>
 
-                <!-- Chart & Recent -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="card lg:col-span-1 p-6">
                         <h3 class="font-bold text-gray-900 mb-4">Activity Overview</h3>
@@ -421,19 +380,17 @@
                                         <th>Client Name</th>
                                         <th>ID</th>
                                         <th>Date Added</th>
-                                        <th>Status</th>
+                                        <th>Device Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="recent-clients-list">
-                                    <!-- Populated by JS -->
-                                </tbody>
+                                <tbody id="recent-clients-list"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ADD CLIENT VIEW -->
+            <!-- ADD CLIENT -->
             <section id="view-add-client" class="view-section">
                 <div class="max-w-2xl mx-auto">
                     <div class="mb-6">
@@ -454,9 +411,21 @@
                                 </div>
                             </div>
 
-                            <div class="mb-8">
+                            <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                                 <input type="email" id="newClientEmail" class="input" placeholder="john@example.com">
+                            </div>
+
+                            <!-- Initial Device Status Selection -->
+                            <div class="mb-8">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Initial Device Status</label>
+                                <select id="newClientStatus" class="input">
+                                    <option value="Received">Received</option>
+                                    <option value="In Repair">In Repair</option>
+                                    <option value="Waiting for Parts">Waiting for Parts</option>
+                                    <option value="Ready for Pickup">Ready for Pickup</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
                             </div>
 
                             <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-8 flex justify-between items-center">
@@ -475,7 +444,7 @@
                 </div>
             </section>
 
-            <!-- MANAGE CLIENTS VIEW -->
+            <!-- MANAGE CLIENTS -->
             <section id="view-manage-clients" class="view-section">
                 <div class="card">
                     <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -495,14 +464,12 @@
                                     <th>Full Name</th>
                                     <th>Client ID</th>
                                     <th>Contact</th>
-                                    <th>Email</th>
+                                    <th>Current Status</th>
                                     <th>Date Added</th>
                                     <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="client-table-body">
-                                <!-- Populated by JS -->
-                            </tbody>
+                            <tbody id="client-table-body"></tbody>
                         </table>
                         <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16 text-gray-400">
                             <i class="fa-regular fa-folder-open text-4xl mb-3"></i>
@@ -512,7 +479,7 @@
                 </div>
             </section>
 
-            <!-- SERVICE REPORT VIEW -->
+            <!-- SERVICE REPORT FORM -->
             <section id="view-service-form" class="view-section">
                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
                     <!-- Controls -->
@@ -537,14 +504,16 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Device Status</label>
-                                    <select id="device-status" class="input">
-                                        <option>Received</option>
-                                        <option>In Repair</option>
-                                        <option>Waiting for Parts</option>
-                                        <option>Ready for Pickup</option>
-                                        <option>Completed</option>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Update Device Status</label>
+                                    <select id="device-status" class="input" onchange="app.updateStatusColor(this)">
+                                        <option value="Received">Received</option>
+                                        <option value="In Repair">In Repair</option>
+                                        <option value="Waiting for Parts">Waiting for Parts</option>
+                                        <option value="Ready for Pickup">Ready for Pickup</option>
+                                        <option value="Completed">Completed</option>
                                     </select>
+                                    <!-- Hidden input to store the report ID if editing -->
+                                    <input type="hidden" id="current-report-id">
                                 </div>
                             </div>
                         </div>
@@ -558,6 +527,9 @@
                                 <button onclick="app.downloadPDF()" class="btn btn-ghost w-full justify-center border-gray-300">
                                     <i class="fa-solid fa-file-pdf text-red-500"></i> Export PDF
                                 </button>
+                                <button onclick="app.clearReportForm()" class="btn btn-ghost w-full justify-center border-gray-300 text-gray-500">
+                                    <i class="fa-solid fa-eraser"></i> Clear Form
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -565,10 +537,8 @@
                     <!-- Paper -->
                     <div class="xl:col-span-3 overflow-auto bg-gray-200 p-4 rounded-xl flex justify-center">
                         <div id="report-paper">
-                            <!-- Header -->
                             <div class="rpt-header">
                                 <div class="flex items-center gap-4">
-                                    <!-- Logo placeholder -->
                                     <div class="bg-white text-blue-900 font-display font-bold px-3 py-1 rounded text-xl">RG</div>
                                     <div>
                                         <div class="font-bold text-lg tracking-wide">RARE GRADE TECH</div>
@@ -681,7 +651,6 @@
                                 </div>
                             </div>
 
-                            <!-- Footer -->
                             <div class="mt-12 pt-4 border-t border-gray-300 text-center text-xs text-gray-500">
                                 <p class="font-semibold text-gray-700">Thank you for your business!</p>
                                 <p>015 065 0979 • 061 527 0749 • info@raregradetech.co.za • raregradetech.com</p>
@@ -694,12 +663,30 @@
         </div>
     </main>
 
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div id="toast">
         <div id="toast-icon" class="text-green-500 text-xl"><i class="fa-solid fa-circle-check"></i></div>
         <div>
             <h4 id="toast-title" class="font-bold text-gray-900 text-sm">Success</h4>
             <p id="toast-msg" class="text-xs text-gray-500">Operation completed successfully.</p>
+        </div>
+    </div>
+
+    <!-- Reports Modal -->
+    <div id="reports-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div>
+                    <h3 class="font-bold text-lg text-gray-900">Service History</h3>
+                    <p class="text-sm text-gray-500" id="reports-modal-subtitle">Client Reports</p>
+                </div>
+                <button onclick="app.closeReportsModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="reports-list-container">
+                <!-- Reports injected here -->
+            </div>
         </div>
     </div>
 
@@ -723,7 +710,6 @@
             }
 
             initFirebase() {
-                // Using the provided Firebase Config
                 const firebaseConfig = {
                     apiKey: "AIzaSyAxBT0oESoL62oz_x_Z8cMtdENWZPx4tMI",
                     authDomain: "pinotp-d7ef5.firebaseapp.com",
@@ -748,9 +734,9 @@
                             this.clients.push(client);
                         });
                     }
-                    this.updateStats();
                     this.renderClientTable();
                     this.renderClientDropdown();
+                    this.updateStats();
                 });
 
                 // Listen for Reports
@@ -764,21 +750,18 @@
                         });
                     }
                     this.updateStats();
+                    this.renderClientTable(); // Re-render to update status badges
                 });
             }
 
             navigate(viewId) {
-                // Hide all views
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                // Show target
                 document.getElementById(`view-${viewId}`).classList.add('active');
                 
-                // Update Sidebar Active State
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
 
-                // Update Header Title
                 const titles = {
                     'dashboard': 'Dashboard',
                     'add-client': 'New Client',
@@ -787,7 +770,6 @@
                 };
                 document.getElementById('page-title').innerText = titles[viewId];
 
-                // Close mobile sidebar
                 document.getElementById('sidebar').classList.remove('open');
                 document.querySelector('.overlay').classList.remove('open');
             }
@@ -795,7 +777,6 @@
             toggleSidebar() {
                 const sidebar = document.getElementById('sidebar');
                 const overlay = document.querySelector('.overlay');
-                
                 if (window.innerWidth <= 1024) {
                     sidebar.classList.toggle('open');
                     overlay.classList.toggle('open');
@@ -822,6 +803,7 @@
                 const name = document.getElementById('newClientName').value.trim();
                 const phone = document.getElementById('newClientPhone').value.trim();
                 const email = document.getElementById('newClientEmail').value.trim();
+                const status = document.getElementById('newClientStatus').value;
 
                 if(!name || !phone) {
                     this.showToast('Error', 'Name and Phone are required', 'error');
@@ -831,12 +813,11 @@
                 const displayId = document.getElementById('preview-client-id').innerText;
                 
                 const newClient = {
-                    displayId: displayId === '—' ? 'RGT-XXX' + Date.now() : displayId,
-                    name,
-                    phone,
-                    email: email || '',
+                    displayId: displayId === '—' ? 'RGT-' + Date.now() : displayId,
+                    name, phone, email: email || '',
                     date: new Date().toLocaleDateString(),
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    initialStatus: status // Save initial status if needed
                 };
 
                 this.db.ref('clients').push(newClient)
@@ -846,9 +827,7 @@
                         document.getElementById('preview-client-id').innerText = '—';
                         setTimeout(() => this.navigate('manage-clients'), 1000);
                     })
-                    .catch(err => {
-                        this.showToast('Error', err.message, 'error');
-                    });
+                    .catch(err => this.showToast('Error', err.message, 'error'));
             }
 
             renderClientTable() {
@@ -864,34 +843,47 @@
                 }
                 document.getElementById('empty-state').classList.add('hidden');
 
-                // Sort by newest first
                 const sorted = [...this.clients].sort((a,b) => b.timestamp - a.timestamp);
 
-                // Populate Main Table
                 sorted.forEach(client => {
+                    // Find latest report for this client to show status
+                    const clientReports = this.reports.filter(r => r.clientKey === client._key);
+                    const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
+                    const currentStatus = latestReport ? latestReport.status : (client.initialStatus || 'Received');
+                    
+                    let statusBadgeClass = 'badge-gray';
+                    if(currentStatus === 'Received') statusBadgeClass = 'badge-blue';
+                    if(currentStatus === 'In Repair' || currentStatus === 'Waiting for Parts') statusBadgeClass = 'badge-orange';
+                    if(currentStatus === 'Completed' || currentStatus === 'Ready for Pickup') statusBadgeClass = 'badge-green';
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="font-medium text-gray-900">${client.name}</td>
                         <td><span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">${client.displayId}</span></td>
                         <td>${client.phone}</td>
-                        <td class="text-gray-500 text-sm">${client.email || '—'}</td>
+                        <td><span class="badge ${statusBadgeClass}">${currentStatus}</span></td>
                         <td class="text-gray-500 text-sm">${client.date}</td>
                         <td class="text-right">
-                            <button onclick="app.prepReport('${client._key}')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mr-3">Report</button>
+                            <button onclick="app.prepReport('${client._key}')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mr-3">New Report</button>
+                            ${clientReports.length > 0 ? `<button onclick="app.viewReports('${client._key}')" class="text-gray-500 hover:text-gray-800 text-sm font-medium mr-3">History (${clientReports.length})</button>` : ''}
                             <button onclick="app.deleteClient('${client._key}')" class="text-red-400 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
 
-                // Populate Recent List (Dashboard)
+                // Dashboard Recent List
                 sorted.slice(0, 5).forEach(client => {
+                    const clientReports = this.reports.filter(r => r.clientKey === client._key);
+                    const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
+                    const currentStatus = latestReport ? latestReport.status : 'Registered';
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="font-medium text-gray-900">${client.name}</td>
                         <td><span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">${client.displayId}</span></td>
                         <td class="text-gray-500 text-sm">${client.date}</td>
-                        <td><span class="badge badge-green">Active</span></td>
+                        <td><span class="badge ${currentStatus === 'Completed' ? 'badge-green' : 'badge-blue'}">${currentStatus}</span></td>
                     `;
                     recentList.appendChild(tr);
                 });
@@ -900,12 +892,9 @@
             renderClientDropdown() {
                 const select = document.getElementById('report-client-select');
                 if(!select) return;
-                
-                // Keep first option
                 const firstOpt = select.options[0];
                 select.innerHTML = '';
                 select.appendChild(firstOpt);
-
                 this.clients.forEach(c => {
                     const opt = document.createElement('option');
                     opt.value = c._key;
@@ -917,18 +906,21 @@
             filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase();
                 const rows = document.querySelectorAll('#client-table-body tr');
-                
                 rows.forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    row.style.display = text.includes(term) ? '' : 'none';
+                    row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
                 });
             }
 
             deleteClient(key) {
-                if(confirm('Are you sure you want to delete this client?')) {
-                    this.db.ref('clients/' + key).remove()
-                        .then(() => this.showToast('Deleted', 'Client removed from registry'))
-                        .catch(err => this.showToast('Error', err.message, 'error'));
+                if(confirm('Delete this client and all their reports?')) {
+                    // Delete client
+                    this.db.ref('clients/' + key).remove();
+                    // Delete associated reports
+                    const clientReports = this.reports.filter(r => r.clientKey === key);
+                    clientReports.forEach(r => {
+                        this.db.ref('reports/' + r._key).remove();
+                    });
+                    this.showToast('Deleted', 'Client and history removed');
                 }
             }
 
@@ -936,6 +928,7 @@
 
             prepReport(clientKey) {
                 this.navigate('service-form');
+                this.clearReportForm();
                 const select = document.getElementById('report-client-select');
                 if(select) {
                     select.value = clientKey;
@@ -955,11 +948,8 @@
             setReportType(type) {
                 this.currentReportType = type;
                 document.getElementById('report-type-title').innerText = type.toUpperCase();
-                
-                // Toggle Button Styles
                 const hwBtn = document.getElementById('btn-type-hardware');
                 const swBtn = document.getElementById('btn-type-software');
-                
                 if(type === 'Hardware') {
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
@@ -967,6 +957,10 @@
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
                 }
+            }
+
+            updateStatusColor(select) {
+                // Visual feedback for status selection if needed
             }
 
             generateReportID() {
@@ -981,6 +975,9 @@
                     this.showToast('Error', 'Please select a client first', 'error');
                     return;
                 }
+
+                const reportId = document.getElementById('current-report-id').value;
+                const isUpdate = !!reportId;
 
                 const reportData = {
                     type: this.currentReportType,
@@ -1010,16 +1007,21 @@
                     },
                     checkboxes: this.captureCheckboxStates(),
                     status: document.getElementById('device-status').value,
-                    timestamp: Date.now(),
-                    createdAt: new Date().toISOString()
+                    timestamp: Date.now()
                 };
 
-                this.db.ref('reports').push(reportData)
-                    .then(() => {
-                        this.showToast('Report Saved', 'Service report saved to database');
-                        this.clearReportForm();
-                    })
-                    .catch(err => this.showToast('Error', err.message, 'error'));
+                if(isUpdate) {
+                    this.db.ref('reports/' + reportId).update(reportData)
+                        .then(() => this.showToast('Updated', 'Report updated successfully'))
+                        .catch(err => this.showToast('Error', err.message, 'error'));
+                } else {
+                    this.db.ref('reports').push(reportData)
+                        .then(() => {
+                            this.showToast('Saved', 'New report saved to database');
+                            this.clearReportForm();
+                        })
+                        .catch(err => this.showToast('Error', err.message, 'error'));
+                }
             }
 
             captureCheckboxStates() {
@@ -1038,11 +1040,124 @@
             }
 
             clearReportForm() {
-                // Reset text inputs within paper
                 document.querySelectorAll('#report-paper input[type="text"], #report-paper textarea').forEach(el => el.value = '');
                 document.querySelectorAll('#report-paper input[type="checkbox"]').forEach(el => el.checked = false);
                 document.getElementById('report-client-select').value = '';
+                document.getElementById('device-status').value = 'Received';
+                document.getElementById('current-report-id').value = ''; // Clear edit mode
                 this.generateReportID();
+                this.showToast('Cleared', 'Form reset to default');
+            }
+
+            // --- View / Load Existing Reports ---
+
+            viewReports(clientKey) {
+                const client = this.clients.find(c => c._key === clientKey);
+                const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a,b) => b.timestamp - a.timestamp);
+                
+                document.getElementById('reports-modal-subtitle').innerText = `${client.name} — ${clientReports.length} report(s)`;
+                const container = document.getElementById('reports-list-container');
+                container.innerHTML = '';
+
+                if(clientReports.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 py-8">No reports found.</p>';
+                } else {
+                    clientReports.forEach(report => {
+                        const div = document.createElement('div');
+                        div.className = 'report-list-item';
+                        div.innerHTML = `
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">${report.type} Report</span>
+                                    <div class="font-bold text-gray-900">${new Date(report.timestamp).toLocaleDateString()}</div>
+                                </div>
+                                <span class="badge ${report.status === 'Completed' ? 'badge-green' : 'badge-orange'} text-xs">${report.status}</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mb-3">
+                                <div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>
+                                <div><strong>Issue:</strong> ${report.deviceInfo?.issue || 'N/A'}</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="app.loadReport('${report._key}')" class="btn btn-primary btn-sm flex-1 justify-center">Open</button>
+                                <button onclick="app.deleteReport('${report._key}')" class="btn btn-ghost btn-sm text-red-500 border-red-200 hover:bg-red-50">Delete</button>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+                
+                document.getElementById('reports-modal').classList.add('open');
+            }
+
+            closeReportsModal() {
+                document.getElementById('reports-modal').classList.remove('open');
+            }
+
+            loadReport(reportKey) {
+                const report = this.reports.find(r => r._key === reportKey);
+                if(!report) return;
+
+                this.closeReportsModal();
+                this.navigate('service-form');
+
+                // Set Edit Mode ID
+                document.getElementById('current-report-id').value = reportKey;
+
+                // Load Client
+                const sel = document.getElementById('report-client-select');
+                sel.value = report.clientKey;
+                this.loadClientToForm(report.clientKey);
+
+                // Load Type
+                this.setReportType(report.type || 'Hardware');
+
+                // Load Status
+                document.getElementById('device-status').value = report.status || 'Received';
+
+                // Load Device Info
+                if(report.deviceInfo) {
+                    document.getElementById('display-device-model').value = report.deviceInfo.model || '';
+                    document.getElementById('display-serial').value = report.deviceInfo.serial || '';
+                    document.getElementById('display-issue').value = report.deviceInfo.issue || '';
+                }
+
+                // Load Service Details
+                if(report.serviceDetails) {
+                    const sd = report.serviceDetails;
+                    document.getElementById('display-diagnosis').value = sd.diagnosis || '';
+                    document.getElementById('display-resolution').value = sd.resolution || '';
+                    document.getElementById('display-date').value = sd.serviceDate || '';
+                    document.getElementById('display-technician-name').value = sd.technicianName || '';
+                    document.getElementById('display-notes').value = sd.notes || '';
+                    document.getElementById('display-client-signature').value = sd.clientSignature || '';
+                    document.getElementById('display-date-full').value = sd.completionDate || '';
+                    document.getElementById('display-other-service').value = sd.otherService || '';
+                    document.getElementById('display-before-partial').value = sd.beforePartialDetails || '';
+                    document.getElementById('display-after-partial').value = sd.afterPartialDetails || '';
+                    document.getElementById('display-issues-persisting').value = sd.issuesPersisting || '';
+                }
+
+                // Load Checkboxes
+                if(report.checkboxes) {
+                    for(const [id, checked] of Object.entries(report.checkboxes)) {
+                        const el = document.getElementById(id);
+                        if(el) el.checked = checked;
+                    }
+                }
+
+                this.showToast('Report Loaded', 'Data retrieved successfully');
+            }
+
+            deleteReport(reportKey) {
+                if(confirm('Are you sure you want to delete this report?')) {
+                    this.db.ref('reports/' + reportKey).remove()
+                        .then(() => {
+                            this.showToast('Deleted', 'Report removed');
+                            // Refresh modal
+                            const clientKey = this.reports.find(r => r._key === reportKey)?.clientKey;
+                            if(clientKey) this.viewReports(clientKey);
+                        });
+                }
             }
 
             downloadPDF() {
@@ -1063,7 +1178,6 @@
             // --- Utilities ---
 
             updateStats() {
-                // Animate numbers
                 this.animateValue('stat-clients', this.clients.length);
                 this.animateValue('stat-reports', this.reports.length);
                 
@@ -1074,7 +1188,6 @@
                 this.animateValue('stat-in-repair', inRepair);
                 this.animateValue('stat-completed', completed);
                 
-                // Sidebar stats
                 document.getElementById('side-received').innerText = received;
                 document.getElementById('side-in-repair').innerText = inRepair;
                 document.getElementById('side-completed').innerText = completed;
@@ -1085,14 +1198,11 @@
                 if(!el) return;
                 const start = parseInt(el.innerText) || 0;
                 if(start === end) return;
-                
                 const duration = 1000;
                 const startTime = performance.now();
-
                 const step = (currentTime) => {
                     const progress = Math.min((currentTime - startTime) / duration, 1);
-                    const value = Math.floor(progress * (end - start) + start);
-                    el.innerText = value;
+                    el.innerText = Math.floor(progress * (end - start) + start);
                     if(progress < 1) requestAnimationFrame(step);
                 };
                 requestAnimationFrame(step);
@@ -1107,14 +1217,12 @@
                 const toast = document.getElementById('toast');
                 document.getElementById('toast-title').innerText = title;
                 document.getElementById('toast-msg').innerText = message;
-                
                 const icon = document.getElementById('toast-icon');
                 if(type === 'error') {
                     icon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500"></i>';
                 } else {
                     icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500"></i>';
                 }
-
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             }
@@ -1122,7 +1230,6 @@
             initChart() {
                 const ctx = document.getElementById('activityChart');
                 if(!ctx) return;
-
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1150,7 +1257,6 @@
             }
         }
 
-        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
             window.app = new RareGradeApp();
         });
