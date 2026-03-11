@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
@@ -214,26 +213,6 @@
             background: var(--accent-light); 
             transform: translateY(-2px); 
         }
-        /* Media preview */
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
-        }
-        .media-preview {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-        .video-preview {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
         /*
            OPTIMIZED PDF STYLES
         */
@@ -294,12 +273,6 @@
             font-size: 9.5pt;
             display: block;
             margin-bottom: 2px;
-        }
-        #report-paper .media-section img,
-        #report-paper .media-section video {
-            max-width: 100%;
-            border: 1px solid #999;
-            margin: 4px 0;
         }
         /* Report type sections toggle */
         .hardware-section, .software-section {
@@ -578,28 +551,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- NEW: Media Evidence Upload -->
-                        <div class="card p-6">
-                            <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-camera"></i> Evidence Media
-                            </h3>
-                            <div class="space-y-5">
-                                <!-- Photos -->
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1">Before / After Photos (multiple)</label>
-                                    <input type="file" id="media-photos" accept="image/*" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                    <div id="photo-preview" class="media-grid mt-3"></div>
-                                </div>
-                                <!-- Video -->
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1">Video Clip (repair process)</label>
-                                    <input type="file" id="media-video" accept="video/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                    <div id="video-preview" class="mt-3"></div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="card p-6">
                             <h3 class="font-bold text-gray-900 mb-4">Actions</h3>
                             <div class="space-y-3">
@@ -608,9 +559,6 @@
                                 </button>
                                 <button onclick="app.downloadPDF()" class="btn btn-ghost w-full justify-center border-gray-300">
                                     <i class="fa-solid fa-file-pdf text-red-500"></i> Export PDF
-                                </button>
-                                <button onclick="app.sendStatusNotification()" class="btn btn-ghost w-full justify-center border-green-300 text-green-600">
-                                    <i class="fa-solid fa-paper-plane"></i> Send WhatsApp Update
                                 </button>
                                 <button onclick="app.clearReportForm()" class="btn btn-ghost w-full justify-center border-gray-300 text-gray-500">
                                     <i class="fa-solid fa-eraser"></i> Clear Form
@@ -645,7 +593,7 @@
                                 </table>
                             </div>
                            
-                            <!-- Hardware Section -->
+                            <!-- Hardware Section (default visible) -->
                             <div id="hardware-section" class="hardware-section">
                                 <!-- Device Info -->
                                 <div class="mb-4">
@@ -716,9 +664,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Software Section -->
+                            <!-- Software Section (hidden by default) -->
                             <div id="software-section" class="software-section hidden">
-                                <!-- (unchanged software fields) -->
                                 <div class="mb-4">
                                     <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Project Information (Software)</h3>
                                     <table class="w-full text-sm">
@@ -727,12 +674,14 @@
                                         <tr><td class="py-1 font-semibold">Work Performed:</td><td class="py-1"><input id="sw-work" class="form-line" placeholder="Description of development work"></td></tr>
                                     </table>
                                 </div>
+                                <!-- Status After Service (Software) -->
                                 <div class="mb-4 text-sm flex items-center gap-4">
                                     <span class="font-bold">Project Status:</span>
                                     <label class="mr-4"><input type="checkbox" id="sw-cb-deployed" class="mr-1"> Deployed / Delivered</label>
                                     <label><input type="checkbox" id="sw-cb-testing" class="mr-1"> In Testing / QA</label>
                                     <label><input type="checkbox" id="sw-cb-maintenance" class="mr-1"> Maintenance Mode</label>
                                 </div>
+                                <!-- Service Summary (Software) -->
                                 <div class="mb-4 text-sm">
                                     <h4 class="font-bold mb-2">Service Summary:</h4>
                                     <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
@@ -754,6 +703,7 @@
                                         <input id="sw-date" class="form-line w-40">
                                     </div>
                                 </div>
+                                <!-- Developer Name (moved from removed notes block) -->
                                 <div class="mb-4 text-sm">
                                     <div class="flex items-center mb-2">
                                         <span class="font-semibold w-32">Developer Name:</span>
@@ -761,13 +711,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- NEW: Media Evidence in PDF -->
-                            <div id="media-section" class="mb-6">
-                                <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Evidence Media</h3>
-                                <div id="pdf-photo-grid" class="grid grid-cols-3 gap-2"></div>
-                                <div id="pdf-video-grid" class="mt-3"></div>
-                            </div>
-                            <!-- Signature -->
+                            <!-- Signature (common) -->
                             <div class="border-t-2 border-black pt-4 text-sm mt-auto">
                                 <h4 class="font-bold mb-2">Client Acknowledgment</h4>
                                 <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the device/project and agreement with the service details provided.</p>
@@ -823,9 +767,7 @@
                 this.clients = [];
                 this.reports = [];
                 this.db = null;
-                this.storage = null;
                 this.currentReportType = 'Hardware';
-                this.pendingMedia = { photos: [], videos: [] };
                 this.init();
             }
             init() {
@@ -835,9 +777,37 @@
                 this.initChart();
                 this.generateReportID();
                 this.navigate('dashboard');
+                // Ensure sections are toggled correctly on start
                 this.toggleReportSections(this.currentReportType);
+                // Setup hover-based sidebar collapse/expand (desktop only)
                 this.setupSidebarHover();
-                this.setupMediaListeners();
+            }
+            setupSidebarHover() {
+                const sidebar = document.getElementById('sidebar');
+                // Hover expand
+                sidebar.addEventListener('mouseenter', () => {
+                    if (window.innerWidth > 1024) {
+                        sidebar.classList.remove('collapsed');
+                    }
+                });
+                // Hover collapse
+                sidebar.addEventListener('mouseleave', () => {
+                    if (window.innerWidth > 1024) {
+                        sidebar.classList.add('collapsed');
+                    }
+                });
+                // Initial state: collapsed on desktop
+                if (window.innerWidth > 1024) {
+                    sidebar.classList.add('collapsed');
+                }
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth <= 1024) {
+                        sidebar.classList.remove('collapsed');
+                    } else {
+                        sidebar.classList.add('collapsed');
+                    }
+                });
             }
             initFirebase() {
                 const firebaseConfig = {
@@ -851,9 +821,9 @@
                 };
                 firebase.initializeApp(firebaseConfig);
                 this.db = firebase.database();
-                this.storage = firebase.storage();
             }
             setupListeners() {
+                // Listen for Clients
                 this.db.ref('clients').on('value', (snapshot) => {
                     this.clients = [];
                     if(snapshot.exists()) {
@@ -867,6 +837,7 @@
                     this.renderClientDropdown();
                     this.updateStats();
                 });
+                // Listen for Reports
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
                     if(snapshot.exists()) {
@@ -877,67 +848,13 @@
                         });
                     }
                     this.updateStats();
-                    this.renderClientTable();
+                    this.renderClientTable(); // Re-render to update status badges
                 });
-            }
-            setupMediaListeners() {
-                const photoInput = document.getElementById('media-photos');
-                const videoInput = document.getElementById('media-video');
-                photoInput.addEventListener('change', (e) => this.handlePhotoSelect(e));
-                videoInput.addEventListener('change', (e) => this.handleVideoSelect(e));
-            }
-            handlePhotoSelect(e) {
-                this.pendingMedia.photos = Array.from(e.target.files);
-                this.renderMediaPreviews();
-            }
-            handleVideoSelect(e) {
-                this.pendingMedia.videos = Array.from(e.target.files);
-                this.renderMediaPreviews();
-            }
-            renderMediaPreviews() {
-                // Photos
-                const photoContainer = document.getElementById('photo-preview');
-                photoContainer.innerHTML = '';
-                this.pendingMedia.photos.forEach(file => {
-                    const url = URL.createObjectURL(file);
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.className = 'media-preview';
-                    photoContainer.appendChild(img);
-                });
-                // Video
-                const videoContainer = document.getElementById('video-preview');
-                videoContainer.innerHTML = '';
-                this.pendingMedia.videos.forEach(file => {
-                    const url = URL.createObjectURL(file);
-                    const video = document.createElement('video');
-                    video.src = url;
-                    video.controls = true;
-                    video.className = 'video-preview';
-                    videoContainer.appendChild(video);
-                });
-            }
-            async uploadMedia(reportKey) {
-                const media = { photos: [], videos: [] };
-                const ref = this.storage.ref(`reports/${reportKey}/media`);
-
-                // Upload photos
-                for (let file of this.pendingMedia.photos) {
-                    const snapshot = await ref.child(`photo_${Date.now()}`).put(file);
-                    const url = await snapshot.ref.getDownloadURL();
-                    media.photos.push(url);
-                }
-                // Upload videos
-                for (let file of this.pendingMedia.videos) {
-                    const snapshot = await ref.child(`video_${Date.now()}`).put(file);
-                    const url = await snapshot.ref.getDownloadURL();
-                    media.videos.push(url);
-                }
-                return media;
             }
             navigate(viewId) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 document.getElementById(`view-${viewId}`).classList.add('active');
+             
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
@@ -961,21 +878,7 @@
                     sidebar.classList.toggle('collapsed');
                 }
             }
-            setupSidebarHover() {
-                const sidebar = document.getElementById('sidebar');
-                sidebar.addEventListener('mouseenter', () => {
-                    if (window.innerWidth > 1024) sidebar.classList.remove('collapsed');
-                });
-                sidebar.addEventListener('mouseleave', () => {
-                    if (window.innerWidth > 1024) sidebar.classList.add('collapsed');
-                });
-                if (window.innerWidth > 1024) sidebar.classList.add('collapsed');
-                window.addEventListener('resize', () => {
-                    if (window.innerWidth <= 1024) sidebar.classList.remove('collapsed');
-                    else sidebar.classList.add('collapsed');
-                });
-            }
-            // --- Client Management (unchanged) ---
+            // --- Client Management ---
             updateIdPreview() {
                 const name = document.getElementById('newClientName').value.trim();
                 const preview = document.getElementById('preview-client-id');
@@ -1003,7 +906,7 @@
                     name, phone, email: email || '',
                     date: new Date().toLocaleDateString(),
                     timestamp: Date.now(),
-                    initialStatus: status
+                    initialStatus: status // Save initial status if needed
                 };
                 this.db.ref('clients').push(newClient)
                     .then(() => {
@@ -1014,9 +917,10 @@
                     })
                     .catch(err => this.showToast('Error', err.message, 'error'));
             }
-            renderClientTable() { /* unchanged */ 
+            renderClientTable() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
+             
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
                 if(this.clients.length === 0) {
@@ -1026,9 +930,11 @@
                 document.getElementById('empty-state').classList.add('hidden');
                 const sorted = [...this.clients].sort((a,b) => b.timestamp - a.timestamp);
                 sorted.forEach(client => {
+                    // Find latest report for this client to show status
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
                     const currentStatus = latestReport ? latestReport.status : (client.initialStatus || 'Received');
+                 
                     let statusBadgeClass = 'badge-gray';
                     if(currentStatus === 'Received') statusBadgeClass = 'badge-blue';
                     if(currentStatus === 'In Repair' || currentStatus === 'Waiting for Parts') statusBadgeClass = 'badge-orange';
@@ -1048,6 +954,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
+                // Dashboard Recent List
                 sorted.slice(0, 5).forEach(client => {
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
@@ -1062,7 +969,7 @@
                     recentList.appendChild(tr);
                 });
             }
-            renderClientDropdown() { /* unchanged */ 
+            renderClientDropdown() {
                 const select = document.getElementById('report-client-select');
                 if(!select) return;
                 const firstOpt = select.options[0];
@@ -1075,25 +982,34 @@
                     select.appendChild(opt);
                 });
             }
-            filterClients() { /* unchanged */ 
+            filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase();
                 const rows = document.querySelectorAll('#client-table-body tr');
                 rows.forEach(row => {
                     row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
                 });
             }
-            deleteClient(key) { /* unchanged */ 
+            deleteClient(key) {
                 if(confirm('Delete this client and all their reports?')) {
                     const clientReports = this.reports.filter(r => r.clientKey === key);
+                 
                     this.db.ref('clients/' + key).remove()
                         .then(() => {
-                            const deletePromises = clientReports.map(r => this.db.ref('reports/' + r._key).remove());
+                            const deletePromises = clientReports.map(r =>
+                                this.db.ref('reports/' + r._key).remove()
+                            );
                             return Promise.all(deletePromises);
                         })
-                        .then(() => this.showToast('Deleted', 'Client and history removed'))
-                        .catch(err => this.showToast('Error', err.message, 'error'));
+                        .then(() => {
+                            this.showToast('Deleted', 'Client and history removed');
+                        })
+                        .catch(err => {
+                            console.error('Delete error:', err);
+                            this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
+                        });
                 }
             }
+            // --- Service Reports ---
             prepReport(clientKey) {
                 this.navigate('service-form');
                 this.clearReportForm();
@@ -1103,7 +1019,7 @@
                     this.loadClientToForm(clientKey);
                 }
             }
-            loadClientToForm(clientKey) { /* unchanged */ 
+            loadClientToForm(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 if(client) {
                     document.getElementById('display-client-name').value = client.name;
@@ -1111,7 +1027,7 @@
                     document.getElementById('display-client-email').value = client.email;
                 }
             }
-            toggleReportSections(type) { /* unchanged */ 
+            toggleReportSections(type) {
                 const hwSection = document.getElementById('hardware-section');
                 const swSection = document.getElementById('software-section');
                 if (type === 'Hardware') {
@@ -1122,7 +1038,7 @@
                     swSection.classList.remove('hidden');
                 }
             }
-            setReportType(type) { /* unchanged */ 
+            setReportType(type) {
                 this.currentReportType = type;
                 document.getElementById('report-type-title').innerText = type.toUpperCase();
                 const hwBtn = document.getElementById('btn-type-hardware');
@@ -1136,22 +1052,26 @@
                 }
                 this.toggleReportSections(type);
             }
-            updateStatusColor(select) { /* unchanged */ }
-            generateReportID() { /* unchanged */ 
+            updateStatusColor(select) {
+                // Visual feedback for status selection if needed
+            }
+            generateReportID() {
                 const today = new Date().toLocaleDateString('en-GB');
                 document.getElementById('display-date').value = today;
                 document.getElementById('sw-date').value = today;
                 document.getElementById('display-date-full').value = today;
             }
-            captureCheckboxStates() { /* unchanged */ 
+            captureCheckboxStates() {
                 const ids = [
+                    // Hardware
                     'cb-functional', 'cb-non-functional', 'cb-device-repair', 'cb-software-install',
                     'cb-software-update', 'cb-programming', 'cb-other', 'cb-before-new', 'cb-before-used',
                     'cb-before-damaged', 'cb-before-fully-functional', 'cb-before-non-functional', 'cb-before-partial',
                     'cb-after-fully-functional', 'cb-after-partial', 'cb-after-issues',
+                    // Software
                     'sw-cb-deployed', 'sw-cb-testing', 'sw-cb-maintenance', 'sw-cb-web-dev', 'sw-cb-mobile-app',
                     'sw-cb-desktop-app', 'sw-cb-database-design', 'sw-cb-api-integration', 'sw-cb-bug-fix',
-                    'sw-cb-code-optimization', 'sw-cb-ui-ux', 'sw-cb-other'
+                    'sw-cb-code-optimization', 'sw-cb-ui-ux', 'sw-cb-other', 'sw-cb-local', 'sw-cb-cloud', 'sw-cb-hybrid'
                 ];
                 const states = {};
                 ids.forEach(id => {
@@ -1160,20 +1080,16 @@
                 });
                 return states;
             }
-            async saveReport() {
+            saveReport() {
                 const clientKey = document.getElementById('report-client-select').value;
                 if(!clientKey) {
                     this.showToast('Error', 'Please select a client first', 'error');
                     return;
                 }
-                const reportId = document.getElementById('current-report-id').value || this.db.ref('reports').push().key;
-                const isUpdate = !!document.getElementById('current-report-id').value;
-
-                let media = { photos: [], videos: [] };
-                if (this.pendingMedia.photos.length || this.pendingMedia.videos.length) {
-                    media = await this.uploadMedia(reportId);
-                }
-
+                const reportId = document.getElementById('current-report-id').value;
+                const isUpdate = !!reportId;
+               
+                // Common fields
                 const reportData = {
                     type: this.currentReportType,
                     clientKey: clientKey,
@@ -1184,9 +1100,9 @@
                     },
                     status: document.getElementById('device-status').value,
                     timestamp: Date.now(),
-                    checkboxes: this.captureCheckboxStates(),
-                    media: media
+                    checkboxes: this.captureCheckboxStates()
                 };
+                // Hardware specific fields
                 if (this.currentReportType === 'Hardware') {
                     reportData.deviceInfo = {
                         model: document.getElementById('display-device-model').value,
@@ -1197,14 +1113,16 @@
                         diagnosis: document.getElementById('display-diagnosis').value,
                         resolution: document.getElementById('display-resolution').value,
                         serviceDate: document.getElementById('display-date').value,
+                        technicianName: document.getElementById('display-technician-name').value,
+                        notes: document.getElementById('display-notes').value,
+                        clientSignature: document.getElementById('display-client-signature').value,
+                        completionDate: document.getElementById('display-date-full').value,
                         otherService: document.getElementById('display-other-service').value,
                         beforePartialDetails: document.getElementById('display-before-partial').value,
                         afterPartialDetails: document.getElementById('display-after-partial').value,
-                        issuesPersisting: document.getElementById('display-issues-persisting').value,
-                        clientSignature: document.getElementById('display-client-signature').value,
-                        completionDate: document.getElementById('display-date-full').value
+                        issuesPersisting: document.getElementById('display-issues-persisting').value
                     };
-                } else {
+                } else { // Software
                     reportData.projectInfo = {
                         projectName: document.getElementById('sw-project-name').value,
                         language: document.getElementById('sw-language').value,
@@ -1218,70 +1136,68 @@
                         signatureDate: document.getElementById('display-date-full').value
                     };
                 }
-
-                const ref = this.db.ref('reports/' + reportId);
                 if(isUpdate) {
-                    await ref.update(reportData);
-                    this.showToast('Updated', 'Report updated successfully');
+                    this.db.ref('reports/' + reportId).update(reportData)
+                        .then(() => this.showToast('Updated', 'Report updated successfully'))
+                        .catch(err => this.showToast('Error', err.message, 'error'));
                 } else {
-                    await ref.set(reportData);
-                    this.showToast('Saved', 'New report saved to database');
+                    this.db.ref('reports').push(reportData)
+                        .then(() => {
+                            this.showToast('Saved', 'New report saved to database');
+                            this.clearReportForm();
+                        })
+                        .catch(err => this.showToast('Error', err.message, 'error'));
                 }
-
-                // Auto-send notification
-                this.sendStatusNotification(true);
-
-                this.clearReportForm();
             }
             clearReportForm() {
-                document.querySelectorAll('#report-paper input[type="text"], #report-paper textarea, #report-paper input[type="hidden"]').forEach(el => el.value = '');
+                // Clear all inputs and checkboxes in both sections
+                document.querySelectorAll('#report-paper input[type="text"], #report-paper textarea').forEach(el => el.value = '');
                 document.querySelectorAll('#report-paper input[type="checkbox"]').forEach(el => el.checked = false);
                 document.getElementById('report-client-select').value = '';
                 document.getElementById('device-status').value = 'Received';
                 document.getElementById('current-report-id').value = '';
-                document.getElementById('photo-preview').innerHTML = '';
-                document.getElementById('video-preview').innerHTML = '';
-                this.pendingMedia = { photos: [], videos: [] };
                 this.generateReportID();
                 this.showToast('Cleared', 'Form reset to default');
             }
-            viewReports(clientKey) { /* unchanged except media support */ 
+            // --- View / Load Existing Reports ---
+            viewReports(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a,b) => b.timestamp - a.timestamp);
+             
                 document.getElementById('reports-modal-subtitle').innerText = `${client.name} — ${clientReports.length} report(s)`;
                 const container = document.getElementById('reports-list-container');
                 container.innerHTML = '';
                 if(clientReports.length === 0) {
                     container.innerHTML = '<p class="text-center text-gray-500 py-8">No reports found.</p>';
-                    return;
-                }
-                clientReports.forEach(report => {
-                    const div = document.createElement('div');
-                    div.className = 'report-list-item';
-                    const mediaHTML = report.media && report.media.photos && report.media.photos.length ? 
-                        `<div class="text-xs text-gray-500 mt-2">📸 ${report.media.photos.length} photo(s)</div>` : '';
-                    div.innerHTML = `
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">${report.type} Report</span>
-                                <div class="font-bold text-gray-900">${new Date(report.timestamp).toLocaleDateString()}</div>
+                } else {
+                    clientReports.forEach(report => {
+                        const div = document.createElement('div');
+                        div.className = 'report-list-item';
+                        div.innerHTML = `
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">${report.type} Report</span>
+                                    <div class="font-bold text-gray-900">${new Date(report.timestamp).toLocaleDateString()}</div>
+                                </div>
+                                <span class="badge ${report.status === 'Completed' ? 'badge-green' : 'badge-orange'} text-xs">${report.status}</span>
                             </div>
-                            <span class="badge ${report.status === 'Completed' ? 'badge-green' : 'badge-orange'} text-xs">${report.status}</span>
-                        </div>
-                        <div class="text-sm text-gray-600 mb-3">
-                            ${report.type === 'Hardware'
-                                ? `<div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>`
-                                : `<div><strong>Project:</strong> ${report.projectInfo?.projectName || 'N/A'}</div>`
-                            }
-                        </div>
-                        ${mediaHTML}
-                        <div class="flex gap-2">
-                            <button onclick="app.loadReport('${report._key}')" class="btn btn-primary btn-sm flex-1 justify-center">Open</button>
-                            <button onclick="app.deleteReport('${report._key}')" class="btn btn-ghost btn-sm text-red-500 border-red-200 hover:bg-red-50">Delete</button>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
+                            <div class="text-sm text-gray-600 mb-3">
+                                ${report.type === 'Hardware'
+                                    ? `<div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>
+                                       <div><strong>Issue:</strong> ${report.deviceInfo?.issue || 'N/A'}</div>`
+                                    : `<div><strong>Project:</strong> ${report.projectInfo?.projectName || 'N/A'}</div>
+                                       <div><strong>Language:</strong> ${report.projectInfo?.language || 'N/A'}</div>`
+                                }
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="app.loadReport('${report._key}')" class="btn btn-primary btn-sm flex-1 justify-center">Open</button>
+                                <button onclick="app.deleteReport('${report._key}')" class="btn btn-ghost btn-sm text-red-500 border-red-200 hover:bg-red-50">Delete</button>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+             
                 document.getElementById('reports-modal').classList.add('open');
             }
             closeReportsModal() {
@@ -1292,13 +1208,17 @@
                 if(!report) return;
                 this.closeReportsModal();
                 this.navigate('service-form');
+                // Set Edit Mode ID
                 document.getElementById('current-report-id').value = reportKey;
+                // Set report type first to show correct section
                 this.setReportType(report.type || 'Hardware');
+                // Load Client
                 const sel = document.getElementById('report-client-select');
                 sel.value = report.clientKey;
                 this.loadClientToForm(report.clientKey);
+                // Load Status
                 document.getElementById('device-status').value = report.status || 'Received';
-
+               
                 // Load common fields
                 if (report.clientInfo) {
                     document.getElementById('display-client-name').value = report.clientInfo.name || '';
@@ -1307,8 +1227,7 @@
                 }
                 document.getElementById('display-client-signature').value = report.softwareDetails?.clientSignature || report.serviceDetails?.clientSignature || '';
                 document.getElementById('display-date-full').value = report.softwareDetails?.signatureDate || report.serviceDetails?.completionDate || '';
-
-                // Hardware fields
+                // Load hardware-specific fields
                 if (report.type === 'Hardware' && report.deviceInfo) {
                     document.getElementById('display-device-model').value = report.deviceInfo.model || '';
                     document.getElementById('display-serial').value = report.deviceInfo.serial || '';
@@ -1319,12 +1238,14 @@
                     document.getElementById('display-diagnosis').value = sd.diagnosis || '';
                     document.getElementById('display-resolution').value = sd.resolution || '';
                     document.getElementById('display-date').value = sd.serviceDate || '';
+                    document.getElementById('display-technician-name').value = sd.technicianName || '';
+                    document.getElementById('display-notes').value = sd.notes || '';
                     document.getElementById('display-other-service').value = sd.otherService || '';
                     document.getElementById('display-before-partial').value = sd.beforePartialDetails || '';
                     document.getElementById('display-after-partial').value = sd.afterPartialDetails || '';
                     document.getElementById('display-issues-persisting').value = sd.issuesPersisting || '';
                 }
-                // Software fields
+                // Load software-specific fields
                 if (report.type === 'Software' && report.projectInfo) {
                     const pi = report.projectInfo;
                     document.getElementById('sw-project-name').value = pi.projectName || '';
@@ -1337,55 +1258,39 @@
                     document.getElementById('sw-date').value = sd.completionDate || '';
                     document.getElementById('sw-other-service').value = sd.otherService || '';
                 }
-                // Checkboxes
+                // Load Checkboxes (for both sections; inactive section is hidden, but we still set values)
                 if(report.checkboxes) {
                     for(const [id, checked] of Object.entries(report.checkboxes)) {
                         const el = document.getElementById(id);
                         if(el) el.checked = checked;
                     }
                 }
-                // Media preview in form (for edit)
-                this.pendingMedia.photos = [];
-                this.pendingMedia.videos = [];
-                document.getElementById('photo-preview').innerHTML = '';
-                document.getElementById('video-preview').innerHTML = '';
-                if (report.media) {
-                    if (report.media.photos) {
-                        report.media.photos.forEach(url => {
-                            const img = document.createElement('img');
-                            img.src = url;
-                            img.className = 'media-preview';
-                            document.getElementById('photo-preview').appendChild(img);
-                        });
-                    }
-                    if (report.media.videos) {
-                        report.media.videos.forEach(url => {
-                            const video = document.createElement('video');
-                            video.src = url;
-                            video.controls = true;
-                            video.className = 'video-preview';
-                            document.getElementById('video-preview').appendChild(video);
-                        });
-                    }
-                }
                 this.showToast('Report Loaded', 'Data retrieved successfully');
             }
-            deleteReport(reportKey) { /* unchanged */ 
+            deleteReport(reportKey) {
                 if(confirm('Are you sure you want to delete this report?')) {
                     const report = this.reports.find(r => r._key === reportKey);
                     const clientKey = report ? report.clientKey : null;
+                 
                     this.db.ref('reports/' + reportKey).remove()
                         .then(() => {
                             this.showToast('Deleted', 'Report removed');
-                            if(clientKey) this.viewReports(clientKey);
-                            else this.closeReportsModal();
+                            if(clientKey) {
+                                this.viewReports(clientKey);
+                            } else {
+                                this.closeReportsModal();
+                            }
                         })
-                        .catch(err => this.showToast('Error', err.message, 'error'));
+                        .catch(err => {
+                            console.error('Delete report error:', err);
+                            this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
+                        });
                 }
             }
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 this.showToast('Generating PDF', 'Please wait...');
+             
                 html2pdf().set({
                     margin: 0,
                     filename: `RGT_Service_Report_${Date.now()}.pdf`,
@@ -1397,34 +1302,22 @@
                     this.showToast('Success', 'PDF Downloaded');
                 });
             }
-            // NEW: Send WhatsApp / SMS Notification (simulated but realistic)
-            sendStatusNotification(fromSave = false) {
-                const phone = document.getElementById('display-client-phone').value;
-                const status = document.getElementById('device-status').value;
-                const clientName = document.getElementById('display-client-name').value || 'Valued Client';
-                if (!phone) {
-                    this.showToast('Error', 'Client phone number required for notification', 'error');
-                    return;
-                }
-                const message = `Hi ${clientName}, your device status has been updated to *${status}*. View full report here: https://raregradetech.co.za/report/${Date.now()}`;
-                // Show realistic WhatsApp-style toast
-                this.showToast('WhatsApp Sent', `Message sent to ${phone}`, 'success');
-                console.log('%c📱 WHATSAPP NOTIFICATION SIMULATED', 'color:#25D366; font-weight:bold', message);
-                // In real production replace with Twilio / WhatsApp Business API call
-            }
-            updateStats() { /* unchanged */ 
+            // --- Utilities ---
+            updateStats() {
                 this.animateValue('stat-clients', this.clients.length);
                 this.animateValue('stat-reports', this.reports.length);
+             
                 const inRepair = this.reports.filter(r => r.status === 'In Repair').length;
                 const completed = this.reports.filter(r => r.status === 'Completed').length;
                 const received = this.reports.filter(r => r.status === 'Received').length;
                 this.animateValue('stat-in-repair', inRepair);
                 this.animateValue('stat-completed', completed);
+             
                 document.getElementById('side-received').innerText = received;
                 document.getElementById('side-in-repair').innerText = inRepair;
                 document.getElementById('side-completed').innerText = completed;
             }
-            animateValue(id, end) { /* unchanged */ 
+            animateValue(id, end) {
                 const el = document.getElementById(id);
                 if(!el) return;
                 const start = parseInt(el.innerText) || 0;
@@ -1438,7 +1331,7 @@
                 };
                 requestAnimationFrame(step);
             }
-            updateDate() { /* unchanged */ 
+            updateDate() {
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-ZA', options);
             }
@@ -1453,9 +1346,9 @@
                     icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500"></i>';
                 }
                 toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 4000);
+                setTimeout(() => toast.classList.remove('show'), 3000);
             }
-            initChart() { /* unchanged */ 
+            initChart() {
                 const ctx = document.getElementById('activityChart');
                 if(!ctx) return;
                 new Chart(ctx, {
