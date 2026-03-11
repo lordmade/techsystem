@@ -87,7 +87,7 @@
         }
         .stat-card { padding: 20px; position: relative; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-2px); }
-      
+       
         .stat-icon-bg {
             position: absolute;
             right: 20px;
@@ -240,9 +240,9 @@
             padding: 1px 0;
             height: 16px; /* Fixed height for consistency */
         }
-      
+       
         #report-paper .form-line:focus { outline: none; border-bottom-color: #003087; }
-      
+       
         #report-paper h3, #report-paper h4 {
             font-size: 11pt;
             margin-bottom: 6px;
@@ -280,16 +280,13 @@
             .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 20; }
             .overlay.open { display: block; }
         }
-
-        .hardware-only, .software-only { display: none; }
-        .hardware-only.active, .software-only.active { display: block; }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <aside id="sidebar">
         <div class="p-6 border-b border-gray-200 flex items-center gap-3">
-            <img src="https://i.postimg.cc/QMT6Ns0J/Gemini-Generated-Image-3tzsqu3tzsqu3tzs-removebg-preview.png" alt="Rare Grade Tech Logo" class="w-10 h-10 rounded-lg shadow-lg object-contain">
+            <img src="https://i.postimg.cc/QMT6Ns0J/Gemini-Generated-Image-3tzsqu3tzsqu3tzs-removebg-preview.png alt="Rare Grade Tech Logo" class="w-10 h-10 rounded-lg shadow-lg object-contain">
             <div class="logo-text">
                 <h1 class="font-display font-bold text-gray-900 leading-tight">Rare Grade</h1>
                 <p class="text-xs text-gray-500 font-medium">Enterprise Portal</p>
@@ -297,28 +294,28 @@
         </div>
         <nav class="flex-1 py-6 overflow-y-auto">
             <div class="px-6 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Menu</div>
-          
+           
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item active w-full text-left">
                 <i class="fa-solid fa-chart-pie w-5"></i>
                 <span class="nav-text">Dashboard</span>
             </button>
-          
+           
             <button onclick="app.navigate('add-client')" id="nav-add-client" class="nav-item w-full text-left">
                 <i class="fa-solid fa-user-plus w-5"></i>
                 <span class="nav-text">New Client</span>
             </button>
-          
+           
             <button onclick="app.navigate('manage-clients')" id="nav-manage-clients" class="nav-item w-full text-left">
                 <i class="fa-solid fa-users w-5"></i>
                 <span class="nav-text">Client Registry</span>
             </button>
-          
+           
             <button onclick="app.navigate('service-form')" id="nav-service-form" class="nav-item w-full text-left">
                 <i class="fa-solid fa-file-signature w-5"></i>
                 <span class="nav-text">Service Reports</span>
             </button>
             <div class="px-6 mt-6 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Device Status</div>
-          
+           
             <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600">
                 <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div> Received</span>
                 <span class="font-bold text-gray-900" id="side-received">0</span>
@@ -352,7 +349,7 @@
                 </button>
                 <h2 id="page-title" class="text-xl font-bold text-gray-900 font-display">Dashboard</h2>
             </div>
-          
+           
             <div class="flex items-center gap-4">
                 <div class="hidden md:flex items-center gap-2 text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">
                     <i class="fa-regular fa-calendar"></i>
@@ -364,7 +361,7 @@
             </div>
         </header>
         <div class="content-area">
-          
+           
             <!-- DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -394,7 +391,7 @@
                         <h3 class="font-bold text-gray-900 mb-4">Activity Overview</h3>
                         <canvas id="activityChart" height="200"></canvas>
                     </div>
-                  
+                   
                     <div class="card lg:col-span-2">
                         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
                             <h3 class="font-bold text-gray-900">Recent Registrations</h3>
@@ -416,7 +413,6 @@
                     </div>
                 </div>
             </section>
-
             <!-- ADD CLIENT -->
             <section id="view-add-client" class="view-section">
                 <div class="max-w-2xl mx-auto">
@@ -465,7 +461,6 @@
                     </div>
                 </div>
             </section>
-
             <!-- MANAGE CLIENTS -->
             <section id="view-manage-clients" class="view-section">
                 <div class="card">
@@ -478,7 +473,7 @@
                             <i class="fa-solid fa-plus"></i> New Client
                         </button>
                     </div>
-                  
+                   
                     <div class="overflow-x-auto">
                         <table>
                             <thead>
@@ -500,7 +495,6 @@
                     </div>
                 </div>
             </section>
-
             <!-- SERVICE REPORT FORM -->
             <section id="view-service-form" class="view-section">
                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
@@ -508,7 +502,7 @@
                     <div class="xl:col-span-1 space-y-6 no-print">
                         <div class="card p-6">
                             <h3 class="font-bold text-gray-900 mb-4">Configuration</h3>
-                          
+                           
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Client</label>
@@ -552,7 +546,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Paper -->
                     <div class="xl:col-span-3 overflow-auto bg-gray-200 p-4 rounded-xl flex justify-center">
                         <div id="report-paper">
@@ -570,206 +563,104 @@
                                 </div>
                             </div>
                             <p class="text-center text-xs text-gray-600 mb-4 italic">Thank you for trusting us with your device. Below is the detailed report on the services performed.</p>
-
-                            <!-- ─────────────────────── Hardware Content ─────────────────────── -->
-                            <div id="hardware-content" class="hardware-only active">
-                                <!-- Client Info -->
-                                <div class="mb-4">
-                                    <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client Information</h3>
-                                    <table class="w-full text-sm">
-                                        <tr><td class="py-1 w-1/3 font-semibold">Client Name:</td><td class="py-1"><input id="display-client-name" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Contact Number:</td><td class="py-1"><input id="display-client-phone" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Email Address:</td><td class="py-1"><input id="display-client-email" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Device Model:</td><td class="py-1"><input id="display-device-model" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Serial Number:</td><td class="py-1"><input id="display-serial" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Issue Reported:</td><td class="py-1"><input id="display-issue" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Diagnosis:</td><td class="py-1"><input id="display-diagnosis" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
-                                    </table>
+                            <!-- Client Info -->
+                            <div class="mb-4">
+                                <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client Information</h3>
+                                <table class="w-full text-sm">
+                                    <tr><td class="py-1 w-1/3 font-semibold">Client Name:</td><td class="py-1"><input id="display-client-name" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Contact Number:</td><td class="py-1"><input id="display-client-phone" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Email Address:</td><td class="py-1"><input id="display-client-email" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Device Model:</td><td class="py-1"><input id="display-device-model" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Serial Number:</td><td class="py-1"><input id="display-serial" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Issue Reported:</td><td class="py-1"><input id="display-issue" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Diagnosis:</td><td class="py-1"><input id="display-diagnosis" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
+                                </table>
+                            </div>
+                            <!-- Status -->
+                            <div class="mb-4 text-sm flex items-center gap-4">
+                                <span class="font-bold">Status After Service:</span>
+                                <label class="mr-4"><input type="checkbox" id="cb-functional" class="mr-1"> Functional</label>
+                                <label><input type="checkbox" id="cb-non-functional" class="mr-1"> Non-Functional</label>
+                            </div>
+                            <!-- Service Summary -->
+                            <div class="mb-4 text-sm">
+                                <h4 class="font-bold mb-2">Service Summary:</h4>
+                                <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
+                                    <label><input type="checkbox" id="cb-device-repair" class="mr-2"> Device Repair</label>
+                                    <label><input type="checkbox" id="cb-software-install" class="mr-2"> Software Installation</label>
+                                    <label><input type="checkbox" id="cb-software-update" class="mr-2"> Software Update</label>
+                                    <label><input type="checkbox" id="cb-programming" class="mr-2"> Programming</label>
+                                    <div class="col-span-2 flex items-center">
+                                        <label class="mr-2"><input type="checkbox" id="cb-other" class="mr-1"> Other:</label>
+                                        <input id="display-other-service" class="form-line flex-1">
+                                    </div>
                                 </div>
-                                <!-- Status -->
-                                <div class="mb-4 text-sm flex items-center gap-4">
-                                    <span class="font-bold">Status After Service:</span>
-                                    <label class="mr-4"><input type="checkbox" id="cb-functional" class="mr-1"> Functional</label>
-                                    <label><input type="checkbox" id="cb-non-functional" class="mr-1"> Non-Functional</label>
+                                <div class="mt-2 flex items-center">
+                                    <span class="font-bold mr-2">Date of Completion:</span>
+                                    <input id="display-date" class="form-line w-40">
                                 </div>
-                                <!-- Service Summary -->
-                                <div class="mb-4 text-sm">
-                                    <h4 class="font-bold mb-2">Service Summary:</h4>
-                                    <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
-                                        <label><input type="checkbox" id="cb-device-repair" class="mr-2"> Device Repair</label>
-                                        <label><input type="checkbox" id="cb-software-install" class="mr-2"> Software Installation</label>
-                                        <label><input type="checkbox" id="cb-software-update" class="mr-2"> Software Update</label>
-                                        <label><input type="checkbox" id="cb-programming" class="mr-2"> Programming</label>
-                                        <div class="col-span-2 flex items-center">
-                                            <label class="mr-2"><input type="checkbox" id="cb-other" class="mr-1"> Other:</label>
-                                            <input id="display-other-service" class="form-line flex-1">
+                            </div>
+                            <!-- Condition -->
+                            <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                                <div>
+                                    <h4 class="font-bold mb-2">Condition Before Service:</h4>
+                                    <div class="space-y-1 checkbox-grid">
+                                        <div class="flex gap-4 mb-1">
+                                            <label><input type="checkbox" id="cb-before-new" class="mr-1"> NEW</label>
+                                            <label><input type="checkbox" id="cb-before-used" class="mr-1"> USED</label>
+                                            <label><input type="checkbox" id="cb-before-damaged" class="mr-1"> DMG</label>
                                         </div>
-                                    </div>
-                                    <div class="mt-2 flex items-center">
-                                        <span class="font-bold mr-2">Date of Completion:</span>
-                                        <input id="display-date" class="form-line w-40">
-                                    </div>
-                                </div>
-                                <!-- Condition -->
-                                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-                                    <div>
-                                        <h4 class="font-bold mb-2">Condition Before Service:</h4>
-                                        <div class="space-y-1 checkbox-grid">
-                                            <div class="flex gap-4 mb-1">
-                                                <label><input type="checkbox" id="cb-before-new" class="mr-1"> NEW</label>
-                                                <label><input type="checkbox" id="cb-before-used" class="mr-1"> USED</label>
-                                                <label><input type="checkbox" id="cb-before-damaged" class="mr-1"> DMG</label>
-                                            </div>
-                                            <label class="block"><input type="checkbox" id="cb-before-fully-functional" class="mr-1"> Fully Functional</label>
-                                            <label class="block"><input type="checkbox" id="cb-before-non-functional" class="mr-1"> Non-Functional</label>
-                                            <div class="flex items-center">
-                                                <label class="mr-2"><input type="checkbox" id="cb-before-partial" class="mr-1"> Partial:</label>
-                                                <input id="display-before-partial" class="form-line flex-1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold mb-2">After Service:</h4>
-                                        <div class="space-y-1 checkbox-grid">
-                                            <label class="block"><input type="checkbox" id="cb-after-fully-functional" class="mr-1"> Fully Functional</label>
-                                            <div class="flex items-center">
-                                                <label class="mr-2"><input type="checkbox" id="cb-after-partial" class="mr-1"> Partial:</label>
-                                                <input id="display-after-partial" class="form-line flex-1">
-                                            </div>
-                                            <div class="flex items-center">
-                                                <label class="mr-2"><input type="checkbox" id="cb-after-issues" class="mr-1"> Issues:</label>
-                                                <input id="display-issues-persisting" class="form-line flex-1">
-                                            </div>
+                                        <label class="block"><input type="checkbox" id="cb-before-fully-functional" class="mr-1"> Fully Functional</label>
+                                        <label class="block"><input type="checkbox" id="cb-before-non-functional" class="mr-1"> Non-Functional</label>
+                                        <div class="flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-before-partial" class="mr-1"> Partial:</label>
+                                            <input id="display-before-partial" class="form-line flex-1">
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Technician -->
-                                <div class="mb-4 text-sm">
-                                    <h4 class="font-bold mb-2">Technician Notes:</h4>
-                                    <div class="flex items-center mb-2">
-                                        <span class="font-semibold w-32">Technician Name:</span>
-                                        <input id="display-technician-name" class="form-line flex-1">
-                                    </div>
-                                    <div>
-                                        <span class="font-semibold block mb-1">Notes/Observations:</span>
-                                        <textarea id="display-notes" class="form-line w-full h-12"></textarea>
-                                    </div>
-                                </div>
-                                <!-- Signature -->
-                                <div class="border-t-2 border-black pt-4 text-sm mt-auto">
-                                    <h4 class="font-bold mb-2">Client Acknowledgment</h4>
-                                    <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the device and agreement with the service details provided.</p>
-                                    <div class="flex justify-between items-end">
-                                        <div class="w-1/2 pr-4">
-                                            <div class="font-semibold mb-1">Client Signature:</div>
-                                            <input id="display-client-signature" class="form-line">
+                                <div>
+                                    <h4 class="font-bold mb-2">After Service:</h4>
+                                    <div class="space-y-1 checkbox-grid">
+                                        <label class="block"><input type="checkbox" id="cb-after-fully-functional" class="mr-1"> Fully Functional</label>
+                                        <div class="flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-after-partial" class="mr-1"> Partial:</label>
+                                            <input id="display-after-partial" class="form-line flex-1">
                                         </div>
-                                        <div class="w-1/2 pl-4">
-                                            <div class="font-semibold mb-1">Date:</div>
-                                            <input id="display-date-full" class="form-line">
+                                        <div class="flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-after-issues" class="mr-1"> Issues:</label>
+                                            <input id="display-issues-persisting" class="form-line flex-1">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- ─────────────────────── Software Content ─────────────────────── -->
-                            <div id="software-content" class="software-only">
-                                <!-- Client & Project Info -->
-                                <div class="mb-4">
-                                    <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client & Project Information</h3>
-                                    <table class="w-full text-sm">
-                                        <tr><td class="py-1 w-1/3 font-semibold">Client Name:</td><td class="py-1"><input id="display-client-name" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Contact Number:</td><td class="py-1"><input id="display-client-phone" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Email Address:</td><td class="py-1"><input id="display-client-email" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Project / Task Name:</td><td class="py-1"><input id="display-project-name" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Platform / Environment:</td><td class="py-1"><input id="display-platform" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Main Objective:</td><td class="py-1"><input id="display-main-objective" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Key Deliverables:</td><td class="py-1"><input id="display-key-deliverables" class="form-line"></td></tr>
-                                        <tr><td class="py-1 font-semibold">Technologies / Tools Used:</td><td class="py-1"><input id="display-technologies-used" class="form-line"></td></tr>
-                                    </table>
+                            <!-- Technician -->
+                            <div class="mb-4 text-sm">
+                                <h4 class="font-bold mb-2">Technician Notes:</h4>
+                                <div class="flex items-center mb-2">
+                                    <span class="font-semibold w-32">Technician Name:</span>
+                                    <input id="display-technician-name" class="form-line flex-1">
                                 </div>
-
-                                <!-- Software Summary -->
-                                <div class="mb-4 text-sm">
-                                    <h4 class="font-bold mb-2">Work Performed:</h4>
-                                    <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
-                                        <label><input type="checkbox" id="cb-new-feature" class="mr-2"> New Feature Development</label>
-                                        <label><input type="checkbox" id="cb-bug-fix" class="mr-2"> Bug Fixing</label>
-                                        <label><input type="checkbox" id="cb-refactoring" class="mr-2"> Code Refactoring / Optimization</label>
-                                        <label><input type="checkbox" id="cb-testing" class="mr-2"> Testing / QA</label>
-                                        <label><input type="checkbox" id="cb-deployment" class="mr-2"> Deployment / Release</label>
-                                        <label><input type="checkbox" id="cb-documentation" class="mr-2"> Documentation / Training</label>
-                                        <div class="col-span-2 flex items-center">
-                                            <label class="mr-2"><input type="checkbox" id="cb-sw-other" class="mr-1"> Other:</label>
-                                            <input id="display-sw-other" class="form-line flex-1">
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 flex items-center">
-                                        <span class="font-bold mr-2">Date of Completion:</span>
-                                        <input id="display-date" class="form-line w-40">
-                                    </div>
+                                <div>
+                                    <span class="font-semibold block mb-1">Notes/Observations:</span>
+                                    <textarea id="display-notes" class="form-line w-full h-12"></textarea>
                                 </div>
-
-                                <!-- Outcome -->
-                                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-                                    <div>
-                                        <h4 class="font-bold mb-2">Project Status:</h4>
-                                        <div class="space-y-1 checkbox-grid">
-                                            <label class="block"><input type="checkbox" id="cb-sw-completed" class="mr-1"> Fully Completed</label>
-                                            <label class="block"><input type="checkbox" id="cb-sw-phase" class="mr-1"> Phase / Milestone Completed</label>
-                                            <label class="block"><input type="checkbox" id="cb-sw-ongoing" class="mr-1"> Ongoing</label>
-                                            <div class="flex items-center">
-                                                <label class="mr-2"><input type="checkbox" id="cb-sw-partial" class="mr-1"> Partial Delivery:</label>
-                                                <input id="display-sw-partial" class="form-line flex-1">
-                                            </div>
-                                        </div>
+                            </div>
+                            <!-- Signature -->
+                            <div class="border-t-2 border-black pt-4 text-sm mt-auto">
+                                <h4 class="font-bold mb-2">Client Acknowledgment</h4>
+                                <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the device and agreement with the service details provided.</p>
+                                <div class="flex justify-between items-end">
+                                    <div class="w-1/2 pr-4">
+                                        <div class="font-semibold mb-1">Client Signature:</div>
+                                        <input id="display-client-signature" class="form-line">
                                     </div>
-                                    <div>
-                                        <h4 class="font-bold mb-2">Remaining / Known Issues:</h4>
-                                        <div class="space-y-2">
-                                            <div class="flex items-center">
-                                                <label class="mr-2">Known Issues:</label>
-                                                <input id="display-sw-known-issues" class="form-line flex-1">
-                                            </div>
-                                            <div class="flex items-center">
-                                                <label class="mr-2">Next Steps:</label>
-                                                <input id="display-sw-next-steps" class="form-line flex-1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Notes -->
-                                <div class="mb-4 text-sm">
-                                    <h4 class="font-bold mb-2">Developer Notes:</h4>
-                                    <div class="flex items-center mb-2">
-                                        <span class="font-semibold w-32">Developer Name:</span>
-                                        <input id="display-technician-name" class="form-line flex-1">
-                                    </div>
-                                    <div>
-                                        <span class="font-semibold block mb-1">Notes / Recommendations:</span>
-                                        <textarea id="display-notes" class="form-line w-full h-12"></textarea>
-                                    </div>
-                                </div>
-
-                                <!-- Signature -->
-                                <div class="border-t-2 border-black pt-4 text-sm mt-auto">
-                                    <h4 class="font-bold mb-2">Client Acknowledgment</h4>
-                                    <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the deliverables and agreement with the service details provided.</p>
-                                    <div class="flex justify-between items-end">
-                                        <div class="w-1/2 pr-4">
-                                            <div class="font-semibold mb-1">Client Signature:</div>
-                                            <input id="display-client-signature" class="form-line">
-                                        </div>
-                                        <div class="w-1/2 pl-4">
-                                            <div class="font-semibold mb-1">Date:</div>
-                                            <input id="display-date-full" class="form-line">
-                                        </div>
+                                    <div class="w-1/2 pl-4">
+                                        <div class="font-semibold mb-1">Date:</div>
+                                        <input id="display-date-full" class="form-line">
                                     </div>
                                 </div>
                             </div>
-
                             <div class="mt-6 pt-2 border-t border-gray-300 text-center text-xs text-gray-500">
                                 <p class="font-semibold text-gray-700">Thank you for your business!</p>
                                 <p>015 065 0979 • 061 527 0749 • info@raregradetech.co.za • raregradetech.com</p>
@@ -780,7 +671,6 @@
             </section>
         </div>
     </main>
-
     <!-- Toast -->
     <div id="toast">
         <div id="toast-icon" class="text-green-500 text-xl"><i class="fa-solid fa-circle-check"></i></div>
@@ -789,7 +679,6 @@
             <p id="toast-msg" class="text-xs text-gray-500">Operation completed successfully.</p>
         </div>
     </div>
-
     <!-- Reports Modal -->
     <div id="reports-modal" class="modal-overlay">
         <div class="modal-box">
@@ -807,7 +696,6 @@
             </div>
         </div>
     </div>
-
     <script>
         class RareGradeApp {
             constructor() {
@@ -839,6 +727,7 @@
                 this.db = firebase.database();
             }
             setupListeners() {
+                // Listen for Clients
                 this.db.ref('clients').on('value', (snapshot) => {
                     this.clients = [];
                     if(snapshot.exists()) {
@@ -852,6 +741,7 @@
                     this.renderClientDropdown();
                     this.updateStats();
                 });
+                // Listen for Reports
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
                     if(snapshot.exists()) {
@@ -862,13 +752,13 @@
                         });
                     }
                     this.updateStats();
-                    this.renderClientTable();
+                    this.renderClientTable(); // Re-render to update status badges
                 });
             }
             navigate(viewId) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 document.getElementById(`view-${viewId}`).classList.add('active');
-              
+               
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
@@ -892,6 +782,7 @@
                     sidebar.classList.toggle('collapsed');
                 }
             }
+            // --- Client Management ---
             updateIdPreview() {
                 const name = document.getElementById('newClientName').value.trim();
                 const preview = document.getElementById('preview-client-id');
@@ -913,13 +804,13 @@
                     return;
                 }
                 const displayId = document.getElementById('preview-client-id').innerText;
-              
+               
                 const newClient = {
                     displayId: displayId === '—' ? 'RGT-' + Date.now() : displayId,
                     name, phone, email: email || '',
                     date: new Date().toLocaleDateString(),
                     timestamp: Date.now(),
-                    initialStatus: status
+                    initialStatus: status // Save initial status if needed
                 };
                 this.db.ref('clients').push(newClient)
                     .then(() => {
@@ -933,7 +824,7 @@
             renderClientTable() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-              
+               
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
                 if(this.clients.length === 0) {
@@ -943,10 +834,11 @@
                 document.getElementById('empty-state').classList.add('hidden');
                 const sorted = [...this.clients].sort((a,b) => b.timestamp - a.timestamp);
                 sorted.forEach(client => {
+                    // Find latest report for this client to show status
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
                     const currentStatus = latestReport ? latestReport.status : (client.initialStatus || 'Received');
-                  
+                   
                     let statusBadgeClass = 'badge-gray';
                     if(currentStatus === 'Received') statusBadgeClass = 'badge-blue';
                     if(currentStatus === 'In Repair' || currentStatus === 'Waiting for Parts') statusBadgeClass = 'badge-orange';
@@ -966,6 +858,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
+                // Dashboard Recent List
                 sorted.slice(0, 5).forEach(client => {
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
@@ -1000,25 +893,54 @@
                     row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
                 });
             }
-            deleteClient(key) {
-                if(confirm('Delete this client and all their reports?')) {
-                    const clientReports = this.reports.filter(r => r.clientKey === key);
-                    this.db.ref('clients/' + key).remove()
-                        .then(() => {
-                            const deletePromises = clientReports.map(r =>
-                                this.db.ref('reports/' + r._key).remove()
-                            );
-                            return Promise.all(deletePromises);
-                        })
-                        .then(() => {
-                            this.showToast('Deleted', 'Client and history removed');
-                        })
-                        .catch(err => {
-                            console.error('Delete error:', err);
-                            this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
-                        });
+           // REPLACE the deleteClient function (around line 540)
+deleteClient(key) {
+    if(confirm('Delete this client and all their reports?')) {
+        // Store reports to delete before removing client
+        const clientReports = this.reports.filter(r => r.clientKey === key);
+       
+        // Delete client first
+        this.db.ref('clients/' + key).remove()
+            .then(() => {
+                // Then delete associated reports
+                const deletePromises = clientReports.map(r =>
+                    this.db.ref('reports/' + r._key).remove()
+                );
+                return Promise.all(deletePromises);
+            })
+            .then(() => {
+                this.showToast('Deleted', 'Client and history removed');
+            })
+            .catch(err => {
+                console.error('Delete error:', err);
+                this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
+            });
+    }
+}
+// REPLACE the deleteReport function (around line 620)
+deleteReport(reportKey) {
+    if(confirm('Are you sure you want to delete this report?')) {
+        // Find clientKey BEFORE deletion
+        const report = this.reports.find(r => r._key === reportKey);
+        const clientKey = report ? report.clientKey : null;
+       
+        this.db.ref('reports/' + reportKey).remove()
+            .then(() => {
+                this.showToast('Deleted', 'Report removed');
+                // Refresh modal using the stored clientKey
+                if(clientKey) {
+                    this.viewReports(clientKey);
+                } else {
+                    this.closeReportsModal();
                 }
-            }
+            })
+            .catch(err => {
+                console.error('Delete report error:', err);
+                this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
+            });
+    }
+}
+            // --- Service Reports ---
             prepReport(clientKey) {
                 this.navigate('service-form');
                 this.clearReportForm();
@@ -1044,16 +966,14 @@
                 if(type === 'Hardware') {
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
-                    document.getElementById('hardware-content').classList.add('active');
-                    document.getElementById('software-content').classList.remove('active');
                 } else {
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
-                    document.getElementById('software-content').classList.add('active');
-                    document.getElementById('hardware-content').classList.remove('active');
                 }
             }
-            updateStatusColor(select) {}
+            updateStatusColor(select) {
+                // Visual feedback for status selection if needed
+            }
             generateReportID() {
                 const today = new Date().toLocaleDateString('en-GB');
                 document.getElementById('display-date').value = today;
@@ -1075,33 +995,23 @@
                         phone: document.getElementById('display-client-phone').value,
                         email: document.getElementById('display-client-email').value
                     },
-                    deviceInfo: this.currentReportType === 'Hardware' ? {
+                    deviceInfo: {
                         model: document.getElementById('display-device-model').value,
                         serial: document.getElementById('display-serial').value,
                         issue: document.getElementById('display-issue').value
-                    } : undefined,
-                    projectInfo: this.currentReportType === 'Software' ? {
-                        projectName: document.getElementById('display-project-name').value,
-                        platform: document.getElementById('display-platform').value,
-                        mainObjective: document.getElementById('display-main-objective').value,
-                        keyDeliverables: document.getElementById('display-key-deliverables').value,
-                        technologiesUsed: document.getElementById('display-technologies-used').value
-                    } : undefined,
+                    },
                     serviceDetails: {
-                        diagnosis: this.currentReportType === 'Hardware' ? document.getElementById('display-diagnosis').value : undefined,
-                        resolution: this.currentReportType === 'Hardware' ? document.getElementById('display-resolution').value : undefined,
+                        diagnosis: document.getElementById('display-diagnosis').value,
+                        resolution: document.getElementById('display-resolution').value,
                         serviceDate: document.getElementById('display-date').value,
                         technicianName: document.getElementById('display-technician-name').value,
                         notes: document.getElementById('display-notes').value,
                         clientSignature: document.getElementById('display-client-signature').value,
                         completionDate: document.getElementById('display-date-full').value,
-                        otherService: this.currentReportType === 'Hardware' ? document.getElementById('display-other-service').value : document.getElementById('display-sw-other').value,
-                        beforePartialDetails: this.currentReportType === 'Hardware' ? document.getElementById('display-before-partial').value : undefined,
-                        afterPartialDetails: this.currentReportType === 'Hardware' ? document.getElementById('display-after-partial').value : undefined,
-                        issuesPersisting: this.currentReportType === 'Hardware' ? document.getElementById('display-issues-persisting').value : undefined,
-                        knownIssues: this.currentReportType === 'Software' ? document.getElementById('display-sw-known-issues').value : undefined,
-                        nextSteps: this.currentReportType === 'Software' ? document.getElementById('display-sw-next-steps').value : undefined,
-                        partialDelivery: this.currentReportType === 'Software' ? document.getElementById('display-sw-partial').value : undefined
+                        otherService: document.getElementById('display-other-service').value,
+                        beforePartialDetails: document.getElementById('display-before-partial').value,
+                        afterPartialDetails: document.getElementById('display-after-partial').value,
+                        issuesPersisting: document.getElementById('display-issues-persisting').value
                     },
                     checkboxes: this.captureCheckboxStates(),
                     status: document.getElementById('device-status').value,
@@ -1123,14 +1033,9 @@
             captureCheckboxStates() {
                 const ids = [
                     'cb-functional', 'cb-non-functional', 'cb-device-repair', 'cb-software-install',
-                    'cb-software-update', 'cb-programming', 'cb-other',
-                    'cb-before-new', 'cb-before-used', 'cb-before-damaged',
-                    'cb-before-fully-functional', 'cb-before-non-functional', 'cb-before-partial',
-                    'cb-after-fully-functional', 'cb-after-partial', 'cb-after-issues',
-                    // Software specific
-                    'cb-new-feature', 'cb-bug-fix', 'cb-refactoring', 'cb-testing',
-                    'cb-deployment', 'cb-documentation', 'cb-sw-other',
-                    'cb-sw-completed', 'cb-sw-phase', 'cb-sw-ongoing', 'cb-sw-partial'
+                    'cb-software-update', 'cb-programming', 'cb-other', 'cb-before-new', 'cb-before-used',
+                    'cb-before-damaged', 'cb-before-fully-functional', 'cb-before-non-functional', 'cb-before-partial',
+                    'cb-after-fully-functional', 'cb-after-partial', 'cb-after-issues'
                 ];
                 const states = {};
                 ids.forEach(id => {
@@ -1144,15 +1049,15 @@
                 document.querySelectorAll('#report-paper input[type="checkbox"]').forEach(el => el.checked = false);
                 document.getElementById('report-client-select').value = '';
                 document.getElementById('device-status').value = 'Received';
-                document.getElementById('current-report-id').value = '';
+                document.getElementById('current-report-id').value = ''; // Clear edit mode
                 this.generateReportID();
-                this.setReportType('Hardware');
                 this.showToast('Cleared', 'Form reset to default');
             }
+            // --- View / Load Existing Reports ---
             viewReports(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a,b) => b.timestamp - a.timestamp);
-              
+               
                 document.getElementById('reports-modal-subtitle').innerText = `${client.name} — ${clientReports.length} report(s)`;
                 const container = document.getElementById('reports-list-container');
                 container.innerHTML = '';
@@ -1171,8 +1076,8 @@
                                 <span class="badge ${report.status === 'Completed' ? 'badge-green' : 'badge-orange'} text-xs">${report.status}</span>
                             </div>
                             <div class="text-sm text-gray-600 mb-3">
-                                <div><strong>${report.type === 'Hardware' ? 'Device' : 'Project'}:</strong> ${report.type === 'Hardware' ? (report.deviceInfo?.model || 'N/A') : (report.projectInfo?.projectName || 'N/A')}</div>
-                                <div><strong>Issue/Goal:</strong> ${report.type === 'Hardware' ? (report.deviceInfo?.issue || 'N/A') : (report.projectInfo?.mainObjective || 'N/A')}</div>
+                                <div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>
+                                <div><strong>Issue:</strong> ${report.deviceInfo?.issue || 'N/A'}</div>
                             </div>
                             <div class="flex gap-2">
                                 <button onclick="app.loadReport('${report._key}')" class="btn btn-primary btn-sm flex-1 justify-center">Open</button>
@@ -1182,6 +1087,7 @@
                         container.appendChild(div);
                     });
                 }
+               
                 document.getElementById('reports-modal').classList.add('open');
             }
             closeReportsModal() {
@@ -1192,46 +1098,38 @@
                 if(!report) return;
                 this.closeReportsModal();
                 this.navigate('service-form');
+                // Set Edit Mode ID
                 document.getElementById('current-report-id').value = reportKey;
+                // Load Client
                 const sel = document.getElementById('report-client-select');
                 sel.value = report.clientKey;
                 this.loadClientToForm(report.clientKey);
+                // Load Type
                 this.setReportType(report.type || 'Hardware');
+                // Load Status
                 document.getElementById('device-status').value = report.status || 'Received';
-                // Common fields
-                document.getElementById('display-client-name').value = report.clientInfo?.name || '';
-                document.getElementById('display-client-phone').value = report.clientInfo?.phone || '';
-                document.getElementById('display-client-email').value = report.clientInfo?.email || '';
-                document.getElementById('display-technician-name').value = report.serviceDetails?.technicianName || '';
-                document.getElementById('display-notes').value = report.serviceDetails?.notes || '';
-                document.getElementById('display-client-signature').value = report.serviceDetails?.clientSignature || '';
-                document.getElementById('display-date').value = report.serviceDetails?.serviceDate || '';
-                document.getElementById('display-date-full').value = report.serviceDetails?.completionDate || '';
-                // Hardware specific
-                if(report.type === 'Hardware') {
-                    document.getElementById('display-device-model').value = report.deviceInfo?.model || '';
-                    document.getElementById('display-serial').value = report.deviceInfo?.serial || '';
-                    document.getElementById('display-issue').value = report.deviceInfo?.issue || '';
-                    document.getElementById('display-diagnosis').value = report.serviceDetails?.diagnosis || '';
-                    document.getElementById('display-resolution').value = report.serviceDetails?.resolution || '';
-                    document.getElementById('display-other-service').value = report.serviceDetails?.otherService || '';
-                    document.getElementById('display-before-partial').value = report.serviceDetails?.beforePartialDetails || '';
-                    document.getElementById('display-after-partial').value = report.serviceDetails?.afterPartialDetails || '';
-                    document.getElementById('display-issues-persisting').value = report.serviceDetails?.issuesPersisting || '';
+                // Load Device Info
+                if(report.deviceInfo) {
+                    document.getElementById('display-device-model').value = report.deviceInfo.model || '';
+                    document.getElementById('display-serial').value = report.deviceInfo.serial || '';
+                    document.getElementById('display-issue').value = report.deviceInfo.issue || '';
                 }
-                // Software specific
-                if(report.type === 'Software') {
-                    document.getElementById('display-project-name').value = report.projectInfo?.projectName || '';
-                    document.getElementById('display-platform').value = report.projectInfo?.platform || '';
-                    document.getElementById('display-main-objective').value = report.projectInfo?.mainObjective || '';
-                    document.getElementById('display-key-deliverables').value = report.projectInfo?.keyDeliverables || '';
-                    document.getElementById('display-technologies-used').value = report.projectInfo?.technologiesUsed || '';
-                    document.getElementById('display-sw-other').value = report.serviceDetails?.otherService || '';
-                    document.getElementById('display-sw-known-issues').value = report.serviceDetails?.knownIssues || '';
-                    document.getElementById('display-sw-next-steps').value = report.serviceDetails?.nextSteps || '';
-                    document.getElementById('display-sw-partial').value = report.serviceDetails?.partialDelivery || '';
+                // Load Service Details
+                if(report.serviceDetails) {
+                    const sd = report.serviceDetails;
+                    document.getElementById('display-diagnosis').value = sd.diagnosis || '';
+                    document.getElementById('display-resolution').value = sd.resolution || '';
+                    document.getElementById('display-date').value = sd.serviceDate || '';
+                    document.getElementById('display-technician-name').value = sd.technicianName || '';
+                    document.getElementById('display-notes').value = sd.notes || '';
+                    document.getElementById('display-client-signature').value = sd.clientSignature || '';
+                    document.getElementById('display-date-full').value = sd.completionDate || '';
+                    document.getElementById('display-other-service').value = sd.otherService || '';
+                    document.getElementById('display-before-partial').value = sd.beforePartialDetails || '';
+                    document.getElementById('display-after-partial').value = sd.afterPartialDetails || '';
+                    document.getElementById('display-issues-persisting').value = sd.issuesPersisting || '';
                 }
-                // Checkboxes
+                // Load Checkboxes
                 if(report.checkboxes) {
                     for(const [id, checked] of Object.entries(report.checkboxes)) {
                         const el = document.getElementById(id);
@@ -1242,42 +1140,41 @@
             }
             deleteReport(reportKey) {
                 if(confirm('Are you sure you want to delete this report?')) {
-                    const report = this.reports.find(r => r._key === reportKey);
-                    const clientKey = report ? report.clientKey : null;
                     this.db.ref('reports/' + reportKey).remove()
                         .then(() => {
                             this.showToast('Deleted', 'Report removed');
+                            // Refresh modal
+                            const clientKey = this.reports.find(r => r._key === reportKey)?.clientKey;
                             if(clientKey) this.viewReports(clientKey);
-                            else this.closeReportsModal();
-                        })
-                        .catch(err => {
-                            console.error('Delete report error:', err);
-                            this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
                         });
                 }
             }
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 this.showToast('Generating PDF', 'Please wait...');
+               
                 html2pdf().set({
                     margin: 0,
                     filename: `RGT_Service_Report_${Date.now()}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { scale: 2, useCORS: true },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak: { mode: 'avoid-all' }
+                    pagebreak: { mode: 'avoid-all' } // Prevent breaking inside elements
                 }).from(element).save().then(() => {
                     this.showToast('Success', 'PDF Downloaded');
                 });
             }
+            // --- Utilities ---
             updateStats() {
                 this.animateValue('stat-clients', this.clients.length);
                 this.animateValue('stat-reports', this.reports.length);
+               
                 const inRepair = this.reports.filter(r => r.status === 'In Repair').length;
                 const completed = this.reports.filter(r => r.status === 'Completed').length;
                 const received = this.reports.filter(r => r.status === 'Received').length;
                 this.animateValue('stat-in-repair', inRepair);
                 this.animateValue('stat-completed', completed);
+               
                 document.getElementById('side-received').innerText = received;
                 document.getElementById('side-in-repair').innerText = inRepair;
                 document.getElementById('side-completed').innerText = completed;
