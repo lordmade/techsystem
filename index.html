@@ -721,9 +721,10 @@
                                 <span style="font-weight: bold; display: inline-block; width: 70px;">Technician:</span>
                                 <input id="display-technician-name" class="form-line" style="width: calc(100% - 75px); display: inline-block;">
                             </div>
-                            <div style="margin-bottom: 2px; flex-shrink: 0;">
+                            <!-- Notes section now grows to fill full remaining height and pushes footer to bottom -->
+                            <div style="margin-bottom: 2px; flex: 1; display: flex; flex-direction: column;">
                                 <span style="font-weight: bold; font-size: 7pt; display: block;">Notes:</span>
-                                <textarea id="display-notes" class="form-line" style="height: 16px; border: 1px solid #999; font-size: 7pt;"></textarea>
+                                <textarea id="display-notes" class="form-line" style="flex: 1; height: auto; border: 1px solid #999; font-size: 7pt; resize: none;"></textarea>
                             </div>
                             <!-- Signature -->
                             <div style="border-top: 1px solid #999; padding-top: 2px; margin-top: 2px; font-size: 7pt; flex-shrink: 0;">
