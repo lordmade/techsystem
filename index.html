@@ -49,8 +49,10 @@
         #sidebar.collapsed { width: 80px; }
         #sidebar.collapsed .nav-text,
         #sidebar.collapsed .logo-text,
-        #sidebar.collapsed .user-info { display: none; }
+        #sidebar.collapsed .user-info,
+        #sidebar.collapsed .status-label { display: none; }
         #sidebar.collapsed .nav-item { justify-content: center; padding: 12px; }
+        #sidebar.collapsed .device-status-item { justify-content: center; gap: 6px; }
         .nav-item {
             display: flex;
             align-items: center;
@@ -96,7 +98,7 @@
         }
         .stat-card { padding: 20px; position: relative; transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
         .stat-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
-     
+    
         .stat-icon-bg {
             position: absolute;
             right: 20px;
@@ -208,10 +210,10 @@
             border: 1px solid var(--border); border-radius: 8px; padding: 16px;
             margin-bottom: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-        .report-list-item:hover { 
-            border-color: var(--accent); 
-            background: var(--accent-light); 
-            transform: translateY(-2px); 
+        .report-list-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: translateY(-2px);
         }
         /*
            OPTIMIZED PDF STYLES
@@ -254,9 +256,9 @@
             padding: 1px 0;
             height: 16px;
         }
-     
+    
         #report-paper .form-line:focus { outline: none; border-bottom-color: #003087; }
-     
+    
         #report-paper h3, #report-paper h4 {
             font-size: 11pt;
             margin-bottom: 6px;
@@ -314,38 +316,38 @@
         </div>
         <nav class="flex-1 py-6 overflow-y-auto">
             <div class="px-6 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Menu</div>
-         
+        
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item active w-full text-left">
                 <i class="fa-solid fa-chart-pie w-5"></i>
                 <span class="nav-text">Dashboard</span>
             </button>
-         
+        
             <button onclick="app.navigate('add-client')" id="nav-add-client" class="nav-item w-full text-left">
                 <i class="fa-solid fa-user-plus w-5"></i>
                 <span class="nav-text">New Client</span>
             </button>
-         
+        
             <button onclick="app.navigate('manage-clients')" id="nav-manage-clients" class="nav-item w-full text-left">
                 <i class="fa-solid fa-users w-5"></i>
                 <span class="nav-text">Client Registry</span>
             </button>
-         
+        
             <button onclick="app.navigate('service-form')" id="nav-service-form" class="nav-item w-full text-left">
                 <i class="fa-solid fa-file-signature w-5"></i>
                 <span class="nav-text">Service Reports</span>
             </button>
             <div class="px-6 mt-6 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Device Status</div>
-         
-            <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600">
-                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div> Received</span>
+        
+            <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600 device-status-item">
+                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span class="status-label">Received</span></span>
                 <span class="font-bold text-gray-900" id="side-received">0</span>
             </div>
-            <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600">
-                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-orange-500"></div> In Repair</span>
+            <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600 device-status-item">
+                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-orange-500"></div><span class="status-label">In Repair</span></span>
                 <span class="font-bold text-gray-900" id="side-in-repair">0</span>
             </div>
-            <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600">
-                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-500"></div> Completed</span>
+            <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600 device-status-item">
+                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-500"></div><span class="status-label">Completed</span></span>
                 <span class="font-bold text-gray-900" id="side-completed">0</span>
             </div>
         </nav>
@@ -369,7 +371,7 @@
                 </button>
                 <h2 id="page-title" class="text-xl font-bold text-gray-900 font-display">Dashboard</h2>
             </div>
-         
+        
             <div class="flex items-center gap-4">
                 <div class="hidden md:flex items-center gap-2 text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">
                     <i class="fa-regular fa-calendar"></i>
@@ -381,7 +383,7 @@
             </div>
         </header>
         <div class="content-area">
-         
+        
             <!-- DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -411,7 +413,7 @@
                         <h3 class="font-bold text-gray-900 mb-4">Activity Overview</h3>
                         <canvas id="activityChart" height="200"></canvas>
                     </div>
-                 
+                
                     <div class="card lg:col-span-2">
                         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
                             <h3 class="font-bold text-gray-900">Recent Registrations</h3>
@@ -493,7 +495,7 @@
                             <i class="fa-solid fa-plus"></i> New Client
                         </button>
                     </div>
-                 
+                
                     <div class="overflow-x-auto">
                         <table>
                             <thead>
@@ -522,7 +524,7 @@
                     <div class="xl:col-span-1 space-y-6 no-print">
                         <div class="card p-6">
                             <h3 class="font-bold text-gray-900 mb-4">Configuration</h3>
-                         
+                        
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Client</label>
@@ -592,7 +594,7 @@
                                     <tr><td class="py-1 font-semibold">Email Address:</td><td class="py-1"><input id="display-client-email" class="form-line"></td></tr>
                                 </table>
                             </div>
-                           
+                          
                             <!-- Hardware Section (default visible) -->
                             <div id="hardware-section" class="hardware-section">
                                 <!-- Device Info -->
@@ -854,7 +856,7 @@
             navigate(viewId) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 document.getElementById(`view-${viewId}`).classList.add('active');
-             
+            
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
@@ -900,7 +902,7 @@
                     return;
                 }
                 const displayId = document.getElementById('preview-client-id').innerText;
-             
+            
                 const newClient = {
                     displayId: displayId === '—' ? 'RGT-' + Date.now() : displayId,
                     name, phone, email: email || '',
@@ -920,7 +922,7 @@
             renderClientTable() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-             
+            
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
                 if(this.clients.length === 0) {
@@ -934,7 +936,7 @@
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
                     const currentStatus = latestReport ? latestReport.status : (client.initialStatus || 'Received');
-                 
+                
                     let statusBadgeClass = 'badge-gray';
                     if(currentStatus === 'Received') statusBadgeClass = 'badge-blue';
                     if(currentStatus === 'In Repair' || currentStatus === 'Waiting for Parts') statusBadgeClass = 'badge-orange';
@@ -992,7 +994,7 @@
             deleteClient(key) {
                 if(confirm('Delete this client and all their reports?')) {
                     const clientReports = this.reports.filter(r => r.clientKey === key);
-                 
+                
                     this.db.ref('clients/' + key).remove()
                         .then(() => {
                             const deletePromises = clientReports.map(r =>
@@ -1088,7 +1090,7 @@
                 }
                 const reportId = document.getElementById('current-report-id').value;
                 const isUpdate = !!reportId;
-               
+              
                 // Common fields
                 const reportData = {
                     type: this.currentReportType,
@@ -1163,7 +1165,7 @@
             viewReports(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a,b) => b.timestamp - a.timestamp);
-             
+            
                 document.getElementById('reports-modal-subtitle').innerText = `${client.name} — ${clientReports.length} report(s)`;
                 const container = document.getElementById('reports-list-container');
                 container.innerHTML = '';
@@ -1197,7 +1199,7 @@
                         container.appendChild(div);
                     });
                 }
-             
+            
                 document.getElementById('reports-modal').classList.add('open');
             }
             closeReportsModal() {
@@ -1218,7 +1220,7 @@
                 this.loadClientToForm(report.clientKey);
                 // Load Status
                 document.getElementById('device-status').value = report.status || 'Received';
-               
+              
                 // Load common fields
                 if (report.clientInfo) {
                     document.getElementById('display-client-name').value = report.clientInfo.name || '';
@@ -1271,7 +1273,7 @@
                 if(confirm('Are you sure you want to delete this report?')) {
                     const report = this.reports.find(r => r._key === reportKey);
                     const clientKey = report ? report.clientKey : null;
-                 
+                
                     this.db.ref('reports/' + reportKey).remove()
                         .then(() => {
                             this.showToast('Deleted', 'Report removed');
@@ -1290,7 +1292,7 @@
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 this.showToast('Generating PDF', 'Please wait...');
-             
+            
                 html2pdf().set({
                     margin: 0,
                     filename: `RGT_Service_Report_${Date.now()}.pdf`,
@@ -1306,13 +1308,13 @@
             updateStats() {
                 this.animateValue('stat-clients', this.clients.length);
                 this.animateValue('stat-reports', this.reports.length);
-             
+            
                 const inRepair = this.reports.filter(r => r.status === 'In Repair').length;
                 const completed = this.reports.filter(r => r.status === 'Completed').length;
                 const received = this.reports.filter(r => r.status === 'Received').length;
                 this.animateValue('stat-in-repair', inRepair);
                 this.animateValue('stat-completed', completed);
-             
+            
                 document.getElementById('side-received').innerText = received;
                 document.getElementById('side-in-repair').innerText = inRepair;
                 document.getElementById('side-completed').innerText = completed;
