@@ -286,7 +286,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
         <div class="p-6 border-b border-gray-200 flex items-center gap-3">
-            <img src="https://i.postimg.cc/QMT6Ns0J/Gemini-Generated-Image-3tzsqu3tzsqu3tzs-removebg-preview.png" alt="Rare Grade Tech Logo" class="w-10 h-10 rounded-lg shadow-lg object-contain">
+            <img src="https://i.postimg.cc/QMT6Ns0J/Gemini-Generated-Image-3tzsqu3tzsqu3tzs-removebg-preview.png alt="Rare Grade Tech Logo" class="w-10 h-10 rounded-lg shadow-lg object-contain">
             <div class="logo-text">
                 <h1 class="font-display font-bold text-gray-900 leading-tight">Rare Grade</h1>
                 <p class="text-xs text-gray-500 font-medium">Enterprise Portal</p>
@@ -563,39 +563,26 @@
                                 </div>
                             </div>
                             <p class="text-center text-xs text-gray-600 mb-4 italic">Thank you for trusting us with your device. Below is the detailed report on the services performed.</p>
-
-                            <!-- Client & Project / Device Info - changes only here -->
+                            <!-- Client Info -->
                             <div class="mb-4">
-                                <h3 id="client-section-title" class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client Information</h3>
+                                <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client Information</h3>
                                 <table class="w-full text-sm">
                                     <tr><td class="py-1 w-1/3 font-semibold">Client Name:</td><td class="py-1"><input id="display-client-name" class="form-line"></td></tr>
                                     <tr><td class="py-1 font-semibold">Contact Number:</td><td class="py-1"><input id="display-client-phone" class="form-line"></td></tr>
                                     <tr><td class="py-1 font-semibold">Email Address:</td><td class="py-1"><input id="display-client-email" class="form-line"></td></tr>
-
-                                    <!-- Hardware fields -->
-                                    <tr class="hardware-field"><td class="py-1 font-semibold">Device Model:</td><td class="py-1"><input id="display-device-model" class="form-line"></td></tr>
-                                    <tr class="hardware-field"><td class="py-1 font-semibold">Serial Number:</td><td class="py-1"><input id="display-serial" class="form-line"></td></tr>
-                                    <tr class="hardware-field"><td class="py-1 font-semibold">Issue Reported:</td><td class="py-1"><input id="display-issue" class="form-line"></td></tr>
-                                    <tr class="hardware-field"><td class="py-1 font-semibold">Diagnosis:</td><td class="py-1"><input id="display-diagnosis" class="form-line"></td></tr>
-                                    <tr class="hardware-field"><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
-
-                                    <!-- Software fields (hidden by default) -->
-                                    <tr class="software-field" style="display:none"><td class="py-1 font-semibold">Project Name:</td><td class="py-1"><input id="display-project-name" class="form-line"></td></tr>
-                                    <tr class="software-field" style="display:none"><td class="py-1 font-semibold">Project Type / Platform:</td><td class="py-1"><input id="display-platform" class="form-line"></td></tr>
-                                    <tr class="software-field" style="display:none"><td class="py-1 font-semibold">Main Objective:</td><td class="py-1"><input id="display-main-objective" class="form-line"></td></tr>
-                                    <tr class="software-field" style="display:none"><td class="py-1 font-semibold">Key Deliverables:</td><td class="py-1"><input id="display-key-deliverables" class="form-line"></td></tr>
-                                    <tr class="software-field" style="display:none"><td class="py-1 font-semibold">Technologies Used:</td><td class="py-1"><input id="display-technologies-used" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Device Model:</td><td class="py-1"><input id="display-device-model" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Serial Number:</td><td class="py-1"><input id="display-serial" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Issue Reported:</td><td class="py-1"><input id="display-issue" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Diagnosis:</td><td class="py-1"><input id="display-diagnosis" class="form-line"></td></tr>
+                                    <tr><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
                                 </table>
                             </div>
-
                             <!-- Status -->
                             <div class="mb-4 text-sm flex items-center gap-4">
                                 <span class="font-bold">Status After Service:</span>
                                 <label class="mr-4"><input type="checkbox" id="cb-functional" class="mr-1"> Functional</label>
                                 <label><input type="checkbox" id="cb-non-functional" class="mr-1"> Non-Functional</label>
                             </div>
-
-                            <!-- The rest remains completely unchanged -->
                             <!-- Service Summary -->
                             <div class="mb-4 text-sm">
                                 <h4 class="font-bold mb-2">Service Summary:</h4>
@@ -709,7 +696,6 @@
             </div>
         </div>
     </div>
-
     <script>
         class RareGradeApp {
             constructor() {
@@ -719,36 +705,543 @@
                 this.currentReportType = 'Hardware';
                 this.init();
             }
-
-            // ... all other methods remain completely unchanged ...
-
+            init() {
+                this.initFirebase();
+                this.setupListeners();
+                this.updateDate();
+                this.initChart();
+                this.generateReportID();
+                this.navigate('dashboard');
+            }
+            initFirebase() {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyAxBT0oESoL62oz_x_Z8cMtdENWZPx4tMI",
+                    authDomain: "pinotp-d7ef5.firebaseapp.com",
+                    databaseURL: "https://pinotp-d7ef5-default-rtdb.firebaseio.com",
+                    projectId: "pinotp-d7ef5",
+                    storageBucket: "pinotp-d7ef5.firebasestorage.app",
+                    messagingSenderId: "708458917827",
+                    appId: "1:708458917827:web:375de278577df0adcf9776"
+                };
+                firebase.initializeApp(firebaseConfig);
+                this.db = firebase.database();
+            }
+            setupListeners() {
+                // Listen for Clients
+                this.db.ref('clients').on('value', (snapshot) => {
+                    this.clients = [];
+                    if(snapshot.exists()) {
+                        snapshot.forEach(child => {
+                            const client = child.val();
+                            client._key = child.key;
+                            this.clients.push(client);
+                        });
+                    }
+                    this.renderClientTable();
+                    this.renderClientDropdown();
+                    this.updateStats();
+                });
+                // Listen for Reports
+                this.db.ref('reports').on('value', (snapshot) => {
+                    this.reports = [];
+                    if(snapshot.exists()) {
+                        snapshot.forEach(child => {
+                            const report = child.val();
+                            report._key = child.key;
+                            this.reports.push(report);
+                        });
+                    }
+                    this.updateStats();
+                    this.renderClientTable(); // Re-render to update status badges
+                });
+            }
+            navigate(viewId) {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                document.getElementById(`view-${viewId}`).classList.add('active');
+              
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                const activeBtn = document.getElementById(`nav-${viewId}`);
+                if(activeBtn) activeBtn.classList.add('active');
+                const titles = {
+                    'dashboard': 'Dashboard',
+                    'add-client': 'New Client',
+                    'manage-clients': 'Client Registry',
+                    'service-form': 'Service Reports'
+                };
+                document.getElementById('page-title').innerText = titles[viewId];
+                document.getElementById('sidebar').classList.remove('open');
+                document.querySelector('.overlay').classList.remove('open');
+            }
+            toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.querySelector('.overlay');
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('open');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                }
+            }
+            // --- Client Management ---
+            updateIdPreview() {
+                const name = document.getElementById('newClientName').value.trim();
+                const preview = document.getElementById('preview-client-id');
+                if(name.length > 2) {
+                    const id = 'RGT-' + name.substring(0,3).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
+                    preview.innerText = id;
+                } else {
+                    preview.innerText = '—';
+                }
+            }
+            handleAddClient(e) {
+                e.preventDefault();
+                const name = document.getElementById('newClientName').value.trim();
+                const phone = document.getElementById('newClientPhone').value.trim();
+                const email = document.getElementById('newClientEmail').value.trim();
+                const status = document.getElementById('newClientStatus').value;
+                if(!name || !phone) {
+                    this.showToast('Error', 'Name and Phone are required', 'error');
+                    return;
+                }
+                const displayId = document.getElementById('preview-client-id').innerText;
+              
+                const newClient = {
+                    displayId: displayId === '—' ? 'RGT-' + Date.now() : displayId,
+                    name, phone, email: email || '',
+                    date: new Date().toLocaleDateString(),
+                    timestamp: Date.now(),
+                    initialStatus: status // Save initial status if needed
+                };
+                this.db.ref('clients').push(newClient)
+                    .then(() => {
+                        this.showToast('Success', 'Client registered successfully');
+                        e.target.reset();
+                        document.getElementById('preview-client-id').innerText = '—';
+                        setTimeout(() => this.navigate('manage-clients'), 1000);
+                    })
+                    .catch(err => this.showToast('Error', err.message, 'error'));
+            }
+            renderClientTable() {
+                const tbody = document.getElementById('client-table-body');
+                const recentList = document.getElementById('recent-clients-list');
+              
+                tbody.innerHTML = '';
+                recentList.innerHTML = '';
+                if(this.clients.length === 0) {
+                    document.getElementById('empty-state').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('empty-state').classList.add('hidden');
+                const sorted = [...this.clients].sort((a,b) => b.timestamp - a.timestamp);
+                sorted.forEach(client => {
+                    // Find latest report for this client to show status
+                    const clientReports = this.reports.filter(r => r.clientKey === client._key);
+                    const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
+                    const currentStatus = latestReport ? latestReport.status : (client.initialStatus || 'Received');
+                  
+                    let statusBadgeClass = 'badge-gray';
+                    if(currentStatus === 'Received') statusBadgeClass = 'badge-blue';
+                    if(currentStatus === 'In Repair' || currentStatus === 'Waiting for Parts') statusBadgeClass = 'badge-orange';
+                    if(currentStatus === 'Completed' || currentStatus === 'Ready for Pickup') statusBadgeClass = 'badge-green';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="font-medium text-gray-900">${client.name}</td>
+                        <td><span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">${client.displayId}</span></td>
+                        <td>${client.phone}</td>
+                        <td><span class="badge ${statusBadgeClass}">${currentStatus}</span></td>
+                        <td class="text-gray-500 text-sm">${client.date}</td>
+                        <td class="text-right">
+                            <button onclick="app.prepReport('${client._key}')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mr-3">New Report</button>
+                            ${clientReports.length > 0 ? `<button onclick="app.viewReports('${client._key}')" class="text-gray-500 hover:text-gray-800 text-sm font-medium mr-3">History (${clientReports.length})</button>` : ''}
+                            <button onclick="app.deleteClient('${client._key}')" class="text-red-400 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                // Dashboard Recent List
+                sorted.slice(0, 5).forEach(client => {
+                    const clientReports = this.reports.filter(r => r.clientKey === client._key);
+                    const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
+                    const currentStatus = latestReport ? latestReport.status : 'Registered';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="font-medium text-gray-900">${client.name}</td>
+                        <td><span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">${client.displayId}</span></td>
+                        <td class="text-gray-500 text-sm">${client.date}</td>
+                        <td><span class="badge ${currentStatus === 'Completed' ? 'badge-green' : 'badge-blue'}">${currentStatus}</span></td>
+                    `;
+                    recentList.appendChild(tr);
+                });
+            }
+            renderClientDropdown() {
+                const select = document.getElementById('report-client-select');
+                if(!select) return;
+                const firstOpt = select.options[0];
+                select.innerHTML = '';
+                select.appendChild(firstOpt);
+                this.clients.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c._key;
+                    opt.text = `${c.name} (${c.displayId})`;
+                    select.appendChild(opt);
+                });
+            }
+            filterClients() {
+                const term = document.getElementById('client-search').value.toLowerCase();
+                const rows = document.querySelectorAll('#client-table-body tr');
+                rows.forEach(row => {
+                    row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+                });
+            }
+           // REPLACE the deleteClient function (around line 540)
+deleteClient(key) {
+    if(confirm('Delete this client and all their reports?')) {
+        // Store reports to delete before removing client
+        const clientReports = this.reports.filter(r => r.clientKey === key);
+      
+        // Delete client first
+        this.db.ref('clients/' + key).remove()
+            .then(() => {
+                // Then delete associated reports
+                const deletePromises = clientReports.map(r =>
+                    this.db.ref('reports/' + r._key).remove()
+                );
+                return Promise.all(deletePromises);
+            })
+            .then(() => {
+                this.showToast('Deleted', 'Client and history removed');
+            })
+            .catch(err => {
+                console.error('Delete error:', err);
+                this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
+            });
+    }
+}
+// REPLACE the deleteReport function (around line 620)
+deleteReport(reportKey) {
+    if(confirm('Are you sure you want to delete this report?')) {
+        // Find clientKey BEFORE deletion
+        const report = this.reports.find(r => r._key === reportKey);
+        const clientKey = report ? report.clientKey : null;
+      
+        this.db.ref('reports/' + reportKey).remove()
+            .then(() => {
+                this.showToast('Deleted', 'Report removed');
+                // Refresh modal using the stored clientKey
+                if(clientKey) {
+                    this.viewReports(clientKey);
+                } else {
+                    this.closeReportsModal();
+                }
+            })
+            .catch(err => {
+                console.error('Delete report error:', err);
+                this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
+            });
+    }
+}
+            // --- Service Reports ---
+            prepReport(clientKey) {
+                this.navigate('service-form');
+                this.clearReportForm();
+                const select = document.getElementById('report-client-select');
+                if(select) {
+                    select.value = clientKey;
+                    this.loadClientToForm(clientKey);
+                }
+            }
+            loadClientToForm(clientKey) {
+                const client = this.clients.find(c => c._key === clientKey);
+                if(client) {
+                    document.getElementById('display-client-name').value = client.name;
+                    document.getElementById('display-client-phone').value = client.phone;
+                    document.getElementById('display-client-email').value = client.email;
+                }
+            }
             setReportType(type) {
                 this.currentReportType = type;
-                document.getElementById('report-type-title').innerText = type.toUpperCase() + (type === 'Software' ? ' SOFTWARE' : '');
-
+                document.getElementById('report-type-title').innerText = type.toUpperCase();
                 const hwBtn = document.getElementById('btn-type-hardware');
                 const swBtn = document.getElementById('btn-type-software');
                 if(type === 'Hardware') {
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
-                    document.getElementById('client-section-title').innerText = "Client Information";
-                    document.querySelectorAll('.hardware-field').forEach(el => el.style.display = '');
-                    document.querySelectorAll('.software-field').forEach(el => el.style.display = 'none');
                 } else {
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
-                    document.getElementById('client-section-title').innerText = "Client & Project Information";
-                    document.querySelectorAll('.hardware-field').forEach(el => el.style.display = 'none');
-                    document.querySelectorAll('.software-field').forEach(el => el.style.display = '');
                 }
             }
-
-            // ... rest of your original script remains 100% unchanged ...
+            updateStatusColor(select) {
+                // Visual feedback for status selection if needed
+            }
+            generateReportID() {
+                const today = new Date().toLocaleDateString('en-GB');
+                document.getElementById('display-date').value = today;
+                document.getElementById('display-date-full').value = today;
+            }
+            saveReport() {
+                const clientKey = document.getElementById('report-client-select').value;
+                if(!clientKey) {
+                    this.showToast('Error', 'Please select a client first', 'error');
+                    return;
+                }
+                const reportId = document.getElementById('current-report-id').value;
+                const isUpdate = !!reportId;
+                const reportData = {
+                    type: this.currentReportType,
+                    clientKey: clientKey,
+                    clientInfo: {
+                        name: document.getElementById('display-client-name').value,
+                        phone: document.getElementById('display-client-phone').value,
+                        email: document.getElementById('display-client-email').value
+                    },
+                    deviceInfo: {
+                        model: document.getElementById('display-device-model').value,
+                        serial: document.getElementById('display-serial').value,
+                        issue: document.getElementById('display-issue').value
+                    },
+                    serviceDetails: {
+                        diagnosis: document.getElementById('display-diagnosis').value,
+                        resolution: document.getElementById('display-resolution').value,
+                        serviceDate: document.getElementById('display-date').value,
+                        technicianName: document.getElementById('display-technician-name').value,
+                        notes: document.getElementById('display-notes').value,
+                        clientSignature: document.getElementById('display-client-signature').value,
+                        completionDate: document.getElementById('display-date-full').value,
+                        otherService: document.getElementById('display-other-service').value,
+                        beforePartialDetails: document.getElementById('display-before-partial').value,
+                        afterPartialDetails: document.getElementById('display-after-partial').value,
+                        issuesPersisting: document.getElementById('display-issues-persisting').value
+                    },
+                    checkboxes: this.captureCheckboxStates(),
+                    status: document.getElementById('device-status').value,
+                    timestamp: Date.now()
+                };
+                if(isUpdate) {
+                    this.db.ref('reports/' + reportId).update(reportData)
+                        .then(() => this.showToast('Updated', 'Report updated successfully'))
+                        .catch(err => this.showToast('Error', err.message, 'error'));
+                } else {
+                    this.db.ref('reports').push(reportData)
+                        .then(() => {
+                            this.showToast('Saved', 'New report saved to database');
+                            this.clearReportForm();
+                        })
+                        .catch(err => this.showToast('Error', err.message, 'error'));
+                }
+            }
+            captureCheckboxStates() {
+                const ids = [
+                    'cb-functional', 'cb-non-functional', 'cb-device-repair', 'cb-software-install',
+                    'cb-software-update', 'cb-programming', 'cb-other', 'cb-before-new', 'cb-before-used',
+                    'cb-before-damaged', 'cb-before-fully-functional', 'cb-before-non-functional', 'cb-before-partial',
+                    'cb-after-fully-functional', 'cb-after-partial', 'cb-after-issues'
+                ];
+                const states = {};
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) states[id] = el.checked;
+                });
+                return states;
+            }
+            clearReportForm() {
+                document.querySelectorAll('#report-paper input[type="text"], #report-paper textarea').forEach(el => el.value = '');
+                document.querySelectorAll('#report-paper input[type="checkbox"]').forEach(el => el.checked = false);
+                document.getElementById('report-client-select').value = '';
+                document.getElementById('device-status').value = 'Received';
+                document.getElementById('current-report-id').value = ''; // Clear edit mode
+                this.generateReportID();
+                this.showToast('Cleared', 'Form reset to default');
+            }
+            // --- View / Load Existing Reports ---
+            viewReports(clientKey) {
+                const client = this.clients.find(c => c._key === clientKey);
+                const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a,b) => b.timestamp - a.timestamp);
+              
+                document.getElementById('reports-modal-subtitle').innerText = `${client.name} — ${clientReports.length} report(s)`;
+                const container = document.getElementById('reports-list-container');
+                container.innerHTML = '';
+                if(clientReports.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 py-8">No reports found.</p>';
+                } else {
+                    clientReports.forEach(report => {
+                        const div = document.createElement('div');
+                        div.className = 'report-list-item';
+                        div.innerHTML = `
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">${report.type} Report</span>
+                                    <div class="font-bold text-gray-900">${new Date(report.timestamp).toLocaleDateString()}</div>
+                                </div>
+                                <span class="badge ${report.status === 'Completed' ? 'badge-green' : 'badge-orange'} text-xs">${report.status}</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mb-3">
+                                <div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>
+                                <div><strong>Issue:</strong> ${report.deviceInfo?.issue || 'N/A'}</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="app.loadReport('${report._key}')" class="btn btn-primary btn-sm flex-1 justify-center">Open</button>
+                                <button onclick="app.deleteReport('${report._key}')" class="btn btn-ghost btn-sm text-red-500 border-red-200 hover:bg-red-50">Delete</button>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+              
+                document.getElementById('reports-modal').classList.add('open');
+            }
+            closeReportsModal() {
+                document.getElementById('reports-modal').classList.remove('open');
+            }
+            loadReport(reportKey) {
+                const report = this.reports.find(r => r._key === reportKey);
+                if(!report) return;
+                this.closeReportsModal();
+                this.navigate('service-form');
+                // Set Edit Mode ID
+                document.getElementById('current-report-id').value = reportKey;
+                // Load Client
+                const sel = document.getElementById('report-client-select');
+                sel.value = report.clientKey;
+                this.loadClientToForm(report.clientKey);
+                // Load Type
+                this.setReportType(report.type || 'Hardware');
+                // Load Status
+                document.getElementById('device-status').value = report.status || 'Received';
+                // Load Device Info
+                if(report.deviceInfo) {
+                    document.getElementById('display-device-model').value = report.deviceInfo.model || '';
+                    document.getElementById('display-serial').value = report.deviceInfo.serial || '';
+                    document.getElementById('display-issue').value = report.deviceInfo.issue || '';
+                }
+                // Load Service Details
+                if(report.serviceDetails) {
+                    const sd = report.serviceDetails;
+                    document.getElementById('display-diagnosis').value = sd.diagnosis || '';
+                    document.getElementById('display-resolution').value = sd.resolution || '';
+                    document.getElementById('display-date').value = sd.serviceDate || '';
+                    document.getElementById('display-technician-name').value = sd.technicianName || '';
+                    document.getElementById('display-notes').value = sd.notes || '';
+                    document.getElementById('display-client-signature').value = sd.clientSignature || '';
+                    document.getElementById('display-date-full').value = sd.completionDate || '';
+                    document.getElementById('display-other-service').value = sd.otherService || '';
+                    document.getElementById('display-before-partial').value = sd.beforePartialDetails || '';
+                    document.getElementById('display-after-partial').value = sd.afterPartialDetails || '';
+                    document.getElementById('display-issues-persisting').value = sd.issuesPersisting || '';
+                }
+                // Load Checkboxes
+                if(report.checkboxes) {
+                    for(const [id, checked] of Object.entries(report.checkboxes)) {
+                        const el = document.getElementById(id);
+                        if(el) el.checked = checked;
+                    }
+                }
+                this.showToast('Report Loaded', 'Data retrieved successfully');
+            }
+            deleteReport(reportKey) {
+                if(confirm('Are you sure you want to delete this report?')) {
+                    this.db.ref('reports/' + reportKey).remove()
+                        .then(() => {
+                            this.showToast('Deleted', 'Report removed');
+                            // Refresh modal
+                            const clientKey = this.reports.find(r => r._key === reportKey)?.clientKey;
+                            if(clientKey) this.viewReports(clientKey);
+                        });
+                }
+            }
+            downloadPDF() {
+                const element = document.getElementById('report-paper');
+                this.showToast('Generating PDF', 'Please wait...');
+              
+                html2pdf().set({
+                    margin: 0,
+                    filename: `RGT_Service_Report_${Date.now()}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: 'avoid-all' } // Prevent breaking inside elements
+                }).from(element).save().then(() => {
+                    this.showToast('Success', 'PDF Downloaded');
+                });
+            }
+            // --- Utilities ---
+            updateStats() {
+                this.animateValue('stat-clients', this.clients.length);
+                this.animateValue('stat-reports', this.reports.length);
+              
+                const inRepair = this.reports.filter(r => r.status === 'In Repair').length;
+                const completed = this.reports.filter(r => r.status === 'Completed').length;
+                const received = this.reports.filter(r => r.status === 'Received').length;
+                this.animateValue('stat-in-repair', inRepair);
+                this.animateValue('stat-completed', completed);
+              
+                document.getElementById('side-received').innerText = received;
+                document.getElementById('side-in-repair').innerText = inRepair;
+                document.getElementById('side-completed').innerText = completed;
+            }
+            animateValue(id, end) {
+                const el = document.getElementById(id);
+                if(!el) return;
+                const start = parseInt(el.innerText) || 0;
+                if(start === end) return;
+                const duration = 1000;
+                const startTime = performance.now();
+                const step = (currentTime) => {
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    el.innerText = Math.floor(progress * (end - start) + start);
+                    if(progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }
+            updateDate() {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-ZA', options);
+            }
+            showToast(title, message, type = 'success') {
+                const toast = document.getElementById('toast');
+                document.getElementById('toast-title').innerText = title;
+                document.getElementById('toast-msg').innerText = message;
+                const icon = document.getElementById('toast-icon');
+                if(type === 'error') {
+                    icon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500"></i>';
+                } else {
+                    icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500"></i>';
+                }
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+            initChart() {
+                const ctx = document.getElementById('activityChart');
+                if(!ctx) return;
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Activity',
+                            data: [12, 19, 15, 25, 22, 30, 28],
+                            borderColor: '#003087',
+                            backgroundColor: 'rgba(0, 48, 135, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { display: false } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
         }
-
         document.addEventListener('DOMContentLoaded', () => {
             window.app = new RareGradeApp();
         });
     </script>
 </body>
-</html>
+</html> 
