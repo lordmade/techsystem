@@ -911,19 +911,54 @@
                 });
             }
 
-            deleteClient(key) {
-                if(confirm('Delete this client and all their reports?')) {
-                    // Delete client
-                    this.db.ref('clients/' + key).remove();
-                    // Delete associated reports
-                    const clientReports = this.reports.filter(r => r.clientKey === key);
-                    clientReports.forEach(r => {
-                        this.db.ref('reports/' + r._key).remove();
-                    });
-                    this.showToast('Deleted', 'Client and history removed');
-                }
-            }
+           // REPLACE the deleteClient function (around line 540)
+deleteClient(key) {
+    if(confirm('Delete this client and all their reports?')) {
+        // Store reports to delete before removing client
+        const clientReports = this.reports.filter(r => r.clientKey === key);
+        
+        // Delete client first
+        this.db.ref('clients/' + key).remove()
+            .then(() => {
+                // Then delete associated reports
+                const deletePromises = clientReports.map(r => 
+                    this.db.ref('reports/' + r._key).remove()
+                );
+                return Promise.all(deletePromises);
+            })
+            .then(() => {
+                this.showToast('Deleted', 'Client and history removed');
+            })
+            .catch(err => {
+                console.error('Delete error:', err);
+                this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
+            });
+    }
+}
 
+// REPLACE the deleteReport function (around line 620)
+deleteReport(reportKey) {
+    if(confirm('Are you sure you want to delete this report?')) {
+        // Find clientKey BEFORE deletion
+        const report = this.reports.find(r => r._key === reportKey);
+        const clientKey = report ? report.clientKey : null;
+        
+        this.db.ref('reports/' + reportKey).remove()
+            .then(() => {
+                this.showToast('Deleted', 'Report removed');
+                // Refresh modal using the stored clientKey
+                if(clientKey) {
+                    this.viewReports(clientKey);
+                } else {
+                    this.closeReportsModal();
+                }
+            })
+            .catch(err => {
+                console.error('Delete report error:', err);
+                this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
+            });
+    }
+}
             // --- Service Reports ---
 
             prepReport(clientKey) {
