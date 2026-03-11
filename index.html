@@ -44,7 +44,7 @@
             flex-direction: column;
             flex-shrink: 0;
             z-index: 30;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
         #sidebar.collapsed { width: 80px; }
         #sidebar.collapsed .nav-text,
@@ -59,12 +59,16 @@
             margin: 4px 12px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             color: var(--text-muted);
             font-size: 14px;
             font-weight: 500;
         }
-        .nav-item:hover { background: #f1f5f9; color: var(--accent); }
+        .nav-item:hover { 
+            background: #f1f5f9; 
+            color: var(--accent); 
+            transform: translateX(8px); 
+        }
         .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
         main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         header {
@@ -84,9 +88,14 @@
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-        .stat-card { padding: 20px; position: relative; transition: transform 0.2s; }
-        .stat-card:hover { transform: translateY(-2px); }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .stat-card { padding: 20px; position: relative; transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
      
         .stat-icon-bg {
             position: absolute;
@@ -125,8 +134,11 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             border: 1px solid transparent;
+        }
+        .btn:hover {
+            transform: translateY(-1px) scale(1.02);
         }
         .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: #002060; }
@@ -194,9 +206,13 @@
         .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
         .report-list-item {
             border: 1px solid var(--border); border-radius: 8px; padding: 16px;
-            margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+            margin-bottom: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-        .report-list-item:hover { border-color: var(--accent); background: var(--accent-light); }
+        .report-list-item:hover { 
+            border-color: var(--accent); 
+            background: var(--accent-light); 
+            transform: translateY(-2px); 
+        }
         /*
            OPTIMIZED PDF STYLES
         */
@@ -763,6 +779,35 @@
                 this.navigate('dashboard');
                 // Ensure sections are toggled correctly on start
                 this.toggleReportSections(this.currentReportType);
+                // Setup hover-based sidebar collapse/expand (desktop only)
+                this.setupSidebarHover();
+            }
+            setupSidebarHover() {
+                const sidebar = document.getElementById('sidebar');
+                // Hover expand
+                sidebar.addEventListener('mouseenter', () => {
+                    if (window.innerWidth > 1024) {
+                        sidebar.classList.remove('collapsed');
+                    }
+                });
+                // Hover collapse
+                sidebar.addEventListener('mouseleave', () => {
+                    if (window.innerWidth > 1024) {
+                        sidebar.classList.add('collapsed');
+                    }
+                });
+                // Initial state: collapsed on desktop
+                if (window.innerWidth > 1024) {
+                    sidebar.classList.add('collapsed');
+                }
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth <= 1024) {
+                        sidebar.classList.remove('collapsed');
+                    } else {
+                        sidebar.classList.add('collapsed');
+                    }
+                });
             }
             initFirebase() {
                 const firebaseConfig = {
