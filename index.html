@@ -199,17 +199,16 @@
         .report-list-item:hover { border-color: var(--accent); background: var(--accent-light); }
         /*
            OPTIMIZED PDF STYLES
-           These styles ensure the report fits exactly one A4 page (210mm x 297mm)
         */
         #report-paper {
             font-family: 'Times New Roman', serif;
-            font-size: 10pt; /* Reduced base size */
-            line-height: 1.3; /* Tighter leading */
+            font-size: 10pt;
+            line-height: 1.3;
             color: #000;
             background: white;
-            padding: 15mm; /* Balanced margins */
+            padding: 15mm;
             width: 210mm;
-            min-height: 297mm; /* Force A4 height */
+            min-height: 297mm;
             max-height: 297mm;
             margin: 0 auto;
             border-radius: 4px;
@@ -217,16 +216,16 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Distribute space vertically */
+            justify-content: space-between;
         }
         #report-paper .rpt-header {
             background: #003087;
             color: white;
-            padding: 12px 20px; /* Compact header */
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: -15mm -15mm 15px -15mm; /* Negative margin to bleed to edge */
+            margin: -15mm -15mm 15px -15mm;
             width: calc(100% + 30mm);
             box-sizing: border-box;
         }
@@ -238,7 +237,7 @@
             font-size: 10pt;
             font-family: 'Times New Roman', serif;
             padding: 1px 0;
-            height: 16px; /* Fixed height for consistency */
+            height: 16px;
         }
       
         #report-paper .form-line:focus { outline: none; border-bottom-color: #003087; }
@@ -260,7 +259,15 @@
             display: block;
             margin-bottom: 2px;
         }
-        /* Print specific overrides */
+
+        /* Report type sections toggle */
+        .hardware-section, .software-section {
+            transition: opacity 0.2s;
+        }
+        .hardware-section.hidden, .software-section.hidden {
+            display: none;
+        }
+
         @media print {
             body * { visibility: hidden; }
             #report-paper, #report-paper * { visibility: visible; }
@@ -271,7 +278,7 @@
                 width: 100%;
                 margin: 0;
                 box-shadow: none;
-                padding: 15mm; /* Ensure print padding matches screen */
+                padding: 15mm;
             }
         }
         @media (max-width: 768px) {
@@ -286,7 +293,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
         <div class="p-6 border-b border-gray-200 flex items-center gap-3">
-            <img src="https://i.postimg.cc/QMT6Ns0J/Gemini-Generated-Image-3tzsqu3tzsqu3tzs-removebg-preview.png alt="Rare Grade Tech Logo" class="w-10 h-10 rounded-lg shadow-lg object-contain">
+            <img src="https://i.postimg.cc/QMT6Ns0J/Gemini-Generated-Image-3tzsqu3tzsqu3tzs-removebg-preview.png" alt="Rare Grade Tech Logo" class="w-10 h-10 rounded-lg shadow-lg object-contain">
             <div class="logo-text">
                 <h1 class="font-display font-bold text-gray-900 leading-tight">Rare Grade</h1>
                 <p class="text-xs text-gray-500 font-medium">Enterprise Portal</p>
@@ -563,93 +570,140 @@
                                 </div>
                             </div>
                             <p class="text-center text-xs text-gray-600 mb-4 italic">Thank you for trusting us with your device. Below is the detailed report on the services performed.</p>
-                            <!-- Client Info -->
+                            <!-- Client Info (common) -->
                             <div class="mb-4">
                                 <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client Information</h3>
                                 <table class="w-full text-sm">
                                     <tr><td class="py-1 w-1/3 font-semibold">Client Name:</td><td class="py-1"><input id="display-client-name" class="form-line"></td></tr>
                                     <tr><td class="py-1 font-semibold">Contact Number:</td><td class="py-1"><input id="display-client-phone" class="form-line"></td></tr>
                                     <tr><td class="py-1 font-semibold">Email Address:</td><td class="py-1"><input id="display-client-email" class="form-line"></td></tr>
-                                    <tr><td class="py-1 font-semibold">Device Model:</td><td class="py-1"><input id="display-device-model" class="form-line"></td></tr>
-                                    <tr><td class="py-1 font-semibold">Serial Number:</td><td class="py-1"><input id="display-serial" class="form-line"></td></tr>
-                                    <tr><td class="py-1 font-semibold">Issue Reported:</td><td class="py-1"><input id="display-issue" class="form-line"></td></tr>
-                                    <tr><td class="py-1 font-semibold">Diagnosis:</td><td class="py-1"><input id="display-diagnosis" class="form-line"></td></tr>
-                                    <tr><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
                                 </table>
                             </div>
-                            <!-- Status -->
-                            <div class="mb-4 text-sm flex items-center gap-4">
-                                <span class="font-bold">Status After Service:</span>
-                                <label class="mr-4"><input type="checkbox" id="cb-functional" class="mr-1"> Functional</label>
-                                <label><input type="checkbox" id="cb-non-functional" class="mr-1"> Non-Functional</label>
-                            </div>
-                            <!-- Service Summary -->
-                            <div class="mb-4 text-sm">
-                                <h4 class="font-bold mb-2">Service Summary:</h4>
-                                <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
-                                    <label><input type="checkbox" id="cb-device-repair" class="mr-2"> Device Repair</label>
-                                    <label><input type="checkbox" id="cb-software-install" class="mr-2"> Software Installation</label>
-                                    <label><input type="checkbox" id="cb-software-update" class="mr-2"> Software Update</label>
-                                    <label><input type="checkbox" id="cb-programming" class="mr-2"> Programming</label>
-                                    <div class="col-span-2 flex items-center">
-                                        <label class="mr-2"><input type="checkbox" id="cb-other" class="mr-1"> Other:</label>
-                                        <input id="display-other-service" class="form-line flex-1">
-                                    </div>
+                            
+                            <!-- Hardware Section (default visible) -->
+                            <div id="hardware-section" class="hardware-section">
+                                <!-- Device Info -->
+                                <div class="mb-4">
+                                    <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Device Information (Hardware)</h3>
+                                    <table class="w-full text-sm">
+                                        <tr><td class="py-1 w-1/3 font-semibold">Device Model:</td><td class="py-1"><input id="display-device-model" class="form-line"></td></tr>
+                                        <tr><td class="py-1 font-semibold">Serial Number:</td><td class="py-1"><input id="display-serial" class="form-line"></td></tr>
+                                        <tr><td class="py-1 font-semibold">Issue Reported:</td><td class="py-1"><input id="display-issue" class="form-line"></td></tr>
+                                        <tr><td class="py-1 font-semibold">Diagnosis:</td><td class="py-1"><input id="display-diagnosis" class="form-line"></td></tr>
+                                        <tr><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
+                                    </table>
                                 </div>
-                                <div class="mt-2 flex items-center">
-                                    <span class="font-bold mr-2">Date of Completion:</span>
-                                    <input id="display-date" class="form-line w-40">
+                                <!-- Status -->
+                                <div class="mb-4 text-sm flex items-center gap-4">
+                                    <span class="font-bold">Status After Service:</span>
+                                    <label class="mr-4"><input type="checkbox" id="cb-functional" class="mr-1"> Functional</label>
+                                    <label><input type="checkbox" id="cb-non-functional" class="mr-1"> Non-Functional</label>
                                 </div>
-                            </div>
-                            <!-- Condition -->
-                            <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-                                <div>
-                                    <h4 class="font-bold mb-2">Condition Before Service:</h4>
-                                    <div class="space-y-1 checkbox-grid">
-                                        <div class="flex gap-4 mb-1">
-                                            <label><input type="checkbox" id="cb-before-new" class="mr-1"> NEW</label>
-                                            <label><input type="checkbox" id="cb-before-used" class="mr-1"> USED</label>
-                                            <label><input type="checkbox" id="cb-before-damaged" class="mr-1"> DMG</label>
-                                        </div>
-                                        <label class="block"><input type="checkbox" id="cb-before-fully-functional" class="mr-1"> Fully Functional</label>
-                                        <label class="block"><input type="checkbox" id="cb-before-non-functional" class="mr-1"> Non-Functional</label>
-                                        <div class="flex items-center">
-                                            <label class="mr-2"><input type="checkbox" id="cb-before-partial" class="mr-1"> Partial:</label>
-                                            <input id="display-before-partial" class="form-line flex-1">
+                                <!-- Service Summary -->
+                                <div class="mb-4 text-sm">
+                                    <h4 class="font-bold mb-2">Service Summary:</h4>
+                                    <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
+                                        <label><input type="checkbox" id="cb-device-repair" class="mr-2"> Device Repair</label>
+                                        <label><input type="checkbox" id="cb-software-install" class="mr-2"> Software Installation</label>
+                                        <label><input type="checkbox" id="cb-software-update" class="mr-2"> Software Update</label>
+                                        <label><input type="checkbox" id="cb-programming" class="mr-2"> Programming</label>
+                                        <div class="col-span-2 flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-other" class="mr-1"> Other:</label>
+                                            <input id="display-other-service" class="form-line flex-1">
                                         </div>
                                     </div>
+                                    <div class="mt-2 flex items-center">
+                                        <span class="font-bold mr-2">Date of Completion:</span>
+                                        <input id="display-date" class="form-line w-40">
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold mb-2">After Service:</h4>
-                                    <div class="space-y-1 checkbox-grid">
-                                        <label class="block"><input type="checkbox" id="cb-after-fully-functional" class="mr-1"> Fully Functional</label>
-                                        <div class="flex items-center">
-                                            <label class="mr-2"><input type="checkbox" id="cb-after-partial" class="mr-1"> Partial:</label>
-                                            <input id="display-after-partial" class="form-line flex-1">
+                                <!-- Condition -->
+                                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                                    <div>
+                                        <h4 class="font-bold mb-2">Condition Before Service:</h4>
+                                        <div class="space-y-1 checkbox-grid">
+                                            <div class="flex gap-4 mb-1">
+                                                <label><input type="checkbox" id="cb-before-new" class="mr-1"> NEW</label>
+                                                <label><input type="checkbox" id="cb-before-used" class="mr-1"> USED</label>
+                                                <label><input type="checkbox" id="cb-before-damaged" class="mr-1"> DMG</label>
+                                            </div>
+                                            <label class="block"><input type="checkbox" id="cb-before-fully-functional" class="mr-1"> Fully Functional</label>
+                                            <label class="block"><input type="checkbox" id="cb-before-non-functional" class="mr-1"> Non-Functional</label>
+                                            <div class="flex items-center">
+                                                <label class="mr-2"><input type="checkbox" id="cb-before-partial" class="mr-1"> Partial:</label>
+                                                <input id="display-before-partial" class="form-line flex-1">
+                                            </div>
                                         </div>
-                                        <div class="flex items-center">
-                                            <label class="mr-2"><input type="checkbox" id="cb-after-issues" class="mr-1"> Issues:</label>
-                                            <input id="display-issues-persisting" class="form-line flex-1">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold mb-2">After Service:</h4>
+                                        <div class="space-y-1 checkbox-grid">
+                                            <label class="block"><input type="checkbox" id="cb-after-fully-functional" class="mr-1"> Fully Functional</label>
+                                            <div class="flex items-center">
+                                                <label class="mr-2"><input type="checkbox" id="cb-after-partial" class="mr-1"> Partial:</label>
+                                                <input id="display-after-partial" class="form-line flex-1">
+                                            </div>
+                                            <div class="flex items-center">
+                                                <label class="mr-2"><input type="checkbox" id="cb-after-issues" class="mr-1"> Issues:</label>
+                                                <input id="display-issues-persisting" class="form-line flex-1">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Technician -->
-                            <div class="mb-4 text-sm">
-                                <h4 class="font-bold mb-2">Technician Notes:</h4>
-                                <div class="flex items-center mb-2">
-                                    <span class="font-semibold w-32">Technician Name:</span>
-                                    <input id="display-technician-name" class="form-line flex-1">
+
+                            <!-- Software Section (hidden by default) -->
+                            <div id="software-section" class="software-section hidden">
+                                <div class="mb-4">
+                                    <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Project Information (Software)</h3>
+                                    <table class="w-full text-sm">
+                                        <tr><td class="py-1 w-1/3 font-semibold">Project Name:</td><td class="py-1"><input id="sw-project-name" class="form-line"></td></tr>
+                                        <tr><td class="py-1 font-semibold">Programming Language:</td><td class="py-1"><input id="sw-language" class="form-line" placeholder="e.g., Python, JavaScript"></td></tr>
+                                        <tr><td class="py-1 font-semibold">Work Performed:</td><td class="py-1"><input id="sw-work" class="form-line" placeholder="Description of development work"></td></tr>
+                                    </table>
                                 </div>
-                                <div>
-                                    <span class="font-semibold block mb-1">Notes/Observations:</span>
-                                    <textarea id="display-notes" class="form-line w-full h-12"></textarea>
+                                <!-- Status After Service (Software) -->
+                                <div class="mb-4 text-sm flex items-center gap-4">
+                                    <span class="font-bold">Project Status:</span>
+                                    <label class="mr-4"><input type="checkbox" id="sw-cb-deployed" class="mr-1"> Deployed / Delivered</label>
+                                    <label><input type="checkbox" id="sw-cb-testing" class="mr-1"> In Testing / QA</label>
+                                    <label><input type="checkbox" id="sw-cb-maintenance" class="mr-1"> Maintenance Mode</label>
+                                </div>
+                                <!-- Service Summary (Software) -->
+                                <div class="mb-4 text-sm">
+                                    <h4 class="font-bold mb-2">Service Summary:</h4>
+                                    <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
+                                        <label><input type="checkbox" id="sw-cb-web-dev" class="mr-2"> Website Development</label>
+                                        <label><input type="checkbox" id="sw-cb-mobile-app" class="mr-2"> Mobile App Development</label>
+                                        <label><input type="checkbox" id="sw-cb-desktop-app" class="mr-2"> Desktop Application</label>
+                                        <label><input type="checkbox" id="sw-cb-database-design" class="mr-2"> Database Design</label>
+                                        <label><input type="checkbox" id="sw-cb-api-integration" class="mr-2"> API Integration</label>
+                                        <label><input type="checkbox" id="sw-cb-bug-fix" class="mr-2"> Bug Fixing / Debugging</label>
+                                        <label><input type="checkbox" id="sw-cb-code-optimization" class="mr-2"> Code Optimization</label>
+                                        <label><input type="checkbox" id="sw-cb-ui-ux" class="mr-2"> UI/UX Design</label>
+                                        <div class="col-span-2 flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="sw-cb-other" class="mr-1"> Other:</label>
+                                            <input id="sw-other-service" class="form-line flex-1">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 flex items-center">
+                                        <span class="font-bold mr-2">Date of Completion:</span>
+                                        <input id="sw-date" class="form-line w-40">
+                                    </div>
+                                </div>
+                                <!-- Developer Name (moved from removed notes block) -->
+                                <div class="mb-4 text-sm">
+                                    <div class="flex items-center mb-2">
+                                        <span class="font-semibold w-32">Developer Name:</span>
+                                        <input id="sw-developer-name" class="form-line flex-1">
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Signature -->
+
+                            <!-- Signature (common) -->
                             <div class="border-t-2 border-black pt-4 text-sm mt-auto">
                                 <h4 class="font-bold mb-2">Client Acknowledgment</h4>
-                                <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the device and agreement with the service details provided.</p>
+                                <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the device/project and agreement with the service details provided.</p>
                                 <div class="flex justify-between items-end">
                                     <div class="w-1/2 pr-4">
                                         <div class="font-semibold mb-1">Client Signature:</div>
@@ -712,6 +766,8 @@
                 this.initChart();
                 this.generateReportID();
                 this.navigate('dashboard');
+                // Ensure sections are toggled correctly on start
+                this.toggleReportSections(this.currentReportType);
             }
             initFirebase() {
                 const firebaseConfig = {
@@ -893,53 +949,26 @@
                     row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
                 });
             }
-           // REPLACE the deleteClient function (around line 540)
-deleteClient(key) {
-    if(confirm('Delete this client and all their reports?')) {
-        // Store reports to delete before removing client
-        const clientReports = this.reports.filter(r => r.clientKey === key);
-      
-        // Delete client first
-        this.db.ref('clients/' + key).remove()
-            .then(() => {
-                // Then delete associated reports
-                const deletePromises = clientReports.map(r =>
-                    this.db.ref('reports/' + r._key).remove()
-                );
-                return Promise.all(deletePromises);
-            })
-            .then(() => {
-                this.showToast('Deleted', 'Client and history removed');
-            })
-            .catch(err => {
-                console.error('Delete error:', err);
-                this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
-            });
-    }
-}
-// REPLACE the deleteReport function (around line 620)
-deleteReport(reportKey) {
-    if(confirm('Are you sure you want to delete this report?')) {
-        // Find clientKey BEFORE deletion
-        const report = this.reports.find(r => r._key === reportKey);
-        const clientKey = report ? report.clientKey : null;
-      
-        this.db.ref('reports/' + reportKey).remove()
-            .then(() => {
-                this.showToast('Deleted', 'Report removed');
-                // Refresh modal using the stored clientKey
-                if(clientKey) {
-                    this.viewReports(clientKey);
-                } else {
-                    this.closeReportsModal();
+            deleteClient(key) {
+                if(confirm('Delete this client and all their reports?')) {
+                    const clientReports = this.reports.filter(r => r.clientKey === key);
+                  
+                    this.db.ref('clients/' + key).remove()
+                        .then(() => {
+                            const deletePromises = clientReports.map(r =>
+                                this.db.ref('reports/' + r._key).remove()
+                            );
+                            return Promise.all(deletePromises);
+                        })
+                        .then(() => {
+                            this.showToast('Deleted', 'Client and history removed');
+                        })
+                        .catch(err => {
+                            console.error('Delete error:', err);
+                            this.showToast('Error', 'Failed to delete: ' + err.message, 'error');
+                        });
                 }
-            })
-            .catch(err => {
-                console.error('Delete report error:', err);
-                this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
-            });
-    }
-}
+            }
             // --- Service Reports ---
             prepReport(clientKey) {
                 this.navigate('service-form');
@@ -958,6 +987,17 @@ deleteReport(reportKey) {
                     document.getElementById('display-client-email').value = client.email;
                 }
             }
+            toggleReportSections(type) {
+                const hwSection = document.getElementById('hardware-section');
+                const swSection = document.getElementById('software-section');
+                if (type === 'Hardware') {
+                    hwSection.classList.remove('hidden');
+                    swSection.classList.add('hidden');
+                } else {
+                    hwSection.classList.add('hidden');
+                    swSection.classList.remove('hidden');
+                }
+            }
             setReportType(type) {
                 this.currentReportType = type;
                 document.getElementById('report-type-title').innerText = type.toUpperCase();
@@ -970,6 +1010,7 @@ deleteReport(reportKey) {
                     swBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-blue-900";
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
                 }
+                this.toggleReportSections(type);
             }
             updateStatusColor(select) {
                 // Visual feedback for status selection if needed
@@ -977,7 +1018,27 @@ deleteReport(reportKey) {
             generateReportID() {
                 const today = new Date().toLocaleDateString('en-GB');
                 document.getElementById('display-date').value = today;
+                document.getElementById('sw-date').value = today;
                 document.getElementById('display-date-full').value = today;
+            }
+            captureCheckboxStates() {
+                const ids = [
+                    // Hardware
+                    'cb-functional', 'cb-non-functional', 'cb-device-repair', 'cb-software-install',
+                    'cb-software-update', 'cb-programming', 'cb-other', 'cb-before-new', 'cb-before-used',
+                    'cb-before-damaged', 'cb-before-fully-functional', 'cb-before-non-functional', 'cb-before-partial',
+                    'cb-after-fully-functional', 'cb-after-partial', 'cb-after-issues',
+                    // Software
+                    'sw-cb-deployed', 'sw-cb-testing', 'sw-cb-maintenance', 'sw-cb-web-dev', 'sw-cb-mobile-app',
+                    'sw-cb-desktop-app', 'sw-cb-database-design', 'sw-cb-api-integration', 'sw-cb-bug-fix',
+                    'sw-cb-code-optimization', 'sw-cb-ui-ux', 'sw-cb-other', 'sw-cb-local', 'sw-cb-cloud', 'sw-cb-hybrid'
+                ];
+                const states = {};
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) states[id] = el.checked;
+                });
+                return states;
             }
             saveReport() {
                 const clientKey = document.getElementById('report-client-select').value;
@@ -987,6 +1048,8 @@ deleteReport(reportKey) {
                 }
                 const reportId = document.getElementById('current-report-id').value;
                 const isUpdate = !!reportId;
+                
+                // Common fields
                 const reportData = {
                     type: this.currentReportType,
                     clientKey: clientKey,
@@ -995,12 +1058,19 @@ deleteReport(reportKey) {
                         phone: document.getElementById('display-client-phone').value,
                         email: document.getElementById('display-client-email').value
                     },
-                    deviceInfo: {
+                    status: document.getElementById('device-status').value,
+                    timestamp: Date.now(),
+                    checkboxes: this.captureCheckboxStates()
+                };
+
+                // Hardware specific fields
+                if (this.currentReportType === 'Hardware') {
+                    reportData.deviceInfo = {
                         model: document.getElementById('display-device-model').value,
                         serial: document.getElementById('display-serial').value,
                         issue: document.getElementById('display-issue').value
-                    },
-                    serviceDetails: {
+                    };
+                    reportData.serviceDetails = {
                         diagnosis: document.getElementById('display-diagnosis').value,
                         resolution: document.getElementById('display-resolution').value,
                         serviceDate: document.getElementById('display-date').value,
@@ -1012,11 +1082,22 @@ deleteReport(reportKey) {
                         beforePartialDetails: document.getElementById('display-before-partial').value,
                         afterPartialDetails: document.getElementById('display-after-partial').value,
                         issuesPersisting: document.getElementById('display-issues-persisting').value
-                    },
-                    checkboxes: this.captureCheckboxStates(),
-                    status: document.getElementById('device-status').value,
-                    timestamp: Date.now()
-                };
+                    };
+                } else { // Software
+                    reportData.projectInfo = {
+                        projectName: document.getElementById('sw-project-name').value,
+                        language: document.getElementById('sw-language').value,
+                        workPerformed: document.getElementById('sw-work').value
+                    };
+                    reportData.softwareDetails = {
+                        developerName: document.getElementById('sw-developer-name').value,
+                        completionDate: document.getElementById('sw-date').value,
+                        otherService: document.getElementById('sw-other-service').value,
+                        clientSignature: document.getElementById('display-client-signature').value,
+                        signatureDate: document.getElementById('display-date-full').value
+                    };
+                }
+
                 if(isUpdate) {
                     this.db.ref('reports/' + reportId).update(reportData)
                         .then(() => this.showToast('Updated', 'Report updated successfully'))
@@ -1030,26 +1111,13 @@ deleteReport(reportKey) {
                         .catch(err => this.showToast('Error', err.message, 'error'));
                 }
             }
-            captureCheckboxStates() {
-                const ids = [
-                    'cb-functional', 'cb-non-functional', 'cb-device-repair', 'cb-software-install',
-                    'cb-software-update', 'cb-programming', 'cb-other', 'cb-before-new', 'cb-before-used',
-                    'cb-before-damaged', 'cb-before-fully-functional', 'cb-before-non-functional', 'cb-before-partial',
-                    'cb-after-fully-functional', 'cb-after-partial', 'cb-after-issues'
-                ];
-                const states = {};
-                ids.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) states[id] = el.checked;
-                });
-                return states;
-            }
             clearReportForm() {
+                // Clear all inputs and checkboxes in both sections
                 document.querySelectorAll('#report-paper input[type="text"], #report-paper textarea').forEach(el => el.value = '');
                 document.querySelectorAll('#report-paper input[type="checkbox"]').forEach(el => el.checked = false);
                 document.getElementById('report-client-select').value = '';
                 document.getElementById('device-status').value = 'Received';
-                document.getElementById('current-report-id').value = ''; // Clear edit mode
+                document.getElementById('current-report-id').value = '';
                 this.generateReportID();
                 this.showToast('Cleared', 'Form reset to default');
             }
@@ -1076,8 +1144,12 @@ deleteReport(reportKey) {
                                 <span class="badge ${report.status === 'Completed' ? 'badge-green' : 'badge-orange'} text-xs">${report.status}</span>
                             </div>
                             <div class="text-sm text-gray-600 mb-3">
-                                <div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>
-                                <div><strong>Issue:</strong> ${report.deviceInfo?.issue || 'N/A'}</div>
+                                ${report.type === 'Hardware' 
+                                    ? `<div><strong>Device:</strong> ${report.deviceInfo?.model || 'N/A'}</div>
+                                       <div><strong>Issue:</strong> ${report.deviceInfo?.issue || 'N/A'}</div>`
+                                    : `<div><strong>Project:</strong> ${report.projectInfo?.projectName || 'N/A'}</div>
+                                       <div><strong>Language:</strong> ${report.projectInfo?.language || 'N/A'}</div>`
+                                }
                             </div>
                             <div class="flex gap-2">
                                 <button onclick="app.loadReport('${report._key}')" class="btn btn-primary btn-sm flex-1 justify-center">Open</button>
@@ -1100,36 +1172,58 @@ deleteReport(reportKey) {
                 this.navigate('service-form');
                 // Set Edit Mode ID
                 document.getElementById('current-report-id').value = reportKey;
+                // Set report type first to show correct section
+                this.setReportType(report.type || 'Hardware');
                 // Load Client
                 const sel = document.getElementById('report-client-select');
                 sel.value = report.clientKey;
                 this.loadClientToForm(report.clientKey);
-                // Load Type
-                this.setReportType(report.type || 'Hardware');
                 // Load Status
                 document.getElementById('device-status').value = report.status || 'Received';
-                // Load Device Info
-                if(report.deviceInfo) {
+                
+                // Load common fields
+                if (report.clientInfo) {
+                    document.getElementById('display-client-name').value = report.clientInfo.name || '';
+                    document.getElementById('display-client-phone').value = report.clientInfo.phone || '';
+                    document.getElementById('display-client-email').value = report.clientInfo.email || '';
+                }
+                document.getElementById('display-client-signature').value = report.softwareDetails?.clientSignature || report.serviceDetails?.clientSignature || '';
+                document.getElementById('display-date-full').value = report.softwareDetails?.signatureDate || report.serviceDetails?.completionDate || '';
+
+                // Load hardware-specific fields
+                if (report.type === 'Hardware' && report.deviceInfo) {
                     document.getElementById('display-device-model').value = report.deviceInfo.model || '';
                     document.getElementById('display-serial').value = report.deviceInfo.serial || '';
                     document.getElementById('display-issue').value = report.deviceInfo.issue || '';
                 }
-                // Load Service Details
-                if(report.serviceDetails) {
+                if (report.type === 'Hardware' && report.serviceDetails) {
                     const sd = report.serviceDetails;
                     document.getElementById('display-diagnosis').value = sd.diagnosis || '';
                     document.getElementById('display-resolution').value = sd.resolution || '';
                     document.getElementById('display-date').value = sd.serviceDate || '';
                     document.getElementById('display-technician-name').value = sd.technicianName || '';
                     document.getElementById('display-notes').value = sd.notes || '';
-                    document.getElementById('display-client-signature').value = sd.clientSignature || '';
-                    document.getElementById('display-date-full').value = sd.completionDate || '';
                     document.getElementById('display-other-service').value = sd.otherService || '';
                     document.getElementById('display-before-partial').value = sd.beforePartialDetails || '';
                     document.getElementById('display-after-partial').value = sd.afterPartialDetails || '';
                     document.getElementById('display-issues-persisting').value = sd.issuesPersisting || '';
                 }
-                // Load Checkboxes
+
+                // Load software-specific fields
+                if (report.type === 'Software' && report.projectInfo) {
+                    const pi = report.projectInfo;
+                    document.getElementById('sw-project-name').value = pi.projectName || '';
+                    document.getElementById('sw-language').value = pi.language || '';
+                    document.getElementById('sw-work').value = pi.workPerformed || '';
+                }
+                if (report.type === 'Software' && report.softwareDetails) {
+                    const sd = report.softwareDetails;
+                    document.getElementById('sw-developer-name').value = sd.developerName || '';
+                    document.getElementById('sw-date').value = sd.completionDate || '';
+                    document.getElementById('sw-other-service').value = sd.otherService || '';
+                }
+
+                // Load Checkboxes (for both sections; inactive section is hidden, but we still set values)
                 if(report.checkboxes) {
                     for(const [id, checked] of Object.entries(report.checkboxes)) {
                         const el = document.getElementById(id);
@@ -1140,12 +1234,21 @@ deleteReport(reportKey) {
             }
             deleteReport(reportKey) {
                 if(confirm('Are you sure you want to delete this report?')) {
+                    const report = this.reports.find(r => r._key === reportKey);
+                    const clientKey = report ? report.clientKey : null;
+                  
                     this.db.ref('reports/' + reportKey).remove()
                         .then(() => {
                             this.showToast('Deleted', 'Report removed');
-                            // Refresh modal
-                            const clientKey = this.reports.find(r => r._key === reportKey)?.clientKey;
-                            if(clientKey) this.viewReports(clientKey);
+                            if(clientKey) {
+                                this.viewReports(clientKey);
+                            } else {
+                                this.closeReportsModal();
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Delete report error:', err);
+                            this.showToast('Error', 'Failed to delete report: ' + err.message, 'error');
                         });
                 }
             }
@@ -1159,7 +1262,7 @@ deleteReport(reportKey) {
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { scale: 2, useCORS: true },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak: { mode: 'avoid-all' } // Prevent breaking inside elements
+                    pagebreak: { mode: 'avoid-all' }
                 }).from(element).save().then(() => {
                     this.showToast('Success', 'PDF Downloaded');
                 });
@@ -1244,4 +1347,4 @@ deleteReport(reportKey) {
         });
     </script>
 </body>
-</html> 
+</html>
