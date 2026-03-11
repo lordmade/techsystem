@@ -11,6 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         :root {
             --bg: #f3f4f6;
@@ -24,6 +25,7 @@
             --warning: #f59e0b;
             --danger: #ef4444;
         }
+
         body {
             background-color: var(--bg);
             color: var(--text-main);
@@ -32,10 +34,13 @@
             overflow: hidden;
             display: flex;
         }
+
         h1, h2, h3, .font-display { font-family: 'Syne', sans-serif; }
+
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
         #sidebar {
             width: 260px;
             background: var(--bg-card);
@@ -46,11 +51,13 @@
             z-index: 30;
             transition: all 0.3s ease;
         }
+
         #sidebar.collapsed { width: 80px; }
         #sidebar.collapsed .nav-text,
         #sidebar.collapsed .logo-text,
         #sidebar.collapsed .user-info { display: none; }
         #sidebar.collapsed .nav-item { justify-content: center; padding: 12px; }
+
         .nav-item {
             display: flex;
             align-items: center;
@@ -64,9 +71,12 @@
             font-size: 14px;
             font-weight: 500;
         }
+
         .nav-item:hover { background: #f1f5f9; color: var(--accent); }
         .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
         main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
         header {
             height: 64px;
             background: var(--bg-card);
@@ -77,7 +87,9 @@
             justify-content: space-between;
             flex-shrink: 0;
         }
+
         .content-area { flex: 1; overflow-y: auto; padding: 24px; }
+
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -85,9 +97,10 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             overflow: hidden;
         }
+
         .stat-card { padding: 20px; position: relative; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-2px); }
-       
+        
         .stat-icon-bg {
             position: absolute;
             right: 20px;
@@ -96,6 +109,7 @@
             opacity: 0.1;
             color: var(--accent);
         }
+
         table { width: 100%; border-collapse: collapse; }
         thead th {
             padding: 12px 16px;
@@ -116,6 +130,7 @@
         }
         tbody tr:hover { background: #f8fafc; }
         tbody tr:last-child td { border-bottom: none; }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -133,6 +148,7 @@
         .btn-ghost { background: transparent; border-color: var(--border); color: var(--text-muted); }
         .btn-ghost:hover { background: #f1f5f9; color: var(--text-main); }
         .btn-sm { padding: 6px 12px; font-size: 13px; }
+
         .input {
             width: 100%;
             background: white;
@@ -144,9 +160,12 @@
             transition: all 0.2s;
         }
         .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1); }
+
         .view-section { display: none; animation: fadeIn 0.3s ease; }
         .view-section.active { display: block; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .badge {
             display: inline-flex;
             align-items: center;
@@ -159,6 +178,7 @@
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-orange { background: #ffedd5; color: #9a3412; }
         .badge-gray { background: #f3f4f6; color: #374151; }
+
         /* Toast */
         #toast {
             position: fixed;
@@ -178,6 +198,7 @@
             transition: all 0.3s;
         }
         #toast.show { transform: translateY(0); opacity: 1; }
+
         /* Modal */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5);
@@ -197,29 +218,91 @@
             margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
         }
         .report-list-item:hover { border-color: var(--accent); background: var(--accent-light); }
-        /* Report Paper */
+
+        /* 
+           OPTIMIZED PDF STYLES 
+           These styles ensure the report fits exactly one A4 page (210mm x 297mm)
+        */
         #report-paper {
-            font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.4;
-            color: #000; background: white; padding: 12mm; width: 210mm;
-            height: 297mm; margin: 0 auto; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            box-sizing: border-box; overflow: hidden;
+            font-family: 'Times New Roman', serif; 
+            font-size: 10pt; /* Reduced base size */
+            line-height: 1.3; /* Tighter leading */
+            color: #000; 
+            background: white; 
+            padding: 15mm; /* Balanced margins */
+            width: 210mm;
+            min-height: 297mm; /* Force A4 height */
+            max-height: 297mm;
+            margin: 0 auto; 
+            border-radius: 4px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribute space vertically */
         }
+
         #report-paper .rpt-header {
-            background: #003087; color: white; padding: 16px 24px;
-            display: flex; align-items: center; justify-content: space-between;
-            margin: -12mm -12mm 15px;
+            background: #003087; 
+            color: white; 
+            padding: 12px 20px; /* Compact header */
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            margin: -15mm -15mm 15px -15mm; /* Negative margin to bleed to edge */
+            width: calc(100% + 30mm);
+            box-sizing: border-box;
         }
+
         #report-paper .form-line {
-            border: none; border-bottom: 1px solid #999; background: transparent;
-            width: 100%; font-size: 11pt; font-family: 'Times New Roman', serif; padding: 2px 0;
+            border: none; 
+            border-bottom: 1px solid #999; 
+            background: transparent;
+            width: 100%; 
+            font-size: 10pt; 
+            font-family: 'Times New Roman', serif; 
+            padding: 1px 0;
+            height: 16px; /* Fixed height for consistency */
         }
+        
         #report-paper .form-line:focus { outline: none; border-bottom-color: #003087; }
-       
+        
+        #report-paper h3, #report-paper h4 {
+            font-size: 11pt;
+            margin-bottom: 6px;
+            margin-top: 10px;
+        }
+
+        #report-paper table {
+            margin-bottom: 8px;
+        }
+
+        #report-paper td {
+            padding: 2px 0;
+            vertical-align: bottom;
+        }
+
+        #report-paper .checkbox-grid label {
+            font-size: 9.5pt;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Print specific overrides */
         @media print {
             body * { visibility: hidden; }
             #report-paper, #report-paper * { visibility: visible; }
-            #report-paper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; box-shadow: none; }
+            #report-paper { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                margin: 0; 
+                box-shadow: none; 
+                padding: 15mm; /* Ensure print padding matches screen */
+            }
         }
+
         @media (max-width: 768px) {
             #sidebar { position: fixed; left: -260px; height: 100vh; box-shadow: 5px 0 20px rgba(0,0,0,0.1); }
             #sidebar.open { left: 0; }
@@ -229,6 +312,7 @@
     </style>
 </head>
 <body>
+
     <!-- Sidebar -->
     <aside id="sidebar">
         <div class="p-6 border-b border-gray-200 flex items-center gap-3">
@@ -238,30 +322,32 @@
                 <p class="text-xs text-gray-500 font-medium">Enterprise Portal</p>
             </div>
         </div>
+
         <nav class="flex-1 py-6 overflow-y-auto">
             <div class="px-6 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Menu</div>
-           
+            
             <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-item active w-full text-left">
                 <i class="fa-solid fa-chart-pie w-5"></i>
                 <span class="nav-text">Dashboard</span>
             </button>
-           
+            
             <button onclick="app.navigate('add-client')" id="nav-add-client" class="nav-item w-full text-left">
                 <i class="fa-solid fa-user-plus w-5"></i>
                 <span class="nav-text">New Client</span>
             </button>
-           
+            
             <button onclick="app.navigate('manage-clients')" id="nav-manage-clients" class="nav-item w-full text-left">
                 <i class="fa-solid fa-users w-5"></i>
                 <span class="nav-text">Client Registry</span>
             </button>
-           
+            
             <button onclick="app.navigate('service-form')" id="nav-service-form" class="nav-item w-full text-left">
                 <i class="fa-solid fa-file-signature w-5"></i>
                 <span class="nav-text">Service Reports</span>
             </button>
+
             <div class="px-6 mt-6 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Device Status</div>
-           
+            
             <div class="px-6 py-2 flex items-center justify-between text-sm text-gray-600">
                 <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div> Received</span>
                 <span class="font-bold text-gray-900" id="side-received">0</span>
@@ -275,6 +361,7 @@
                 <span class="font-bold text-gray-900" id="side-completed">0</span>
             </div>
         </nav>
+
         <div class="p-4 border-t border-gray-200">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">VL</div>
@@ -285,7 +372,9 @@
             </div>
         </div>
     </aside>
+
     <div class="overlay" onclick="app.toggleSidebar()"></div>
+
     <!-- Main Content -->
     <main>
         <header>
@@ -295,7 +384,7 @@
                 </button>
                 <h2 id="page-title" class="text-xl font-bold text-gray-900 font-display">Dashboard</h2>
             </div>
-           
+            
             <div class="flex items-center gap-4">
                 <div class="hidden md:flex items-center gap-2 text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">
                     <i class="fa-regular fa-calendar"></i>
@@ -306,8 +395,9 @@
                 </button>
             </div>
         </header>
+
         <div class="content-area">
-           
+            
             <!-- DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -332,12 +422,13 @@
                         <h3 class="text-3xl font-bold text-gray-900" id="stat-completed">0</h3>
                     </div>
                 </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="card lg:col-span-1 p-6">
                         <h3 class="font-bold text-gray-900 mb-4">Activity Overview</h3>
                         <canvas id="activityChart" height="200"></canvas>
                     </div>
-                   
+                    
                     <div class="card lg:col-span-2">
                         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
                             <h3 class="font-bold text-gray-900">Recent Registrations</h3>
@@ -359,6 +450,7 @@
                     </div>
                 </div>
             </section>
+
             <!-- ADD CLIENT -->
             <section id="view-add-client" class="view-section">
                 <div class="max-w-2xl mx-auto">
@@ -366,6 +458,7 @@
                         <h2 class="text-2xl font-bold text-gray-900 font-display">Onboard New Client</h2>
                         <p class="text-gray-500">Create a new profile in the enterprise registry.</p>
                     </div>
+
                     <div class="card p-8">
                         <form id="add-client-form" onsubmit="app.handleAddClient(event)">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -378,10 +471,12 @@
                                     <input type="tel" id="newClientPhone" required class="input" placeholder="+27 61 527 0749">
                                 </div>
                             </div>
+
                             <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                                 <input type="email" id="newClientEmail" class="input" placeholder="john@example.com">
                             </div>
+
                             <!-- Initial Device Status Selection -->
                             <div class="mb-8">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Initial Device Status</label>
@@ -393,10 +488,12 @@
                                     <option value="Completed">Completed</option>
                                 </select>
                             </div>
+
                             <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-8 flex justify-between items-center">
                                 <span class="text-sm text-blue-800 font-medium">Generated Client ID</span>
                                 <span id="preview-client-id" class="font-display font-bold text-blue-900 text-lg">—</span>
                             </div>
+
                             <div class="flex justify-end gap-3">
                                 <button type="button" onclick="app.navigate('dashboard')" class="btn btn-ghost">Cancel</button>
                                 <button type="submit" class="btn btn-primary">
@@ -407,6 +504,7 @@
                     </div>
                 </div>
             </section>
+
             <!-- MANAGE CLIENTS -->
             <section id="view-manage-clients" class="view-section">
                 <div class="card">
@@ -419,7 +517,7 @@
                             <i class="fa-solid fa-plus"></i> New Client
                         </button>
                     </div>
-                   
+                    
                     <div class="overflow-x-auto">
                         <table>
                             <thead>
@@ -441,6 +539,7 @@
                     </div>
                 </div>
             </section>
+
             <!-- SERVICE REPORT FORM -->
             <section id="view-service-form" class="view-section">
                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
@@ -448,7 +547,7 @@
                     <div class="xl:col-span-1 space-y-6 no-print">
                         <div class="card p-6">
                             <h3 class="font-bold text-gray-900 mb-4">Configuration</h3>
-                           
+                            
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Client</label>
@@ -456,6 +555,7 @@
                                         <option value="">-- Choose Client --</option>
                                     </select>
                                 </div>
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
                                     <div class="flex bg-gray-100 p-1 rounded-lg">
@@ -463,6 +563,7 @@
                                         <button onclick="app.setReportType('Software')" id="btn-type-software" class="flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900">Software</button>
                                     </div>
                                 </div>
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Update Device Status</label>
                                     <select id="device-status" class="input" onchange="app.updateStatusColor(this)">
@@ -477,6 +578,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="card p-6">
                             <h3 class="font-bold text-gray-900 mb-4">Actions</h3>
                             <div class="space-y-3">
@@ -492,6 +594,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- Paper -->
                     <div class="xl:col-span-3 overflow-auto bg-gray-200 p-4 rounded-xl flex justify-center">
                         <div id="report-paper">
@@ -508,10 +611,12 @@
                                     <div class="text-xs opacity-80">SERVICE REPORT</div>
                                 </div>
                             </div>
-                            <p class="text-center text-xs text-gray-600 mb-6 italic">Thank you for trusting us with your device. Below is the detailed report on the services performed.</p>
+
+                            <p class="text-center text-xs text-gray-600 mb-4 italic">Thank you for trusting us with your device. Below is the detailed report on the services performed.</p>
+
                             <!-- Client Info -->
-                            <div class="mb-6">
-                                <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-3 uppercase">Client Information</h3>
+                            <div class="mb-4">
+                                <h3 class="font-bold text-sm border-b-2 border-black pb-1 mb-2 uppercase">Client Information</h3>
                                 <table class="w-full text-sm">
                                     <tr><td class="py-1 w-1/3 font-semibold">Client Name:</td><td class="py-1"><input id="display-client-name" class="form-line"></td></tr>
                                     <tr><td class="py-1 font-semibold">Contact Number:</td><td class="py-1"><input id="display-client-phone" class="form-line"></td></tr>
@@ -523,71 +628,82 @@
                                     <tr><td class="py-1 font-semibold">Action Taken:</td><td class="py-1"><input id="display-resolution" class="form-line"></td></tr>
                                 </table>
                             </div>
+
                             <!-- Status -->
-                            <div class="mb-6 text-sm">
-                                <span class="font-bold mr-4">Status After Service:</span>
+                            <div class="mb-4 text-sm flex items-center gap-4">
+                                <span class="font-bold">Status After Service:</span>
                                 <label class="mr-4"><input type="checkbox" id="cb-functional" class="mr-1"> Functional</label>
                                 <label><input type="checkbox" id="cb-non-functional" class="mr-1"> Non-Functional</label>
                             </div>
+
                             <!-- Service Summary -->
-                            <div class="mb-6 text-sm">
+                            <div class="mb-4 text-sm">
                                 <h4 class="font-bold mb-2">Service Summary:</h4>
-                                <div class="grid grid-cols-2 gap-y-2">
+                                <div class="grid grid-cols-2 gap-y-1 checkbox-grid">
                                     <label><input type="checkbox" id="cb-device-repair" class="mr-2"> Device Repair</label>
                                     <label><input type="checkbox" id="cb-software-install" class="mr-2"> Software Installation</label>
                                     <label><input type="checkbox" id="cb-software-update" class="mr-2"> Software Update</label>
                                     <label><input type="checkbox" id="cb-programming" class="mr-2"> Programming</label>
-                                    <div class="col-span-2">
-                                        <label><input type="checkbox" id="cb-other" class="mr-2"> Other:</label>
-                                        <input id="display-other-service" class="form-line inline-block w-64 ml-2">
+                                    <div class="col-span-2 flex items-center">
+                                        <label class="mr-2"><input type="checkbox" id="cb-other" class="mr-1"> Other:</label>
+                                        <input id="display-other-service" class="form-line flex-1">
                                     </div>
                                 </div>
-                                <div class="mt-3">
-                                    <span class="font-bold">Date of Completion:</span>
-                                    <input id="display-date" class="form-line inline-block w-40 ml-2">
+                                <div class="mt-2 flex items-center">
+                                    <span class="font-bold mr-2">Date of Completion:</span>
+                                    <input id="display-date" class="form-line w-40">
                                 </div>
                             </div>
+
                             <!-- Condition -->
-                            <div class="grid grid-cols-2 gap-8 mb-8 text-sm">
+                            <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
                                 <div>
                                     <h4 class="font-bold mb-2">Condition Before Service:</h4>
-                                    <div class="space-y-1">
-                                        <div class="flex gap-4 mb-2">
+                                    <div class="space-y-1 checkbox-grid">
+                                        <div class="flex gap-4 mb-1">
                                             <label><input type="checkbox" id="cb-before-new" class="mr-1"> NEW</label>
                                             <label><input type="checkbox" id="cb-before-used" class="mr-1"> USED</label>
-                                            <label><input type="checkbox" id="cb-before-damaged" class="mr-1"> DAMAGED</label>
+                                            <label><input type="checkbox" id="cb-before-damaged" class="mr-1"> DMG</label>
                                         </div>
                                         <label class="block"><input type="checkbox" id="cb-before-fully-functional" class="mr-1"> Fully Functional</label>
                                         <label class="block"><input type="checkbox" id="cb-before-non-functional" class="mr-1"> Non-Functional</label>
-                                        <label class="block"><input type="checkbox" id="cb-before-partial" class="mr-1"> Partially Functional:</label>
-                                        <input id="display-before-partial" class="form-line ml-4 w-3/4">
+                                        <div class="flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-before-partial" class="mr-1"> Partial:</label>
+                                            <input id="display-before-partial" class="form-line flex-1">
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
                                     <h4 class="font-bold mb-2">After Service:</h4>
-                                    <div class="space-y-1">
+                                    <div class="space-y-1 checkbox-grid">
                                         <label class="block"><input type="checkbox" id="cb-after-fully-functional" class="mr-1"> Fully Functional</label>
-                                        <label class="block"><input type="checkbox" id="cb-after-partial" class="mr-1"> Partially Functional:</label>
-                                        <input id="display-after-partial" class="form-line ml-4 w-3/4">
-                                        <label class="block"><input type="checkbox" id="cb-after-issues" class="mr-1"> Issues Persisting:</label>
-                                        <input id="display-issues-persisting" class="form-line ml-4 w-3/4">
+                                        <div class="flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-after-partial" class="mr-1"> Partial:</label>
+                                            <input id="display-after-partial" class="form-line flex-1">
+                                        </div>
+                                        <div class="flex items-center">
+                                            <label class="mr-2"><input type="checkbox" id="cb-after-issues" class="mr-1"> Issues:</label>
+                                            <input id="display-issues-persisting" class="form-line flex-1">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Technician -->
-                            <div class="mb-8 text-sm">
+                            <div class="mb-4 text-sm">
                                 <h4 class="font-bold mb-2">Technician Notes:</h4>
-                                <div class="mb-2">
-                                    <span class="font-semibold w-32 inline-block">Technician Name:</span>
-                                    <input id="display-technician-name" class="form-line inline-block w-64">
+                                <div class="flex items-center mb-2">
+                                    <span class="font-semibold w-32">Technician Name:</span>
+                                    <input id="display-technician-name" class="form-line flex-1">
                                 </div>
                                 <div>
                                     <span class="font-semibold block mb-1">Notes/Observations:</span>
-                                    <textarea id="display-notes" class="form-line w-full h-16"></textarea>
+                                    <textarea id="display-notes" class="form-line w-full h-12"></textarea>
                                 </div>
                             </div>
+
                             <!-- Signature -->
-                            <div class="border-t-2 border-black pt-6 text-sm">
+                            <div class="border-t-2 border-black pt-4 text-sm mt-auto">
                                 <h4 class="font-bold mb-2">Client Acknowledgment</h4>
                                 <p class="text-xs text-gray-600 mb-4">By signing below, the client confirms receipt of the device and agreement with the service details provided.</p>
                                 <div class="flex justify-between items-end">
@@ -601,7 +717,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-12 pt-4 border-t border-gray-300 text-center text-xs text-gray-500">
+
+                            <div class="mt-6 pt-2 border-t border-gray-300 text-center text-xs text-gray-500">
                                 <p class="font-semibold text-gray-700">Thank you for your business!</p>
                                 <p>015 065 0979 • 061 527 0749 • info@raregradetech.co.za • raregradetech.com</p>
                             </div>
@@ -609,8 +726,10 @@
                     </div>
                 </div>
             </section>
+
         </div>
     </main>
+
     <!-- Toast -->
     <div id="toast">
         <div id="toast-icon" class="text-green-500 text-xl"><i class="fa-solid fa-circle-check"></i></div>
@@ -619,6 +738,7 @@
             <p id="toast-msg" class="text-xs text-gray-500">Operation completed successfully.</p>
         </div>
     </div>
+
     <!-- Reports Modal -->
     <div id="reports-modal" class="modal-overlay">
         <div class="modal-box">
@@ -636,6 +756,7 @@
             </div>
         </div>
     </div>
+
     <script>
         class RareGradeApp {
             constructor() {
@@ -645,6 +766,7 @@
                 this.currentReportType = 'Hardware';
                 this.init();
             }
+
             init() {
                 this.initFirebase();
                 this.setupListeners();
@@ -653,6 +775,7 @@
                 this.generateReportID();
                 this.navigate('dashboard');
             }
+
             initFirebase() {
                 const firebaseConfig = {
                     apiKey: "AIzaSyAxBT0oESoL62oz_x_Z8cMtdENWZPx4tMI",
@@ -666,6 +789,7 @@
                 firebase.initializeApp(firebaseConfig);
                 this.db = firebase.database();
             }
+
             setupListeners() {
                 // Listen for Clients
                 this.db.ref('clients').on('value', (snapshot) => {
@@ -681,6 +805,7 @@
                     this.renderClientDropdown();
                     this.updateStats();
                 });
+
                 // Listen for Reports
                 this.db.ref('reports').on('value', (snapshot) => {
                     this.reports = [];
@@ -695,13 +820,15 @@
                     this.renderClientTable(); // Re-render to update status badges
                 });
             }
+
             navigate(viewId) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 document.getElementById(`view-${viewId}`).classList.add('active');
-               
+                
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 const activeBtn = document.getElementById(`nav-${viewId}`);
                 if(activeBtn) activeBtn.classList.add('active');
+
                 const titles = {
                     'dashboard': 'Dashboard',
                     'add-client': 'New Client',
@@ -709,9 +836,11 @@
                     'service-form': 'Service Reports'
                 };
                 document.getElementById('page-title').innerText = titles[viewId];
+
                 document.getElementById('sidebar').classList.remove('open');
                 document.querySelector('.overlay').classList.remove('open');
             }
+
             toggleSidebar() {
                 const sidebar = document.getElementById('sidebar');
                 const overlay = document.querySelector('.overlay');
@@ -722,7 +851,9 @@
                     sidebar.classList.toggle('collapsed');
                 }
             }
+
             // --- Client Management ---
+
             updateIdPreview() {
                 const name = document.getElementById('newClientName').value.trim();
                 const preview = document.getElementById('preview-client-id');
@@ -733,18 +864,21 @@
                     preview.innerText = '—';
                 }
             }
+
             handleAddClient(e) {
                 e.preventDefault();
                 const name = document.getElementById('newClientName').value.trim();
                 const phone = document.getElementById('newClientPhone').value.trim();
                 const email = document.getElementById('newClientEmail').value.trim();
                 const status = document.getElementById('newClientStatus').value;
+
                 if(!name || !phone) {
                     this.showToast('Error', 'Name and Phone are required', 'error');
                     return;
                 }
+
                 const displayId = document.getElementById('preview-client-id').innerText;
-               
+                
                 const newClient = {
                     displayId: displayId === '—' ? 'RGT-' + Date.now() : displayId,
                     name, phone, email: email || '',
@@ -752,6 +886,7 @@
                     timestamp: Date.now(),
                     initialStatus: status // Save initial status if needed
                 };
+
                 this.db.ref('clients').push(newClient)
                     .then(() => {
                         this.showToast('Success', 'Client registered successfully');
@@ -761,28 +896,33 @@
                     })
                     .catch(err => this.showToast('Error', err.message, 'error'));
             }
+
             renderClientTable() {
                 const tbody = document.getElementById('client-table-body');
                 const recentList = document.getElementById('recent-clients-list');
-               
+                
                 tbody.innerHTML = '';
                 recentList.innerHTML = '';
+
                 if(this.clients.length === 0) {
                     document.getElementById('empty-state').classList.remove('hidden');
                     return;
                 }
                 document.getElementById('empty-state').classList.add('hidden');
+
                 const sorted = [...this.clients].sort((a,b) => b.timestamp - a.timestamp);
+
                 sorted.forEach(client => {
                     // Find latest report for this client to show status
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
                     const currentStatus = latestReport ? latestReport.status : (client.initialStatus || 'Received');
-                   
+                    
                     let statusBadgeClass = 'badge-gray';
                     if(currentStatus === 'Received') statusBadgeClass = 'badge-blue';
                     if(currentStatus === 'In Repair' || currentStatus === 'Waiting for Parts') statusBadgeClass = 'badge-orange';
                     if(currentStatus === 'Completed' || currentStatus === 'Ready for Pickup') statusBadgeClass = 'badge-green';
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="font-medium text-gray-900">${client.name}</td>
@@ -798,11 +938,13 @@
                     `;
                     tbody.appendChild(tr);
                 });
+
                 // Dashboard Recent List
                 sorted.slice(0, 5).forEach(client => {
                     const clientReports = this.reports.filter(r => r.clientKey === client._key);
                     const latestReport = clientReports.sort((a,b) => b.timestamp - a.timestamp)[0];
                     const currentStatus = latestReport ? latestReport.status : 'Registered';
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="font-medium text-gray-900">${client.name}</td>
@@ -813,6 +955,7 @@
                     recentList.appendChild(tr);
                 });
             }
+
             renderClientDropdown() {
                 const select = document.getElementById('report-client-select');
                 if(!select) return;
@@ -826,6 +969,7 @@
                     select.appendChild(opt);
                 });
             }
+
             filterClients() {
                 const term = document.getElementById('client-search').value.toLowerCase();
                 const rows = document.querySelectorAll('#client-table-body tr');
@@ -833,17 +977,18 @@
                     row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
                 });
             }
+
            // REPLACE the deleteClient function (around line 540)
 deleteClient(key) {
     if(confirm('Delete this client and all their reports?')) {
         // Store reports to delete before removing client
         const clientReports = this.reports.filter(r => r.clientKey === key);
-       
+        
         // Delete client first
         this.db.ref('clients/' + key).remove()
             .then(() => {
                 // Then delete associated reports
-                const deletePromises = clientReports.map(r =>
+                const deletePromises = clientReports.map(r => 
                     this.db.ref('reports/' + r._key).remove()
                 );
                 return Promise.all(deletePromises);
@@ -857,13 +1002,14 @@ deleteClient(key) {
             });
     }
 }
+
 // REPLACE the deleteReport function (around line 620)
 deleteReport(reportKey) {
     if(confirm('Are you sure you want to delete this report?')) {
         // Find clientKey BEFORE deletion
         const report = this.reports.find(r => r._key === reportKey);
         const clientKey = report ? report.clientKey : null;
-       
+        
         this.db.ref('reports/' + reportKey).remove()
             .then(() => {
                 this.showToast('Deleted', 'Report removed');
@@ -881,6 +1027,7 @@ deleteReport(reportKey) {
     }
 }
             // --- Service Reports ---
+
             prepReport(clientKey) {
                 this.navigate('service-form');
                 this.clearReportForm();
@@ -890,6 +1037,7 @@ deleteReport(reportKey) {
                     this.loadClientToForm(clientKey);
                 }
             }
+
             loadClientToForm(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 if(client) {
@@ -898,6 +1046,7 @@ deleteReport(reportKey) {
                     document.getElementById('display-client-email').value = client.email;
                 }
             }
+
             setReportType(type) {
                 this.currentReportType = type;
                 document.getElementById('report-type-title').innerText = type.toUpperCase();
@@ -911,22 +1060,27 @@ deleteReport(reportKey) {
                     hwBtn.className = "flex-1 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900";
                 }
             }
+
             updateStatusColor(select) {
                 // Visual feedback for status selection if needed
             }
+
             generateReportID() {
                 const today = new Date().toLocaleDateString('en-GB');
                 document.getElementById('display-date').value = today;
                 document.getElementById('display-date-full').value = today;
             }
+
             saveReport() {
                 const clientKey = document.getElementById('report-client-select').value;
                 if(!clientKey) {
                     this.showToast('Error', 'Please select a client first', 'error');
                     return;
                 }
+
                 const reportId = document.getElementById('current-report-id').value;
                 const isUpdate = !!reportId;
+
                 const reportData = {
                     type: this.currentReportType,
                     clientKey: clientKey,
@@ -957,6 +1111,7 @@ deleteReport(reportKey) {
                     status: document.getElementById('device-status').value,
                     timestamp: Date.now()
                 };
+
                 if(isUpdate) {
                     this.db.ref('reports/' + reportId).update(reportData)
                         .then(() => this.showToast('Updated', 'Report updated successfully'))
@@ -970,6 +1125,7 @@ deleteReport(reportKey) {
                         .catch(err => this.showToast('Error', err.message, 'error'));
                 }
             }
+
             captureCheckboxStates() {
                 const ids = [
                     'cb-functional', 'cb-non-functional', 'cb-device-repair', 'cb-software-install',
@@ -984,6 +1140,7 @@ deleteReport(reportKey) {
                 });
                 return states;
             }
+
             clearReportForm() {
                 document.querySelectorAll('#report-paper input[type="text"], #report-paper textarea').forEach(el => el.value = '');
                 document.querySelectorAll('#report-paper input[type="checkbox"]').forEach(el => el.checked = false);
@@ -993,14 +1150,17 @@ deleteReport(reportKey) {
                 this.generateReportID();
                 this.showToast('Cleared', 'Form reset to default');
             }
+
             // --- View / Load Existing Reports ---
+
             viewReports(clientKey) {
                 const client = this.clients.find(c => c._key === clientKey);
                 const clientReports = this.reports.filter(r => r.clientKey === clientKey).sort((a,b) => b.timestamp - a.timestamp);
-               
+                
                 document.getElementById('reports-modal-subtitle').innerText = `${client.name} — ${clientReports.length} report(s)`;
                 const container = document.getElementById('reports-list-container');
                 container.innerHTML = '';
+
                 if(clientReports.length === 0) {
                     container.innerHTML = '<p class="text-center text-gray-500 py-8">No reports found.</p>';
                 } else {
@@ -1027,33 +1187,42 @@ deleteReport(reportKey) {
                         container.appendChild(div);
                     });
                 }
-               
+                
                 document.getElementById('reports-modal').classList.add('open');
             }
+
             closeReportsModal() {
                 document.getElementById('reports-modal').classList.remove('open');
             }
+
             loadReport(reportKey) {
                 const report = this.reports.find(r => r._key === reportKey);
                 if(!report) return;
+
                 this.closeReportsModal();
                 this.navigate('service-form');
+
                 // Set Edit Mode ID
                 document.getElementById('current-report-id').value = reportKey;
+
                 // Load Client
                 const sel = document.getElementById('report-client-select');
                 sel.value = report.clientKey;
                 this.loadClientToForm(report.clientKey);
+
                 // Load Type
                 this.setReportType(report.type || 'Hardware');
+
                 // Load Status
                 document.getElementById('device-status').value = report.status || 'Received';
+
                 // Load Device Info
                 if(report.deviceInfo) {
                     document.getElementById('display-device-model').value = report.deviceInfo.model || '';
                     document.getElementById('display-serial').value = report.deviceInfo.serial || '';
                     document.getElementById('display-issue').value = report.deviceInfo.issue || '';
                 }
+
                 // Load Service Details
                 if(report.serviceDetails) {
                     const sd = report.serviceDetails;
@@ -1069,6 +1238,7 @@ deleteReport(reportKey) {
                     document.getElementById('display-after-partial').value = sd.afterPartialDetails || '';
                     document.getElementById('display-issues-persisting').value = sd.issuesPersisting || '';
                 }
+
                 // Load Checkboxes
                 if(report.checkboxes) {
                     for(const [id, checked] of Object.entries(report.checkboxes)) {
@@ -1076,8 +1246,10 @@ deleteReport(reportKey) {
                         if(el) el.checked = checked;
                     }
                 }
+
                 this.showToast('Report Loaded', 'Data retrieved successfully');
             }
+
             deleteReport(reportKey) {
                 if(confirm('Are you sure you want to delete this report?')) {
                     this.db.ref('reports/' + reportKey).remove()
@@ -1089,35 +1261,41 @@ deleteReport(reportKey) {
                         });
                 }
             }
+
             downloadPDF() {
                 const element = document.getElementById('report-paper');
                 this.showToast('Generating PDF', 'Please wait...');
-               
+                
                 html2pdf().set({
                     margin: 0,
                     filename: `RGT_Service_Report_${Date.now()}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { scale: 2, useCORS: true },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: 'avoid-all' } // Prevent breaking inside elements
                 }).from(element).save().then(() => {
                     this.showToast('Success', 'PDF Downloaded');
                 });
             }
+
             // --- Utilities ---
+
             updateStats() {
                 this.animateValue('stat-clients', this.clients.length);
                 this.animateValue('stat-reports', this.reports.length);
-               
+                
                 const inRepair = this.reports.filter(r => r.status === 'In Repair').length;
                 const completed = this.reports.filter(r => r.status === 'Completed').length;
                 const received = this.reports.filter(r => r.status === 'Received').length;
+
                 this.animateValue('stat-in-repair', inRepair);
                 this.animateValue('stat-completed', completed);
-               
+                
                 document.getElementById('side-received').innerText = received;
                 document.getElementById('side-in-repair').innerText = inRepair;
                 document.getElementById('side-completed').innerText = completed;
             }
+
             animateValue(id, end) {
                 const el = document.getElementById(id);
                 if(!el) return;
@@ -1132,10 +1310,12 @@ deleteReport(reportKey) {
                 };
                 requestAnimationFrame(step);
             }
+
             updateDate() {
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-ZA', options);
             }
+
             showToast(title, message, type = 'success') {
                 const toast = document.getElementById('toast');
                 document.getElementById('toast-title').innerText = title;
@@ -1149,6 +1329,7 @@ deleteReport(reportKey) {
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             }
+
             initChart() {
                 const ctx = document.getElementById('activityChart');
                 if(!ctx) return;
@@ -1178,6 +1359,7 @@ deleteReport(reportKey) {
                 });
             }
         }
+
         document.addEventListener('DOMContentLoaded', () => {
             window.app = new RareGradeApp();
         });
